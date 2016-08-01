@@ -1,0 +1,18 @@
+namespace foo {
+    var ltuaa = 42;
+    func abc(a) {
+        return ltuaa + a;
+    }
+
+    func def(a) {
+        return abc(a*2);
+    }
+}
+
+using namespace foo;
+
+func main(arg) {
+    return def(3);
+}
+
+

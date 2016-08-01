@@ -1,0 +1,17 @@
+
+// single line comment.
+
+/*
+multiple
+line
+comment
+*/
+
+func helloworld() {
+    // Single-line in func.
+    /*
+    tell("Hello World!"); // nested comment.
+    */
+    tell("Hello Harold!"); // Comment after statement.
+}
+

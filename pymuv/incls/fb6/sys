@@ -1,0 +1,15 @@
+/////////////////////////
+// sys namespace
+
+namespace sys {
+
+extern single sysparm(x);
+extern single sysparm_array(x);
+extern void   setsysparm(x,y);
+
+extern void   force(x,y);
+extern single force_level();
+
+}
+
+

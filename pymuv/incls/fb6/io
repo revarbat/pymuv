@@ -1,0 +1,24 @@
+////////////////////////////////
+// io namespace
+
+namespace io {
+
+extern void     tell(d) = "me @ swap notify";
+extern void     notify(d,msg);
+extern void     notify_except(where,who,msg);
+extern void     array_notify(plyrarr,msgarr);
+extern void     notify_exclude(where,whoarr,msg) = "swap array_vals dup 2 + rotate notify_exclude";
+
+extern void     user_log(msg);
+extern single   read();
+extern multiple tread(secs);
+extern multiple timed_read(secs) = "tread";
+extern void     read_wants_blanks();
+
+extern single   ignoring?(d1,d2);
+extern void     ignore_add(d1,d2);
+extern void     ignore_del(d1,d2);
+extern single   ignore_list(d) = "array_get_ignorelist";
+
+}
+

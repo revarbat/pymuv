@@ -1,0 +1,7 @@
+include "!fb6/prims";
+
+func main(arg)
+{
+    notify(me, arg);
+}
+

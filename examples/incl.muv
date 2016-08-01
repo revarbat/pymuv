@@ -1,0 +1,6 @@
+include "incl2.muv";
+
+func foof(arg) {
+    return "Hi!";
+}
+

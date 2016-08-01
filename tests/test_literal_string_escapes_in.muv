@@ -1,0 +1,4 @@
+func main(arg) {
+    return "A string with\nnewlines and \e[1mstuff\e[0m.";
+}
+

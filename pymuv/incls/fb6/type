@@ -1,0 +1,17 @@
+////////////////////////////
+// type namespace
+
+namespace type {
+
+extern single address?(x);
+extern single array?(x);
+extern single dbref?(x);
+extern single dictionary?(x);
+extern single float?(x);
+extern single int?(x);
+extern single lock?(x);
+extern single number?(x);
+extern single string?(x);
+
+}
+

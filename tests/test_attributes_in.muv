@@ -1,0 +1,33 @@
+include "!fb6/prims";
+
+func sub(a, b, c) {
+    return cat(a, b, c);
+}
+
+func main(arg) {
+    var arr = [
+        "foo" => [
+            "fee" => 2,
+            "fie" => 8,
+            "foe" => 7,
+            "fum" => 42
+        ],
+        "bar" => [
+            "blah" => 1,
+            "blat" => 3,
+            "bloo" => 5,
+            "bleh" => 7,
+            "boo" => &sub
+        ],
+        "baz" => &sub
+    ];
+    var b = arr.foo.fie;
+    arr.bar.bloo = 43;
+    arr.bar.blat += 7;
+    arr["bar"].blat += 8;
+    arr.bar["blat"] += 9;
+    sub(5,4,3);
+    arr.baz(4, 6, 2);
+    arr.bar.boo(4, 6, 2);
+}
+

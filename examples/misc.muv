@@ -1,0 +1,28 @@
+func bar()
+{
+    var a = 0;
+    for (var i in [1, 3, 8, 14]) {
+        a += i;
+    }
+    return a;
+}
+
+
+func foo(a, b, args*)
+{
+    return (a - b + bar());
+}
+
+
+public func main(arg)
+{
+    if (8 == 9 || 0 == 7) {
+        var c = 4;
+        return 4 + 3 * 2 - 1;
+    } else {
+        return foo(8, 3);
+    }
+    return 5;
+}
+
+

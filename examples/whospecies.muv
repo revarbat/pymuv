@@ -1,0 +1,18 @@
+include "!fb6/io";
+include "!fb6/obj";
+include "!fb6/prop";
+
+func showspecies() {
+    for (var obj in obj::contents_array(loc)) {
+        if(obj::player?(obj)) {
+            io::tell(
+                fmtstring("%-30D %-10s %-30s",
+                    obj,
+                    prop::get_str(obj, "sex") || "Unknown",
+                    prop::get_str(obj, "species") || "Unknown"
+                )
+            );
+        }
+    }
+}
+

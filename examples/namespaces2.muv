@@ -1,0 +1,20 @@
+namespace foo {
+    var fee = 42;
+    func abc(a) {
+        return fee+a;
+    }
+}
+
+namespace bar {
+    func abc(a) {
+        return 13+a;
+    }
+}
+
+using namespace foo;
+
+func main(arg) {
+    bar::abc(abc(3));
+}
+
+

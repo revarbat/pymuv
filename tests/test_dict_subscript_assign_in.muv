@@ -1,0 +1,6 @@
+func main(arg) {
+    var a = [];
+    a["foo"] = "FOO";
+    return a["foo"];
+}
+

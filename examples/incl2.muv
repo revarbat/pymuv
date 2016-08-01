@@ -1,0 +1,6 @@
+include "!fb6/prims";
+
+func bass() {
+    return "THUMP!";
+}
+

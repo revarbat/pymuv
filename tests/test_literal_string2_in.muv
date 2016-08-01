@@ -1,0 +1,6 @@
+func main(arg) {
+    return "Multi-
+line
+string";
+}
+

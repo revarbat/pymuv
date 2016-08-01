@@ -1,0 +1,92 @@
+/////////////////////////////
+// obj namespace
+
+namespace obj {
+
+extern single   awake?(d);
+extern single   dbref(x);
+
+extern single   dbtop();
+extern single   dbcmp(x,y);
+extern single   nextowned(x);
+
+extern single   match(x);
+extern single   rmatch(x,y);
+extern single   pmatch(x);
+extern single   part_pmatch(x);
+
+extern single   name_ok?(x) = "name-ok?";
+extern single   pname_ok?(x) = "pname-ok?";
+extern single   ext_name_ok?(x,y) = "ext-name-ok?";
+
+extern single   unparseobj(x);
+extern multiple timestamps(x);
+extern single   objmem(x);
+extern multiple stats(x);
+
+extern single   controls(x,y);
+extern single   owner(x);
+extern void     setown(x,y);
+extern void     moveto(x,y);
+extern single   location(x);
+extern single   contents(x);
+extern single   contents_array(x);
+
+extern single   next(x);
+extern single   exits(x);
+extern single   exits_array(x);
+extern single   getlinks(x) = "getlinks_array";
+extern void     setlinks(x,y) = "setlinks_array";
+extern single   entrances(x) = "entrances_array";
+extern single   nextentrance(x,y);
+extern single   findnext(w,x,y,z);
+
+extern single   copyobj(x);
+extern single   copyplayer(x,y,z);
+extern void     toadplayer(x,y);
+extern single   newplayer(x,y);
+extern single   newroom(x,y);
+extern single   newobject(x,y);
+extern single   newexit(x,y);
+extern single   newprogram(x,y);
+extern void     recycle(x);
+
+extern single   pennies(x);
+extern void     addpennies(x,y);
+extern void     movepennies(x,y,z);
+
+extern single   checkpassword(x,y);
+extern void     newpassword(x,y);
+extern void     setflag(x,y) = "set";
+extern single   flag?(x,y);
+extern single   mlevel(x);
+
+extern single   ok?(x);
+extern single   player?(x);
+extern single   room?(x);
+extern single   thing?(x);
+extern single   exit?(x);
+extern single   program?(x);
+
+extern single   name(x);
+extern single   truename(x);
+extern void     setname(x,y);
+
+extern single   desc(x);
+extern single   succ(x);
+extern single   fail(x);
+extern single   drop(x);
+extern single   osucc(x);
+extern single   ofail(x);
+extern single   odrop(x);
+
+extern void     setdesc(x,y);
+extern void     setsucc(x,y);
+extern void     setfail(x,y);
+extern void     setdrop(x,y);
+extern void     setosucc(x,y);
+extern void     setofail(x,y);
+extern void     setodrop(x,y);
+
+}
+

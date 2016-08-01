@@ -1,0 +1,31 @@
+include "!fb6/prims";
+
+func main(arg) {
+    var k;
+    var v;
+
+    var mylist = [3, 4, 5, 6, 7, 8, 9];
+
+    var squares = [for (v in mylist) v*v];
+    var odds = [for (v in mylist) if (v % 2) v];
+    var evens = [for (v in mylist) unless (v % 2) v];
+
+    var mydict = [
+        "a" => 1,
+        "b" => 2,
+        "c" => 3,
+        "d" => 4
+    ];
+
+    var squarevals = [for (k => v in mydict) k => v*v];
+    var foo = [for (k => v in mydict) if (strcmp(k,"b") > 0) k => v*v];
+    var bar = [for (k => v in mydict) unless (v > 2) k => v*v];
+
+    var obj;
+    var listeners = [
+        for (obj in contents_array(loc))
+            if (player?(obj) && awake?(obj))
+                name(obj)
+    ];
+}
+

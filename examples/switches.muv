@@ -1,0 +1,27 @@
+func main(arg) {
+    var i = "b";
+    switch(i using eq) {
+        case("a") return("One.");
+        case("b") return("Two.");
+        case("c") {
+            switch(4 using ==) {
+                case(1) return("Ayyy!");
+                case(2) return("Beee!");
+                case(3) return("Seee!");
+            }
+        }
+        case("d") return("Three.");
+        default return("Other.");
+    }
+    switch(i using >) {
+        case(1) return("A");
+        case(2) return("B");
+        case(3) return("C");
+    }
+    try {
+        var a = 3 * 4;
+    } catch() {
+        return 2;
+    }
+}
+

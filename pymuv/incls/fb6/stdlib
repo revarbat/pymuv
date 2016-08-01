@@ -1,0 +1,8 @@
+/////////////////////////////////////////
+// Standard absolute basics MUV library
+
+extern single prog();
+extern single trig();
+extern single caller();
+extern single version();
+

@@ -1,0 +1,19 @@
+include "!fb6/prims";
+
+func main(arg) {
+    var foo = "This
+is
+a
+test";
+    tell(cat(
+        foo,
+        "Hello \\World!\n",
+        "\e[1;",
+        "Hello, \"",
+        arg,
+        "\"!",
+        "\[[0;\r",
+        "Hello All!"
+    ));
+}
+

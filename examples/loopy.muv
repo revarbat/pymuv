@@ -1,0 +1,47 @@
+include "!fb6/prims";
+
+func loopy(count)
+{
+    var i = 1;
+    until (i > count) {
+        tell(intostr(i));
+        i++;
+    }
+
+    i = 1;
+    while (i <= count) {
+        tell(intostr(i));
+        i++;
+    }
+
+    i = 1;
+    do {
+        tell(intostr(i));
+        i++;
+    } while(i<=count);
+
+    i = 1;
+    do {
+        tell(intostr(i));
+        i++;
+    } until (i>count);
+
+    for (var i in 1 => count)
+        tell(intostr(i));
+
+    for (var i in count => 1)
+        tell(intostr(i));
+
+    for (var val in online()) {
+        tell(fmtstring("%D", val));
+    }
+
+    for (var key => var val in online()) {
+        tell(cat(key, " = ", val));
+    }
+}
+
+func main() {
+    loopy(10);
+}
+

@@ -1,0 +1,10 @@
+include "!fb6/prims";
+
+func wall(msg) {
+    var d = firstdescr(#-1);
+    while (d) {
+        descrnotify(d, msg);
+        d = nextdescr(d);
+    }
+}
+

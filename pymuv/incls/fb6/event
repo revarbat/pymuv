@@ -1,0 +1,16 @@
+//////////////////////////////
+// event namespace
+
+namespace event {
+
+extern single   count() = "event_count";
+extern single   exists(pat) = "event_exists";
+extern multiple wait() = "event_wait";
+extern multiple waitfor(evtarr) = "event_waitfor";
+extern void     send(pid,evt,dict) = "event_send";
+extern void     timer_start(secs,id);
+extern void     timer_stop(id);
+extern void     watchpid(pid);
+
+}
+

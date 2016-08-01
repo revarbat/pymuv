@@ -1,0 +1,6 @@
+func main(arg) {
+    var a = [13, 42];
+    a[1] |= 13;
+    return a;
+}
+

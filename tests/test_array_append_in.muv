@@ -1,0 +1,5 @@
+func main(arg) {
+    var arr = ["a", "b", "c"];
+    arr[] = "d";
+    return arr;
+}

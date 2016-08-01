@@ -1,0 +1,16 @@
+include "!fb6/prims";
+
+func trys() {
+    var bar;
+
+    try {
+        bar = desc(me);
+    } catch (var err) {
+        tell(err);
+    }
+
+    try {
+        bar = osucc(me);
+    } catch();
+}
+

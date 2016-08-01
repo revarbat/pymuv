@@ -1,0 +1,9 @@
+func main(arg) {
+    var a = [
+        "foo" => "FOO",
+        "bar" => "BAR",
+        "baz" => "BAZ"
+    ];
+    return a["bar"];
+}
+

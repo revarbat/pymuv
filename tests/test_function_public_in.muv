@@ -1,0 +1,16 @@
+extern void tell(msg) = "me @ swap notify";
+
+public func loopy(count)
+{
+    var l = ["foo", "bar", "baz"];
+    for (var v in l) {
+        tell(v);
+    }
+
+    for (var l2 in l) {
+        var l = l2;
+        tell(l);
+    }
+}
+
+

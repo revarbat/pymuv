@@ -1,0 +1,22 @@
+/////////////////////////////////
+// conn Connections namespace
+
+$warn "The con* connection primitives are deprecated. Use the !fb6/descr library instead."
+
+namespace conn {
+
+extern single awake?(d);
+extern single online() = "online_array";
+
+extern single conboot(i);
+extern single concount();
+extern single condbref(i);
+extern single condescr(i);
+extern single conhost(i);
+extern single conidle(i);
+extern void   connotify(i,msg);
+extern single contime(i);
+extern single conuser(i);
+
+}
+

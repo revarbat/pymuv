@@ -1,0 +1,6 @@
+func main(arg) {
+    var a = 42;
+    var b = 13;
+    return a++ + ++b;
+}
+

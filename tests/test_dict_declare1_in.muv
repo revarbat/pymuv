@@ -1,0 +1,8 @@
+func main(arg) {
+    return [
+        "abc" => 9,
+        "def" => 2,
+        "ghi" => 7
+    ];
+}
+

@@ -1,0 +1,7 @@
+include "!fb6/prims";
+include "test_include_in_2.muv";
+
+func foof(arg) {
+    return bass();
+}
+

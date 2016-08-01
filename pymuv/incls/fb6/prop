@@ -1,0 +1,46 @@
+////////////////////
+// prop namespace
+
+namespace prop {
+
+extern single   get(x,y) = "getprop";
+extern single   get_fval(x,y) = "getpropfval";
+extern single   get_str(x,y) = "getpropstr";
+extern single   get_val(x,y) = "getpropval";
+
+extern void     add(w,x,y,z) = "addprop";
+extern void     set(x,y,z) = "setprop";
+extern void     remove(x,y) = "remove_prop";
+
+extern multiple envprop(x,y);
+extern multiple envprop_str(x,y) = "envpropstr";
+
+extern single   blessed?(x,y);
+extern void     bless(x,y) = "blessprop";
+extern void     unbless(x,y) = "unblessprop";
+
+extern single   propdir?(x,y);
+extern single   next(x,y) = "nextprop";
+
+extern single   filter_flags(x,y) = "array_filter_flags";
+extern single   filter(x,y,z) = "array_filter_prop";
+
+extern single   dirs_get(x,y) = "array_get_propdirs";
+
+extern single   list_get(x,y) = "array_get_proplist";
+extern void     list_put(x,y,z) = "array_put_proplist";
+
+extern single   vals_get(x,y) = "array_get_propvals";
+extern void     vals_put(x,y,z) = "array_put_propvals";
+
+extern void     reflist_add(x,y,z);
+extern void     reflist_del(x,y,z);
+extern single   reflist_find(x,y,z);
+extern single   reflist_get(x,y) = "array_get_reflist";
+extern void     reflist_put(x,y,z) = "array_put_reflist";
+
+extern single   parse_mpi(w,x,y,z) = "parseprop";
+extern multiple parse_mpi_ex(w,x,y,z) = "parsepropex";
+
+}
+

@@ -1,0 +1,31 @@
+include "!fb6/prims";
+
+extern void voidfoo();
+
+extern single singlefoo();
+
+extern multiple multfoo();
+
+extern single baz() = "qux";
+
+extern single concat(args*) = "array_interpret";
+
+extern single fmtstr(fmt, args*) = "
+    2 try
+        array_explode 1 + rotate fmtstring
+        depth 0 swap - rotate depth 1 - popn
+    catch abort
+    endcatch";
+
+
+func main()
+{
+    var v;
+    v = voidfoo();
+    v = singlefoo();
+    v = multfoo();
+    v = baz();
+    v = concat("Fee", "Fie", "Foe");
+    v = fmtstr("%d: %s", 5, "Fum");
+}
+

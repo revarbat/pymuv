@@ -1,0 +1,18 @@
+///////////////////////////////
+// prog namespace
+
+namespace prog {
+
+extern multiple call(d, args*) = "array_vals ++ rotate call";
+extern multiple call_public(d, pub, args*) = "[]<- []<- array_vals pop swap call";
+extern multiple execute(d, args*) = "[]<- array_vals pop execute";
+
+extern single cancall?(d,pub);
+extern single compile(d,showerrs);
+extern void   uncompile(d);
+extern single compiled?(d);
+extern single getlines(d,l1,l2) = "program_getlines";
+extern void   setlines(d,lnlst) = "program_setlines";
+
+}
+

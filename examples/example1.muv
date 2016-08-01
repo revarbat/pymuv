@@ -1,0 +1,37 @@
+include "!fb6/prims";
+
+// single line comment.
+
+/*
+multiple
+line
+comment
+*/
+
+func helloworld() { return "Hello World!"; }
+
+func arraydemo() {
+    var myarr = [];
+    myarr[23] = 42;
+    tell(myarr[23]);
+}
+
+func first_word(thing) {
+    var words = split(thing, " ");
+    return words[0];
+}
+
+func submit(arg) {
+    if (!strcmp(arg, "")) {
+        tell("Enter your submission here:");
+        arg = read();
+    }
+    var newobj = copyobj(#1981);
+    var word = first_word(arg);
+    var newname = cat(name(me), "'s submission (", word, ")");
+    setname(newobj, newname);
+    setdesc(newobj, arg);
+    moveto(newobj, #1976);
+    tell("Thank you for the submission.");
+}
+

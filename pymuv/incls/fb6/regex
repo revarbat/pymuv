@@ -1,0 +1,16 @@
+////////////////////////////
+// regex namespace
+
+namespace regex {
+
+    extern multiple match(txt,pat,flgs) = "regexp";
+    extern single   sub(txt,pat,repl,flgs) = "regsub";
+
+    // Server defined constants.
+    const ICASE = muf("reg_icase");
+    const ALL = muf("reg_all");
+    const EXTENDED = muf("reg_extended");
+
+}
+
+

@@ -1,0 +1,10 @@
+func main(arg)
+{
+    var arr = [3, 4, 5, 6];
+    var d = ["foo" => 1, "bar" => 2, "baz" => 3];
+    arr[2] = [8, 9, 10];
+    arr[2][1] = 21;
+    d.bar = ["fee"=>7, "fie"=>19, "foe"=>17];
+    d.bar.fie = 2;
+}
+

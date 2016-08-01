@@ -1,0 +1,9 @@
+func main(arg) {
+    var arr = [
+        "foo" => 3,
+        "bar" => 7,
+        "baz" => 9
+    ];
+    return haskey("bar", arr);
+}
+

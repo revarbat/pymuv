@@ -1,0 +1,34 @@
+namespace gui {
+
+extern single gui_available(dsc);
+extern single gui_dlog_create(dsc,typ,title,argsdict);
+extern single gui_dlog_simple(dsc,title);
+extern single gui_dlog_helper(dsc,title,pagedict);
+extern void   gui_dlog_show(dlogid);
+extern void   gui_dlog_close(dlogid);
+extern void   gui_ctrl_create(dlogid,typ,ctlid,argsdict);
+extern void   gui_ctrl_command(dlogid,ctlid,cmd,argsdict);
+extern single gui_values_get(dlogid);
+extern single gui_value_get(dlogid,ctlid);
+extern void   gui_value_set(dlogid,ctlid,val);
+
+const C_DATUM     = muf("c_datum");
+const C_MENU      = muf("c_menu");
+const C_LABEL     = muf("c_label");
+const C_IMAGE     = muf("c_image");
+const C_HRULE     = muf("c_hrule");
+const C_VRULE     = muf("c_vrule");
+const C_BUTTON    = muf("c_button");
+const C_CHECKBOX  = muf("c_checkbox");
+const C_RADIOBTN  = muf("c_radiobtn");
+const C_EDIT      = muf("c_edit");
+const C_MULTIEDIT = muf("c_multiedit");
+const C_COMBOBOX  = muf("c_combobox");
+const C_LISTBOX   = muf("c_listbox");
+const C_SPINNER   = muf("c_spinner");
+const C_SCALE     = muf("c_scale");
+const C_FRAME     = muf("c_frame");
+const C_NOTEBOOK  = muf("c_notebook");
+
+}
+

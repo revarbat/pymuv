@@ -1,0 +1,51 @@
+include "!fb6/prims";
+
+var foo = 72;
+
+func arrrr() {
+    var bar = ["one", "two", "three", "four", "five"];
+
+    tell(bar[3]);
+    for (var key => var val in bar) {
+        tell(cat(key + " = " + val));
+    }
+}
+
+func trys() {
+    var bar;
+
+    try {
+        bar = desc(me);
+    } catch (var err) {
+        tell(err);
+    }
+
+    try {
+        bar = osucc(me);
+    } catch();
+}
+
+func loopy(count) {
+    var i;
+
+    tell(intostr(count));
+
+    foo = count;
+
+    i = 1;
+    while (i <= count)
+        tell(intostr(i++));
+
+    i = 1;
+    do {
+        tell(intostr(i));
+        ++i;
+    } until (i > count);
+
+    i = 1;
+    do {
+        tell(intostr(i));
+        i += 1;
+    } while(i <= count);
+}
+

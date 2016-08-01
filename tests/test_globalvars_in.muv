@@ -1,0 +1,12 @@
+include "!fb6/prims";
+
+var foo = 23;
+var bar = 43;
+var fee;
+
+func main(arg) {
+    fee = cat(foo, " ", bar);
+    tell(fee);
+    return 0;
+}
+

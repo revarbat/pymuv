@@ -1,0 +1,6 @@
+func main(arg, blarg)
+{
+    var a = 3;
+    return a + 4;
+}
+

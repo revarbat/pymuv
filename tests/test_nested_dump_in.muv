@@ -1,0 +1,74 @@
+include "!fb6/prims";
+
+func dump(arr, indent) {
+    var key;
+    var val;
+    var out = "";
+    for (key => val in arr) {
+        if (array?(val) || dictionary?(val)) {
+            tell(fmtstring("%s%~ => [", indent, key));
+            dump(val, cat(indent, "  "));
+            tell(fmtstring("%s]", indent));
+        } else {
+            tell(fmtstring("%s%~ => %~", indent, key, val));
+        }
+    }
+}
+
+func dictfunc() {
+    var mydict = [
+        "one" => "First",
+        "two" => "Second",
+        "three" => "Third"
+    ];
+    dump(mydict, "");
+    var myvar = mydict["two"];
+    tell(myvar);
+    mydict["five"] = "Fifth";
+    del(mydict["three"]);
+}
+
+func main() {
+    var arr = [
+        "First",
+        "Second",
+        "Third",
+        "Forth",
+        "Fifth",
+        "Sixth",
+        "Seventh",
+        "Eighth",
+        "Ninth",
+        "Tenth",
+        "Eleventh"
+    ];
+    var idx;
+    var word;
+    for (word in arr) {
+        tell(arr[idx]);
+    }
+    var empty = [];  // initialize 'empty' with an empty array/list.
+    for (idx => word in arr) {
+        notify(me, fmtstring("%d: %s", idx, word));
+    }
+    var nested = [
+        [1, 2, 3, 4],
+        ["a", "b", "c", "d"],
+        ["One", "Two", "Three", "Four"],
+        [
+            [ 3, 1,   4],
+            [ 9, 1,  16],
+            [81, 1, 256]
+        ]
+    ];
+    tell(nested[2][1]);
+    nested[1] = ["Fee", "Fie", "Foe", "Fum"];
+    nested[0][3] = 23;
+    nested[0][3] += 2;
+    nested[0][] = "foo"; // append "foo" to the list in nexted[0];
+    nested[3][1][] = "foo"; // append "foo" to the list in nexted[3][1];
+    del(nested[2]);  // Removes the second list item from nested.
+    dump(nested, "");
+}
+
+

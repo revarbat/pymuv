@@ -1,0 +1,6 @@
+func main(arg) {
+    var a = [3, [42, 7]];
+    a[1][0] ^= 13;
+    return a;
+}
+

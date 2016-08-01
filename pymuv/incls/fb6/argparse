@@ -1,0 +1,193 @@
+//////////////////////////////////////////////////////////
+// argparse -- command-line argument parser.
+//
+
+namespace argparse {
+
+extern single find(a,x) = "array_findval";
+extern multiple strcut(s,pos) = "strcut";
+extern multiple split(s,pos) = "split";
+extern single stringcmp(x,y) = "stringcmp";
+extern single stringpfx(x,y) = "stringpfx";
+extern single join(a,delim) = "array_join";
+extern single toupper(x) = "toupper";
+extern single tolower(x) = "tolower";
+extern single trigname() = "trig name \";\" split pop strip";
+extern multiple regmatch(txt,pat) = "1 regexp";
+
+var current_mode = "";
+var modes_list = [];
+var flags_map = [=>];
+var posargs_map = [=>];
+var remainder_map = ["" => "remainder"];
+
+func init() {
+    current_mode = "";
+    modes_list = [];
+    flags_map = [=>];
+    posargs_map = [=>];
+    remainder_map = ["" => "remainder"];
+}
+
+func parse_posargs(mode, posargs) {
+    do {
+        var tok = regmatch(posargs, "^\([a-z0-9_]*\)\([^a-z0-9_]\)\(.*\)$")[0];
+        if (tok) {
+            if (!posargs_map[mode]) {
+                posargs_map[mode] = [];
+            }
+            posargs_map[mode][] = [tolower(tok[1]), tok[2]];
+            posargs = tok[3];
+        } else {
+            remainder_map[mode] = tolower(posargs);
+            break;
+        }
+    } while (1);
+}
+
+func set_mode(name) {
+    name = tolower(name);
+    current_mode = name;
+}
+
+func add_mode(name, flags, posargs) {
+    name = tolower(name);
+    modes_list[] = name;
+    flags_map[name] = [];
+    posargs_map[name] = [];
+    for (var flag in flags) {
+        if (!flags_map[name]) {
+            flags_map[name] = [];
+        }
+        flags_map[name][] = tolower(flag);
+    }
+    parse_posargs(name, posargs);
+}
+
+func add_flag(name) {
+    name = tolower(name);
+    for (var mode in modes_list) {
+        mode = tolower(mode);
+        if (!find(modes_list, mode)) {
+            abort(fmtstring("ArgParse: Option '%s' declared as part of non-existent mode '%s'!", name, mode));
+        }
+        if (!flags_map[mode]) {
+            flags_map[mode] = [];
+        }
+        flags_map[mode][] = name;
+    }
+}
+
+func add_posargs(posargs) {
+    for (var mode in modes_list) {
+        mode = tolower(mode);
+        if (!find(modes_list, mode)) {
+            abort(fmtstring("ArgParse: Option '%s' declared as part of non-existent mode '%s'!", mode, mode));
+        }
+        parse_posargs(mode, posargs);
+    }
+}
+
+func show_usage() {
+    var cmd = trigname();
+    tell("Usage:");
+    for (var mode in modes_list) {
+        var flags = [for (var flag in flags_map[mode]) cat("[#", flag, "]")];
+        var posargs = [for (var posarg in posargs_map[mode]) cat(toupper(posarg[0]), posarg[1])];
+        var line = fmtstring(
+            "%s %s%s %s%s%s%s",
+            cmd,
+            (mode ? "#" : ""),
+            mode,
+            join(flags, " "),
+            (flags ? " " : ""),
+            join(posargs, ""),
+            toupper(remainder_map[mode])
+        );
+        tell(line);
+    }
+}
+
+func parse(line) {
+    var parts;
+    var mode;
+    var flag;
+    var opts = [=>];
+    var mode_given = 0;
+    while (stringpfx(line, "#")) {
+        parts = split(strcut(line,1)[1], " ");
+        var opt = parts[0];
+        var lc_opt = tolower(opt);
+        var found = 0;
+
+        // Check for exact mode match.
+        for (mode in modes_list) {
+            if (!stringcmp(mode, lc_opt)) {
+                current_mode = mode;
+                found++;
+                break;
+            }
+        }
+        if (found) {
+            mode_given++;
+            line = parts[1];
+            continue;
+        }
+
+        // Check for exact flag match.
+        for (flag in flags_map[current_mode]) {
+            if (!stringcmp(flag, lc_opt)) {
+                opts[flag] = opt;
+                found++;
+                break;
+            }
+        }
+        if (found) {
+            line = parts[1];
+            continue;
+        }
+
+        // Check for mode prefix.
+        for (mode in modes_list) {
+            if (stringpfx(mode, lc_opt)) {
+                current_mode = mode;
+                found++;
+            }
+        }
+
+        // Check for flag prefix.
+        for (flag in flags_map[current_mode]) {
+            if (stringpfx(flag, lc_opt)) {
+                opts[flag] = opt;
+                found++;
+            }
+        }
+
+        if (found == 1) {
+            line = parts[1];
+            continue;
+        } else if (found > 1) {
+            tell(fmtstring("Option #%s is ambiguous.", opt));
+        } else {
+            tell(fmtstring("Option #%s not recognized.", opt));
+        }
+        show_usage();
+        return [];
+    }
+    if (mode_given > 1) {
+        tell("Cannot mix modes.");
+        show_usage();
+        return [];
+    }
+    for (var posarg in posargs_map[current_mode]) {
+        parts = split(line, posarg[1]);
+        opts[posarg[0]] = parts[0];
+        line = parts[1];
+    }
+    opts[remainder_map[current_mode]] = line;
+    opts.mode = current_mode;
+    return opts;
+}
+
+}
+

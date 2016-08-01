@@ -1,0 +1,15 @@
+include "!fb6/prims";
+
+func fibseq(x) {
+    var out = [1, 1];
+    for (var i in 3 => x) {
+        out[] = out[count(out)-2] + out[count(out)-1];
+    }
+    return out;
+}
+
+func main(arg) {
+    var fs = fibseq(atoi(arg));
+    tell(array_join(fs, ", "));
+}
+

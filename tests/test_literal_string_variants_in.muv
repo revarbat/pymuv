@@ -1,0 +1,19 @@
+func quotes(arg) {
+    var a = "Test('')";
+    var b = "Test(\"\")";
+    var c = 'Test("")';
+    var d = 'Test("")';
+    var e = "it's";
+    var f = 'it\'s';
+    var g = 'a"b';
+    var h = "a'b";
+    var i = """abc"def""";
+    var j = """abc
+               def""";
+    var k = '''abc'def''';
+    var l = r'abc\rdef';
+    var m = r"abc\rdef";
+    var n = r'''abc"\r'def''';
+    var o = r"""abc"\r'def""";
+}
+

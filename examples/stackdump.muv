@@ -1,0 +1,69 @@
+include "!fb6/stdlib";
+include "!fb6/type";
+include "!fb6/obj";
+
+extern single depth();
+extern single pick(x);
+
+func dump_item_r(x, indent) {
+    const ind = "    ";
+    var key;
+    var val;
+    var kpart;
+    var vpart;
+    var out = "";
+    if (type::dictionary?(x)) {
+        out = fmtstring("%s{", indent);
+        for (key => val in x) {
+            kpart = dump_item_r(key, cat(indent, ind));
+            vpart = dump_item_r(key, cat(indent, ind, ind));
+            out = fmtstring("%s\n%s =>\n%s", out, kpart, vpart);
+        }
+        out = fmtstring("%s\n%s}dict", out, indent);
+    } else if (type::array?(x)) {
+        out = fmtstring("%s{", indent);
+        for (val in x) {
+            vpart = dump_item_r(val, cat(indent, ind));
+            out = fmtstring("%s\n%s", out, vpart);
+        }
+        out = fmtstring("%s\n%s}list", out, indent);
+    } else if (type::string?(x)) {
+        out = fmtstring("%s\"%~\"", indent, x);
+    } else if (type::dbref?(x)) {
+        if (obj::ok?(x)) {
+            out = fmtstring("%s%D(%d)", indent, x, x);
+        } else {
+            out = fmtstring("%s%d", indent, x);
+        }
+    } else {
+        out = fmtstring("%s%~", indent, x);
+    }
+    return out;
+}
+
+func dump_item(x) {
+    tell(dump_item_r(x, ""));
+}
+
+func dump_stack() {
+    var i = depth();
+    while (i > 0) {
+        dump_item(pick(i));
+        i--;
+    }
+}
+
+
+func main(arg) {
+    push("Test");
+    push(42);
+    push(57.389);
+    push(6.022e23);
+    push(#1);
+    push(&dump_item);
+    push(["Yet", "another", "test"]);
+    push(["foo" => 3, "bar" => 7, "baz" => 11]);
+    dump_stack();
+}
+
+

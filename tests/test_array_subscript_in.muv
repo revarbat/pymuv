@@ -1,0 +1,5 @@
+func main(arg) {
+    var a = [42, 13, 7];
+    return a[1];
+}
+

@@ -1,0 +1,5 @@
+func main(arg) {
+    var a = 42;
+    return a+13;
+}
+

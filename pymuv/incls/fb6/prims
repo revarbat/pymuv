@@ -1,0 +1,431 @@
+////////////////////////////////////////
+// Declarations for all FB6 primitives.
+
+extern single awake?(x);
+extern single online() = "online_array";
+extern single online_array();
+
+extern single conboot(x);
+extern single concount();
+extern single condbref(x);
+extern single condescr(x);
+extern single conhost(x);
+extern single conidle(x);
+extern void connotify(x,y);
+extern single contime(x);
+extern single conuser(x);
+
+extern single descr();
+extern single descr_array(d);
+extern single descr_setuser(i,plyr,pass);
+extern single descrboot(i);
+extern single descrbufsize(i);
+extern single descrcon(i);
+extern single descrdbref(i);
+extern void   descrflush(i);
+extern single descrhost(i);
+extern single descridle(i);
+extern single descriptors(d) = "descr_array";
+extern single descrleastidle(d);
+extern single descrmostidle(d);
+extern void   descrnotify(i,msg);
+extern single descrsecure?(i);
+extern single descrtime(i);
+extern single descruser(i);
+extern single firstdescr(d);
+extern single lastdescr(d);
+extern single nextdescr(i);
+
+extern multiple call(d, args*) = "array_vals ++ rotate call";
+extern multiple call_public(d, pub, args*) = "[]<- []<- array_vals pop swap call";
+extern multiple execute(d, args*) = "[]<- array_vals pop execute";
+
+extern single cancall?(x,y);
+extern single interp(x,y,z);
+
+extern single event_count();
+extern single event_exists(x);
+extern multiple event_wait();
+extern multiple event_waitfor(x);
+extern void event_send(x,y,z);
+extern void timer_start(x,y);
+extern void timer_stop(x);
+extern void watchpid(x);
+
+extern void notify(x,y);
+extern void notify_except(x,y,z);
+extern void array_notify(x,y);
+
+extern void notify_exclude(x,y,z) = "swap array_vals
+dup 2 + rotate notify_exclude";
+
+extern void user_log(x);
+extern single read();
+extern multiple tread(x);
+extern void read_wants_blanks();
+
+extern single atoi(x);
+extern single ctoi(x);
+extern single int(x);
+extern single intostr(x);
+extern single itoc(x);
+extern single stod(x);
+extern single dbref(x);
+
+extern single prog();
+extern single trig();
+extern single caller();
+extern single version();
+
+extern single address?(x);
+extern single array?(x);
+extern single dbref?(x);
+extern single dictionary?(x);
+extern single float?(x);
+extern single int?(x);
+extern single lock?(x);
+extern single number?(x);
+extern single string?(x);
+
+extern single explode(x,y) = "explode_array";
+extern single explode_array(x,y);
+extern single instr(x,y);
+extern single instring(x,y);
+extern single midstr(x,y,z);
+extern single rinstr(x,y);
+extern single rinstring(x,y);
+extern multiple rsplit(x,y);
+extern single smatch(x,y);
+extern multiple split(x,y);
+extern single strcat(x,y);
+extern single strcmp(x,y);
+extern multiple strcut(x,y);
+extern single stringcmp(x,y);
+extern single stringpfx(x,y);
+extern single strip(x);
+extern single striplead(x);
+extern single striptail(x);
+extern single strlen(x);
+extern single strmatch(x,y);
+extern single strncmp(x,y,z);
+extern single subst(x,y,z);
+extern single tolower(x);
+extern single toupper(x);
+
+extern single strencrypt(x,y);
+extern single strdecrypt(x,y);
+
+extern multiple regexp(x,y,z);
+extern single regsub(w,x,y,z);
+
+extern single locked?(x,y);
+extern single parselock(x);
+extern single unparselock(x);
+extern single prettylock(x);
+extern single testlock(x,y);
+extern single setlockstr(x,y);
+extern single getlockstr(x);
+
+extern single array_fmtstrings(x,y);
+extern single pronoun_sub(x,y);
+extern multiple tokensplit(x,y,z);
+
+extern single textattr(x,y);
+extern single ansi_strip(x);
+extern single ansi_strlen(x);
+extern multiple ansi_strcut(x,y);
+extern single ansi_midstr(x,y,z);
+
+extern single getseed();
+extern void setseed(x);
+extern single srand();
+extern single frand();
+extern single random();
+extern single gaussian(x,y);
+
+extern single abs(x);
+extern single ceil(x);
+extern single floor(x);
+extern single fmod(x,y);
+extern multiple modf(x);
+extern single sign(x);
+
+extern single sqrt(x);
+extern single pow(x,y);
+extern single log(x);
+extern single exp(x);
+extern single log10(x);
+extern single exp10(x);
+
+extern single sin(x);
+extern single cos(x);
+extern single tan(x);
+extern single asin(x);
+extern single acos(x);
+extern single atan(x);
+extern single atan2(y,x);
+
+extern multiple diff3(x1,y1,z1,x2,y2,z2);
+extern single dist3d(x,y,z);
+extern multiple xyz_to_polar(x,y,z);
+extern multiple polar_to_xyz(rad,theta,phi);
+
+extern void clear();
+extern single clear_error(x);
+extern single error?();
+extern single error_bit(x);
+extern single error_name(x);
+extern single error_num();
+extern single error_str(x);
+extern single is_set?(x);
+extern single set_error(x);
+
+extern single array_keys(x) = "array_keys array_make";
+extern single array_vals(x) = "array_vals array_make";
+
+extern single array_appenditem(x,y);
+extern single array_compare(x,y);
+extern multiple array_cut(x,y);
+extern single array_delitem(x,y);
+extern single array_delrange(x,y,z);
+extern single array_excludeval(x,y);
+extern single array_extract(x,y);
+extern single array_findval(x,y);
+extern multiple array_first(x);
+extern single array_getitem(x,y);
+extern single array_getrange(x,y);
+extern single array_insertitem(x,y,z);
+extern single array_insertrange(x,y,z);
+extern single array_interpret(x);
+extern single array_join(x,y);
+extern multiple array_last(x);
+extern single array_matchkey(x,y);
+extern single array_matchval(x,y);
+extern single array_nested_del(x,y);
+extern single array_nested_get(x,y);
+extern single array_nested_set(x,y,z);
+extern multiple array_next(x,y);
+extern multiple array_prev(x,y);
+extern single array_reverse(x);
+extern single array_setitem(x,y,z);
+extern single array_setrange(x,y,z);
+extern single array_sort(x,y);
+extern single array_sort_indexed(x,y,z);
+
+extern single array_union(args*) = "array_vals array_nunion";
+extern single array_nunion(args*) = "array_vals array_nunion";
+extern single array_diff(args*) = "array_vals array_ndiff";
+extern single array_ndiff(args*) = "array_vals array_ndiff";
+extern single array_intersect(args*) = "array_vals array_nintersect";
+extern single array_nintersect(args*) = "array_vals array_nintersect";
+
+extern single dbtop();
+extern single dbcmp(x,y);
+extern single unparseobj(x);
+extern single owner(x);
+extern void setown(x,y);
+extern single location(x);
+extern void moveto(x,y);
+extern single contents(x);
+extern single contents_array(x);
+extern single exits(x);
+extern single exits_array(x);
+extern single next(x);
+extern single nextowned(x);
+extern single findnext(w,x,y,z);
+extern single nextentrance(x,y);
+extern single controls(x,y);
+
+extern single copyobj(x);
+extern single copyplayer(x,y,z);
+extern void toadplayer(x,y);
+extern single newplayer(x,y);
+extern single newroom(x,y);
+extern single newobject(x,y);
+extern single newexit(x,y);
+extern single newprogram(x,y);
+extern void recycle(x);
+
+extern single ignoring?(x,y);
+extern void ignore_add(x,y);
+extern void ignore_del(x,y);
+extern single array_get_ignorelist(x);
+
+extern single match(x);
+extern single rmatch(x,y);
+extern single pmatch(x);
+extern single part_pmatch(x);
+
+extern single name_ok?(x) = "name-ok?";
+extern single pname_ok?(x) = "pname-ok?";
+extern single ext_name_ok?(x,y) = "ext-name-ok?";
+
+extern single pennies(x);
+extern void addpennies(x,y);
+extern void movepennies(x,y,z);
+
+extern single checkpassword(x,y);
+extern void newpassword(x,y);
+extern void set(x,y);
+extern single flag?(x,y);
+extern single mlevel(x);
+
+extern single ok?(x);
+extern single player?(x);
+extern single room?(x);
+extern single thing?(x);
+extern single exit?(x);
+extern single program?(x);
+
+extern single sysparm(x);
+extern single sysparm_array(x);
+extern void setsysparm(x,y);
+
+extern single desc(x);
+extern single drop(x);
+extern single fail(x);
+extern single name(x);
+extern single odrop(x);
+extern single ofail(x);
+extern single osucc(x);
+extern void setdesc(x,y);
+extern void setdrop(x,y);
+extern void setfail(x,y);
+extern void setname(x,y);
+extern void setodrop(x,y);
+extern void setofail(x,y);
+extern void setosucc(x,y);
+extern void setsucc(x,y);
+extern single succ(x);
+extern single truename(x);
+
+extern single getlink(x);
+extern void setlink(x,y);
+extern single getlinks(x) = "getlinks_array";
+extern single getlinks_array(x);
+extern void setlinks_array(x,y);
+extern single entrances_array(x);
+extern multiple timestamps(x);
+extern multiple stats(x);
+extern single objmem(x);
+
+extern void addprop(w,x,y,z);
+extern single array_filter_flags(x,y);
+extern single array_filter_prop(x,y,z);
+extern single array_get_propdirs(x,y);
+extern single array_get_proplist(x,y);
+extern single array_get_propvals(x,y);
+extern single array_get_reflist(x,y);
+extern void array_put_proplist(x,y,z);
+extern void array_put_propvals(x,y,z);
+extern void array_put_reflist(x,y,z);
+extern void blessprop(x,y);
+extern multiple envprop(x,y);
+extern multiple envpropstr(x,y);
+extern single getprop(x,y);
+extern single getpropfval(x,y);
+extern single getpropstr(x,y);
+extern single getpropval(x,y);
+extern single blessed?(x,y);
+extern single propdir?(x,y);
+extern single nextprop(x,y);
+extern single parseprop(w,x,y,z);
+extern multiple parsepropex(w,x,y,z);
+extern void reflist_add(x,y,z);
+extern void reflist_del(x,y,z);
+extern single reflist_find(x,y,z);
+extern single reflist_get(x,y) = "array_get_reflist";
+extern void reflist_put(x,y,z) = "array_put_reflist";
+extern void remove_prop(x,y);
+extern void setprop(x,y,z);
+extern void unblessprop(x,y);
+
+extern multiple time();
+extern multiple date();
+extern single systime();
+extern single systime_precise();
+extern single gmtoffset();
+extern multiple timesplit(x);
+extern single timefmt(x,y);
+extern void sleep(x);
+
+extern single mode();
+extern void setmode(x);
+extern void preempt();
+extern void foreground();
+extern void background();
+extern single queue(x,y,z);
+extern single fork();
+extern single kill(x);
+extern single pid();
+extern single ispid?(x);
+extern single getpids(x);
+extern single getpidinfo(x);
+extern single instances(x);
+extern single compile(x,y);
+extern void uncompile(x);
+extern single compiled?(x);
+extern single program_getlines(x,y,z);
+extern void program_setlines(x,y);
+
+extern void mcp_register(x,y,z);
+extern void mcp_register_event(x,y,z);
+extern void mcp_bind(x,y,z);
+extern single mcp_supports(x,y);
+extern void mcp_send(w,x,y,z);
+
+extern single gui_available(x);
+extern single gui_dlog_create(w,x,y,z);
+extern single gui_dlog_simple(x,y);
+extern single gui_dlog_helper(x,y,z);
+extern void gui_dlog_show(x);
+extern void gui_dlog_close(x);
+extern void gui_ctrl_create(w,x,y,z);
+extern void gui_ctrl_command(w,x,y,z);
+extern single gui_values_get(x);
+extern single gui_value_get(x,y);
+extern void gui_value_set(x,y,z);
+
+extern void debug_on();
+extern void debug_off();
+extern void debug_line();
+extern void debugger_break();
+
+extern void force(x,y);
+extern single force_level();
+
+extern single array_make(args*) = "";
+extern single array_make_dict(args*) = "{ swap array_vals pop }dict";
+extern single concat(args*) = "{ }list swap array_reverse foreach swap pop 0 swap array_insertrange repeat";
+extern single merge(args*) = "{ }dict swap foreach swap pop foreach rot rot ->[] repeat repeat";
+
+// Server defined constants.
+const true = 1;
+const false = 0;
+
+const REG_ICASE = muf("reg_icase");
+const REG_ALL = muf("reg_all");
+const REG_EXTENDED = muf("reg_extended");
+
+const PR_MODE = muf("pr_mode");
+const FG_MODE = muf("fg_mode");
+const BG_MODE = muf("bg_mode");
+
+const C_DATUM = muf("c_datum");
+const C_MENU = muf("c_menu");
+const C_LABEL = muf("c_label");
+const C_IMAGE = muf("c_image");
+const C_HRULE = muf("c_hrule");
+const C_VRULE = muf("c_vrule");
+const C_BUTTON = muf("c_button");
+const C_CHECKBOX = muf("c_checkbox");
+const C_RADIOBTN = muf("c_radiobtn");
+const C_EDIT = muf("c_edit");
+const C_MULTIEDIT = muf("c_multiedit");
+const C_COMBOBOX = muf("c_combobox");
+const C_LISTBOX = muf("c_listbox");
+const C_SPINNER = muf("c_spinner");
+const C_SCALE = muf("c_scale");
+const C_FRAME = muf("c_frame");
+const C_NOTEBOOK = muf("c_notebook");
+

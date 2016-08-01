@@ -1,0 +1,32 @@
+include "!fb6/stdlib";
+include "!fb6/str";
+
+func gen() {
+    const set = ["Fee", "Fie", "Foe", "Fum"];
+    var i = 0;
+    var out = [];
+    while (i < 4) {
+        out[] = set[i];
+        i++;
+    }
+    return out;
+}
+
+func listgen() {
+    var out = [];
+    var i = 0;
+    while (i++ < 10) {
+        out[] = gen();
+    }
+    return out;
+}
+
+func main(arg) {
+    <var a, var b, var c, var d> = gen();
+    <d, c, b, a> = gen();
+    for (<a, b, c, d> in listgen()) {
+        tell(cat(a, b));
+    }
+    return [for (<a, b, c, d> in listgen()) if (str::strcmp(a,b)) cat(c, d)];
+}
+

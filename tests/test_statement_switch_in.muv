@@ -1,0 +1,71 @@
+include "!fb6/prims";
+
+extern single type(val) = '"%?" fmtstring';
+
+func complex_match(v1, v2) {
+    if (number?(v1) && number?(v2)) {
+        return v1 == v2;
+    }
+    if (string?(v1) && int?(v2)) {
+        return !strcmp(v1, intostr(v2));
+    }
+    if (!strcmp(type(v1), type(v2))) {
+        return false;
+    }
+    if (string?(v1)) {
+        return !strcmp(tolower(v1), tolower(v2));
+    }
+    return false;
+}
+
+func main(arg) {
+    var i = 2;
+    switch(i) {
+        case(1) tell("One.");
+        case(2) tell("Two.");
+        case(3) tell("Three.");
+    }
+
+    // You can give a using clause to compare using built-in primitives.
+    // 'strcmp' is a special case that really compares using 'strcmp not'.
+    // Note that `using eq` is effectively identical.
+    switch(arg using strcmp) {
+        case("greet") {
+            tell("Hello.");
+        }
+        case("who") {
+            tell("I'm called MUV.");
+        }
+        case("what") {
+            tell("I'm a nicer language to use than MUF.");
+        }
+        default {
+            tell("I don't understand.");
+        }
+    }
+
+    // Passing a function to the using clause allows for more complex matching.
+    switch (arg using complex_match) {
+        case("fee") {
+            tell("Fee selected!");
+        }
+        case(1) {
+            tell("One selected!");
+        }
+        case("") {
+            tell("None selected!");
+        }
+    }
+
+    // You can specify built-in comparators in the using clause.  The first case 
+    // that matches is the only one evaluated.  For example, the code below will
+    // print out `C`.
+    var a="foo";
+    switch (42 using >) {
+        case(99) tell("A");
+        case(50) tell("B");
+        case(25) tell("C");
+        case(10) tell("D");
+    }
+}
+

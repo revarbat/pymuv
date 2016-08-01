@@ -1,0 +1,6 @@
+const pi = 3.14159;
+func main(arg) {
+    const e = 2.71828;
+    return pi/e;
+}
+

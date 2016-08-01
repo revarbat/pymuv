@@ -1,0 +1,8 @@
+func sub(a, b) {
+    return [b, a];
+}
+
+func main(arg) {
+    return sub("Foo", "Bar");
+}
+

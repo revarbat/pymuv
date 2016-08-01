@@ -1,0 +1,12 @@
+func myfunction() {
+    var x = "A";
+    for (var x in ["B", "C", "D"]) {
+	if (x eq "D") {
+	    tell(x);
+	    var x = ["X", "Y", "Z"];
+	    tell(x[1]);
+	}
+    }
+    tell(x);
+}
+

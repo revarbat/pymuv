@@ -1,0 +1,22 @@
+include "!fb6/prims";
+
+func main(arg) {
+    var valid_numbers = [
+        0x63,
+        0o142,
+        0b0110_0001,
+        0d96,
+        95,
+        0xBAD_BEEF,
+        0xbad_beef,
+        12_345_678,
+        0d12_345_678,
+        0o1_234,
+        0
+    ];
+    var num;
+    for (num in valid_numbers) {
+        tell(cat(num, " bottles of beer on the wall!"));
+    }
+}
+

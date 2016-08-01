@@ -1,0 +1,19 @@
+func main(arg) {
+    var a = [
+        "foo" => [
+            "fee" => 0,
+            "fie" => 2,
+            "foe" => 7,
+            "fum" => 9
+        ],
+        "bar" => [
+            "fee" => 2,
+            "fie" => 7,
+            "foe" => 3,
+            "fum" => 8
+        ]
+    ];
+    a["foo"]["fie"] = "FOO";
+    return a["foo"]["fie"];
+}
+

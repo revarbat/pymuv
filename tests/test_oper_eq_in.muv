@@ -1,0 +1,5 @@
+func main(arg) {
+    var s = "Foo";
+    return (s eq "bar");
+}
+
