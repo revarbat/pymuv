@@ -45,7 +45,7 @@ class LValue(object):
     def set_expr(self, ctx):
         """
         Returns the MUF needed to do an assign on the lvalue. (=)
-        Returned MUF expects a value to be on the stack, and consumes it.
+        Returned MUF expects a value to be on the stack.
         """
         if self.readonly:
             raise MuvError(
@@ -86,10 +86,9 @@ class LValue(object):
             idx=" ".join(x.generate_code(ctx) for x in self.indexing)
         )
 
-    def oper_set_expr(self, oper, ctx):
+    def oper_set_expr(self, ctx, oper, val):
         """
         Returns the MUF needed to do an oper-assign on the lvalue. (+=, etc.)
-        Returned MUF expects a value to be on the stack, and consumes it.
         """
         if self.readonly:
             raise MuvError(
@@ -104,52 +103,58 @@ class LValue(object):
             )
         if len(self.indexing) == 0:
             if ctx.assign_level > 1:
-                fmt = "{var} @ swap {oper} dup {var} !"
+                fmt = "{var} @ {val} {oper} dup {var} !"
             else:
-                fmt = "{var} @ swap {oper} {var} !"
-            return fmt.format(var=varname, oper=oper)
+                fmt = "{var} @ {val} {oper} {var} !"
+            return fmt.format(
+                var=varname,
+                oper=oper,
+                val=val.generate_code(ctx),
+            )
         if len(self.indexing) == 1:
             if ctx.assign_level > 1:
                 fmt = (
-                    "{idx} {var} @ "
-                    "dup 3 pick [] 4 rotate {oper} "
+                    "{var} @ {idx} "
+                    "over over [] {val} {oper} "
                     "dup -4 rotate "
-                    "swap rot ->[] {var} !"
+                    "rot rot ->[] {var} !"
                 )
             else:
                 fmt = (
-                    "{idx} {var} @ "
-                    "dup 3 pick [] 4 rotate {oper} "
-                    "swap rot ->[] {var} !"
+                    "{var} @ {idx} "
+                    "over over [] {val} {oper} "
+                    "rot rot ->[] {var} !"
                 )
             return fmt.format(
                 var=varname,
                 oper=oper,
+                val=val.generate_code(ctx),
                 idx=self.indexing[0].generate_code(ctx),
             )
         if ctx.assign_level > 1:
             fmt = (
-                "{{ {idx} }}list {var} @ "
-                "dup 3 pick array_nested_get 4 rotate {oper} "
+                "{var} @ {{ {idx} }}list "
+                "over over array_nested_get {val} {oper} "
                 "dup -4 rotate "
-                "swap rot array_nested_set {var} !"
+                "rot rot array_nested_set {var} !"
             )
         else:
             fmt = (
-                "{{ {idx} }}list {var} @ "
-                "dup 3 pick array_nested_get 4 rotate {oper} "
-                "swap rot array_nested_set {var} !"
+                "{var} @ {{ {idx} }}list "
+                "over over array_nested_get {val} {oper} "
+                "rot rot array_nested_set {var} !"
             )
         return fmt.format(
             var=varname,
             oper=oper,
+            val=val.generate_code(ctx),
             idx=" ".join(
                 x.generate_code(ctx)
                 for x in self.indexing
             )
         )
 
-    def unary_set_expr(self, oper, ctx, postoper=False):
+    def unary_set_expr(self, ctx, oper, postoper=False):
         """
         Returns the MUF needed to do an unary operation on the lvalue. (++, --.)
         """
@@ -165,21 +170,13 @@ class LValue(object):
                 position=self.position
             )
         if len(self.indexing) == 0:
-            if ctx.assign_level <= 1:
-                fmt = "{var} {oper}"
-            elif postoper:
+            if postoper:
                 fmt = "{var} @ {var} {oper}"
             else:
                 fmt = "{var} dup {oper} @"
             return fmt.format(var=varname, oper=oper)
         if len(self.indexing) == 1:
-            if ctx.assign_level <= 1:
-                fmt = (
-                    "{idx} {var} @ "
-                    "dup 3 pick [] {oper} "
-                    "swap rot ->[] {var} !"
-                )
-            elif postoper:
+            if postoper:
                 fmt = (
                     "{idx} {var} @ "
                     "dup 3 pick [] "
@@ -198,13 +195,7 @@ class LValue(object):
                 oper=oper,
                 idx=self.indexing[0].generate_code(ctx),
             )
-        if ctx.assign_level <= 1:
-            fmt = (
-                "{{ {idx} }}list {var} @ "
-                "dup 3 pick array_nested_get {oper} "
-                "swap rot array_nested_set {var} !"
-            )
-        elif postoper:
+        if postoper:
             fmt = (
                 "{{ {idx} }}list {var} @ "
                 "dup 3 pick array_nested_get "

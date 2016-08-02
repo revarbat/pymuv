@@ -120,7 +120,10 @@ class Context(object):
 
     def use_namespace(self, ns):
         if not ns.startswith('::'):
-            ns = '%s::%s' % (self.curr_namespace, ns)
+            oldns = self.curr_namespace
+            if oldns == "::":
+                oldns = ''
+            ns = '%s::%s' % (oldns, ns)
         self.using_namespaces.append(ns)
 
     def canonical_name(self, name):
@@ -141,6 +144,26 @@ class Context(object):
             name = "_" + name
         return name
 
+    def possible_canonicals(self, name):
+        out = []
+        if name.startswith('::'):
+            return [name]
+        for ns in self.using_namespaces:
+            if ns == '::':
+                ns = ''
+            canonical = "%s::%s" % (ns, name)
+            out.append(canonical)
+        ns = self.curr_namespace
+        while True:
+            if ns == '::':
+                ns = ''
+            canonical = "%s::%s" % (ns, name)
+            out.append(canonical)
+            if not ns:
+                break
+            ns = ns.rsplit('::', 1)[0]
+        return out
+
     # Constants ##############################################
 
     def lookup_constant(self, name):
@@ -148,9 +171,9 @@ class Context(object):
             found = scope.lookup_constant(name)
             if found:
                 return found
-        name = self.canonical_name(name)
-        if name in self.global_consts:
-            return self.global_consts[name]
+        for name in self.possible_canonicals(name):
+            if name in self.global_consts:
+                return self.global_consts[name]
         return None
 
     def declare_constant(self, name, val):
@@ -167,9 +190,9 @@ class Context(object):
             found = scope.lookup_variable(name)
             if found:
                 return found
-        name = self.canonical_name(name)
-        if name in self.global_vars:
-            return self.global_vars[name]
+        for name in self.possible_canonicals(name):
+            if name in self.global_vars:
+                return self.global_vars[name]
         return None
 
     def declare_variable(self, name):
@@ -189,8 +212,6 @@ class Context(object):
     def declare_global_var(self, name, sys=False):
         realname = name
         name = self.canonical_name(name)
-        if name in self.global_vars:
-            raise MuvExceptionAlreadyDeclared()
         if not sys:
             realname = self.actualize_name(name)
         self.global_vars[name] = realname
@@ -199,24 +220,9 @@ class Context(object):
     # Functions ##############################################
 
     def lookup_function(self, name):
-        if name.startswith('::') and name in self.functions:
-            return self.functions[name]
-        for ns in self.using_namespaces:
-            if ns == '::':
-                ns = ''
-            canonical = "%s::%s" % (ns, name)
-            if canonical in self.functions:
-                return self.functions[canonical]
-        ns = self.curr_namespace
-        while True:
-            if ns == '::':
-                ns = ''
-            canonical = "%s::%s" % (ns, name)
-            if canonical in self.functions:
-                return self.functions[canonical]
-            if not ns:
-                break
-            ns = ns.rsplit('::', 1)[0]
+        for name in self.possible_canonicals(name):
+            if name in self.functions:
+                return self.functions[name]
         return None
 
     def declare_function(

@@ -2,8 +2,8 @@
 (   https://github.com/revarbat/muv )
 : _main[ _arg -- ret ]
     { "a" "b" "c" }list var! _arr
-    "d" _arr @ []<- _arr !
-    _arr @ 
+    _arr @ "d" swap []<- _arr !
+    _arr @
 ;
 : __start
     "me" match me ! me @ location loc ! trig trigger !

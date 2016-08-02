@@ -323,7 +323,7 @@ def OPER_BITOR():
 
 
 def OPER_BITXOR():
-    return _(r'\^(?![=^])')
+    return _(r'\^(?![=^])', str_repr='^')
 
 
 def OPER_BITNOT():
@@ -403,7 +403,7 @@ def NS_SEP():
 
 
 def identifier():
-    return _(r'[a-zA-Z_][a-zA-Z_0-9]*')
+    return _(r'(?i)[a-z_]\w*')
 
 
 def ns_parts():
@@ -478,61 +478,57 @@ def dbref():
 
 
 def raw_dquote_string():
-    return 'r"', _('.*?(?=")'), '"'
+    return [_('r".*?"')]
 
 
 def raw_squote_string():
-    return "r'", _(".*?(?=')"), "'"
+    return [_("r'.*?'")]
 
 
 def raw_dquote3_string():
-    return 'r"""', _('(?ms).*?(?=""")'), '"""'
+    return [_('(?ms)r""".*?"""')]
 
 
 def raw_squote3_string():
-    return "r'''", _("(?ms).*?(?=''')"), "'''"
+    return [_("(?ms)r'''.*?'''")]
 
 
 def dquote_string():
-    return '"', _(r'([^"\\]|\\.|\\$)*'), '"'
+    return [_(r'"([^"\\]|\\.|\\$)*"')]
 
 
 def squote_string():
-    return "'", _(r"([^'\\]|\\.|\\$)*"), "'"
+    return [_(r"'([^'\\]|\\.|\\$)*'")]
 
 
 def dquote3_string():
-    return '"""', _(r'(?ms)([^"\\]|\\.|"(?!""))*'), '"""'
+    return [_(r'(?ms)"""([^"\\]|\\.|"(?!""))*"""')]
 
 
 def squote3_string():
-    return "'''", _(r"(?ms)([^'\\]|\\.|'(?!''))*"), "'''"
+    return [_(r"(?ms)'''([^'\\]|\\.|'(?!''))*'''")]
 
 
 def raw_string_literal():
     return [
         raw_dquote3_string,
-        dquote3_string,
         raw_squote3_string,
-        squote3_string,
         raw_dquote_string,
-        dquote_string,
         raw_squote_string,
+    ]
+
+
+def esc_string_literal():
+    return [
+        dquote3_string,
+        squote3_string,
+        dquote_string,
         squote_string
     ]
 
 
 def string_literal():
-    return [
-        raw_dquote3_string,
-        raw_squote3_string,
-        raw_dquote_string,
-        raw_squote_string,
-        dquote3_string,
-        squote3_string,
-        dquote_string,
-        squote_string
-    ]
+    return [raw_string_literal, esc_string_literal]
 
 
 def declist():
@@ -586,7 +582,7 @@ def compr_for():
 
 
 def raw_muf():
-    return KW_MUF, PAREN, raw_string_literal, ENDPAR
+    return KW_MUF, PAREN, string_literal, ENDPAR
 
 
 def stmt_raw_muf():
@@ -602,7 +598,7 @@ def gstmt_using_ns():
 
 
 def gstmt_include():
-    return KW_INCLUDE, raw_string_literal, SEMICOLON
+    return KW_INCLUDE, string_literal, SEMICOLON
 
 
 def gstmt_var_declinit():
@@ -624,7 +620,7 @@ def simple_extern():
 def raw_muf_extern():
     return (
         KW_EXTERN, extern_type, FUNC_IDENT, argvar_list,
-        ASGN, raw_string_literal, SEMICOLON
+        ASGN, string_literal, SEMICOLON
     )
 
 

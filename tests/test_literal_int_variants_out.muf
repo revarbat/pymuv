@@ -6,7 +6,7 @@
     var _num
     _valid_numbers @ foreach
         _num ! pop
-        { _num @ "bottles of beer on the wall!" }list array_interpret me @ swap notify
+        { _num @ " bottles of beer on the wall!" }list array_interpret me @ swap notify
     repeat
     0
 ;

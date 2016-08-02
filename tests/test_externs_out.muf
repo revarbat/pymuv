@@ -8,7 +8,8 @@
     { multfoo }list _v !
     qux _v !
     { "Fee" "Fie" "Foe" }list array_interpret _v !
-    "%d: %s" { 5 "Fum" }list 2 try
+    "%d: %s" { 5 "Fum" }list 
+    2 try
         array_explode 1 + rotate fmtstring
         depth 0 swap - rotate depth 1 - popn
     catch abort

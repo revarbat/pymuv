@@ -25,54 +25,54 @@
     _i @ var! _swvar
     begin
         _swvar @ 1 "=" if
-            "One." me @ swap notify
+            "One." me @ swap notify break
         then
         _swvar @ 2 "=" if
-            "Two." me @ swap notify
+            "Two." me @ swap notify break
         then
         _swvar @ 3 "=" if
-            "Three." me @ swap notify
+            "Three." me @ swap notify break
         then
     repeat
     _arg @ var! _swvar2
     begin
         _swvar2 @ "greet" strcmp if
-            "Hello." me @ swap notify
+            "Hello." me @ swap notify break
         then
         _swvar2 @ "who" strcmp if
-            "I'm called MUV." me @ swap notify
+            "I'm called MUV." me @ swap notify break
         then
         _swvar2 @ "what" strcmp if
-            "I'm a nicer language to use than MUF." me @ swap notify
+            "I'm a nicer language to use than MUF." me @ swap notify break
         then
         "I don't understand." me @ swap notify break
     repeat
     _arg @ var! _swvar3
     begin
         _swvar3 @ "fee" complex_match if
-            "Fee selected!" me @ swap notify
+            "Fee selected!" me @ swap notify break
         then
         _swvar3 @ 1 complex_match if
-            "One selected!" me @ swap notify
+            "One selected!" me @ swap notify break
         then
         _swvar3 @ "" complex_match if
-            "None selected!" me @ swap notify
+            "None selected!" me @ swap notify break
         then
     repeat
     "foo" var! _a
     42 var! _swvar4
     begin
         _swvar4 @ 99 > if
-            "A" me @ swap notify
+            "A" me @ swap notify break
         then
         _swvar4 @ 50 > if
-            "B" me @ swap notify
+            "B" me @ swap notify break
         then
         _swvar4 @ 25 > if
-            "C" me @ swap notify
+            "C" me @ swap notify break
         then
         _swvar4 @ 10 > if
-            "D" me @ swap notify
+            "D" me @ swap notify break
         then
     repeat
     0

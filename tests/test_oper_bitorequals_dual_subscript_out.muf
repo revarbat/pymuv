@@ -2,7 +2,7 @@
 (   https://github.com/revarbat/muv )
 : _main[ _arg -- ret ]
     { 3 { 42 7 }list }list var! _a
-    13 { 1 0 }list _a @ dup 3 pick array_nested_get 4 rotate bitor swap rot array_nested_set _a !
+    _a @ { 1 0 }list over over array_nested_get 13 bitor rot rot array_nested_set _a !
     _a @
 ;
 : __start

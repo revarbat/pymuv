@@ -2,6 +2,7 @@
 # Syntactic classes
 #######################################################################
 
+import re
 import textwrap
 
 from pymuv.errors import MuvError
@@ -182,10 +183,7 @@ class MuvNodeVarOperAssign(MuvNode):
 
     def generate_code(self, ctx):
         ctx.assign_level += 1
-        out = "{expr} {setexp}".format(
-            expr=self.expr.generate_code(ctx),
-            setexp=self.var.oper_set_expr(self.oper, ctx),
-        )
+        out = self.var.oper_set_expr(ctx, self.oper, self.expr)
         ctx.assign_level -= 1
         return out
 
@@ -209,7 +207,7 @@ class MuvNodePostfixExpr(MuvNode):
         if isinstance(self.expr, MuvNodeVarFetch):
             lval = self.expr.var
             ctx.assign_level += 1
-            out = lval.unary_set_expr(self.oper, ctx, postoper=True)
+            out = lval.unary_set_expr(ctx, self.oper, postoper=True)
             ctx.assign_level -= 1
             return out
         return "{expr} {oper}".format(
@@ -233,7 +231,7 @@ class MuvNodePrefixExpr(MuvNode):
         if isinstance(self.expr, MuvNodeVarFetch):
             lval = self.expr.var
             ctx.assign_level += 1
-            out = lval.unary_set_expr(self.oper, ctx)
+            out = lval.unary_set_expr(ctx, self.oper)
             ctx.assign_level -= 1
             return out
         return "{expr} {oper}".format(
@@ -250,11 +248,14 @@ class MuvNodeBinaryExpr(MuvNode):
         self.expr2 = expr2
 
     def generate_code(self, ctx):
-        return "{expr1} {expr2} {oper}".format(
+        ctx.assign_level += 1
+        out = "{expr1} {expr2} {oper}".format(
             expr1=self.expr1.generate_code(ctx),
             oper=self.oper,
             expr2=self.expr2.generate_code(ctx),
         )
+        ctx.assign_level -= 1
+        return out
 
 
 class MuvNodeLogicalOr(MuvNode):
@@ -742,7 +743,7 @@ class MuvNodeIndex(MuvNode):
         self.idx = idx
 
     def generate_code(self, ctx):
-        out = "{expr} {idx} []".format (
+        out = "{expr} {idx} []".format(
             expr=self.expr.generate_code(ctx),
             idx=self.idx.generate_code(ctx),
         )
@@ -757,7 +758,7 @@ class MuvNodeAddrCall(MuvNode):
 
     def generate_code(self, ctx):
         args = [x.generate_code(ctx) for x in self.args]
-        out = "{args}{expr} execute".format (
+        out = "{args}{expr} execute".format(
             args="".join("%s " % x for x in args if x),
             expr=self.expr.generate_code(ctx),
         )
@@ -839,16 +840,17 @@ class MuvNodeProgram(MuvNode):
         ]
         out = "\n".join(x for x in children if x)
         replacements = [
-            (' swap swap', ''),
-            (' 0 pop', ''),
-            ('swap +', '+'),
-            ('swap *', '*'),
-            ('swap bitor', 'bitor'),
-            ('swap bitxor', 'bitxor'),
-            ('swap bitand', 'bitand'),
+            (r' swap swap', r''),
+            (r' 0 pop', r''),
+            (r'swap \+', r'+'),
+            (r'swap \*', r'*'),
+            (r'swap bitor', r'bitor'),
+            (r'swap bitxor', r'bitxor'),
+            (r'swap bitand', r'bitand'),
+            (r'(\w+) @ \1 (\+\+|--) pop', r'\1 \2'),
         ]
         for pat, repl in replacements:
-            out = out.replace(pat, repl)
+            out = re.sub(pat, repl, out)
         return out
 
 

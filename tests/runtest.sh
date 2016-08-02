@@ -9,9 +9,9 @@ runtest() {
     cmpfile="test_$1_cmp.muf"
 
     incldir=$(dirname $(pwd))/incls
+    echo "Checking test $1"
     $MUV -I $incldir -o $outfile $infile
     if [[ -e $cmpfile ]] ; then
-        echo "Checking test $1"
         diff -c -b -B -w $cmpfile $outfile
     else
         echo "Installing first run results for test $1"

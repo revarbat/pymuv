@@ -5,7 +5,7 @@ lvar _foo
 lvar _bar
 lvar _fee
 : _main[ _arg -- ret ]
-    { _foo @ "" _bar @ }list array_interpret _fee !
+    { _foo @ " " _bar @ }list array_interpret _fee !
     _fee @ me @ swap notify
     0
 ;

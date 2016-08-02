@@ -7,25 +7,25 @@
         _i @ _count @ > not
     while
         _i @ intostr me @ swap notify
-        _i ++ pop
+        _i ++
     repeat
     1 _i !
     begin
         _i @ _count @ <=
     while
         _i @ intostr me @ swap notify
-        _i ++ pop
+        _i ++
     repeat
     1 _i !
     begin
         _i @ intostr me @ swap notify
-        _i ++ pop
+        _i ++
         _i @ _count @ <= not
     until
     1 _i !
     begin
         _i @ intostr me @ swap notify
-        _i ++ pop
+        _i ++
         _i @ _count @ >
     until
     1 _count @ 1 for
@@ -42,7 +42,7 @@
     repeat
     online_array foreach
         var! _val2 var! _key
-        { _key @ "= " _val2 @ }list array_interpret me @ swap notify
+        { _key @ " = " _val2 @ }list array_interpret me @ swap notify
     repeat
     0
 ;

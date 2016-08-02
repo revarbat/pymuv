@@ -2,7 +2,7 @@
 (   https://github.com/revarbat/muv )
 : _main[ _arg -- ret ]
     { 13 42 }list var! _a
-    13 1 _a @ dup 3 pick [] 4 rotate bitxor swap rot ->[] _a !
+    _a @ 1 over over [] 13 bitxor rot rot ->[] _a !
     _a @
 ;
 : __start

@@ -1,9 +1,10 @@
 ( Generated from test_tuple_assign_in.muv by the MUV compiler. )
 (   https://github.com/revarbat/muv )
-: _gen[  -- ret ]
-    var _i var _out
-    0 _i !
-    { }list _out !
+
+
+: _gen[ -- ret ]
+    0 var! _i
+    { }list var! _out
     begin
         _i @ 4 <
     while
@@ -12,31 +13,29 @@
     repeat
     _out @
 ;
-: _listgen[  -- ret ]
-    var _out var _i
-    { }list _out !
-    0 _i !
+: _listgen[ -- ret ]
+    { }list var! _out
+    0 var! _i
     begin
-        _i @ dup ++ _i ! 10 <
+        _i @ _i ++ 10 <
     while
         _out @ _gen swap []<- _out !
     repeat
     _out @
 ;
 : _main[ _arg -- ret ]
-    var _a var _b var _c var _d
-    _gen dup
-    dup 0 [] _a ! dup 1 [] _b ! dup 2 [] _c ! dup 3 [] _d ! pop pop
-    _gen dup
-    dup 0 [] _d ! dup 1 [] _c ! dup 2 [] _b ! dup 3 [] _a ! pop pop
+    _gen 0 3 [..] array_vals pop
+    var! _d var! _c var! _b var! _a
+    _gen 0 3 [..] array_vals pop
+    _a ! _b ! _c ! _d !
     _listgen foreach
-        dup 0 [] _a ! dup 1 [] _b ! dup 2 [] _c ! dup 3 [] _d ! pop
-        pop
-        { _a @ _b @ }list array_interpret me @ swap notify 
+        0 3 [..] array_vals pop
+        _d ! _c ! _b ! _a ! pop
+        { _a @ _b @ }list array_interpret me @ swap notify
     repeat
     { }list _listgen foreach
-        dup 0 [] _a ! dup 1 [] _b ! dup 2 [] _c ! dup 3 [] _d ! pop
-    pop
+        0 3 [..] array_vals pop
+        _d ! _c ! _b ! _a ! pop
         _a @ _b @ strcmp if
             { _c @ _d @ }list array_interpret swap []<-
         then
@@ -46,3 +45,4 @@
     "me" match me ! me @ location loc ! trig trigger !
     _main
 ;
+

@@ -2,7 +2,7 @@
 (   https://github.com/revarbat/muv )
 : _main[ _arg -- ret ]
     42 var! _a
-    13 _a @ * _a !
+    _a @ 13 * _a !
     _a @
 ;
 : __start

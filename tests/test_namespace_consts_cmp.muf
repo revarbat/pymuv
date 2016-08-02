@@ -1,9 +1,8 @@
-( Generated from test_oper_divideequals_in.muv by the MUV compiler. )
+( Generated from test_namespace_consts_in.muv by the MUV compiler. )
 (   https://github.com/revarbat/muv )
+
 : _main[ _arg -- ret ]
-    42 var! _a
-    _a @ 13 / _a !
-    _a @
+    reg_all
 ;
 : __start
     "me" match me ! me @ location loc ! trig trigger !

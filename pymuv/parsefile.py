@@ -38,7 +38,10 @@ class MuvParser(object):
     def simplify_parse_error(self, e):
         groups = {
             "end-of-file": ["EOF"],
-            "string": ['"', "'", 'r"', "r'", '"""', "'''", 'r"""', "r'''"],
+            "string-delimiter": [
+                '"', "'", '"""', "'''",
+                'r"', "r'", 'r"""', "r'''",
+            ],
             "identifier": [r'[a-zA-Z_][a-zA-Z_0-9]*'],
             "variable-declaration": ['var', 'const'],
             "global-statement": [

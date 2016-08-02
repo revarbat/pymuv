@@ -90,30 +90,28 @@ class MuvVisitor(PTNodeVisitor):
         return val
 
     def visit_raw_dquote_string(self, node, children):
-        return str(children[0])
+        return children[0][2:-1]
 
     def visit_raw_squote_string(self, node, children):
-        return str(children[0])
+        return children[0][2:-1]
 
     def visit_raw_dquote3_string(self, node, children):
-        return str(children[0])
+        return children[0][4:-3]
 
     def visit_raw_squote3_string(self, node, children):
-        return str(children[0])
+        return children[0][4:-3]
 
     def visit_dquote_string(self, node, children):
-        if not children:
-            return ''
-        return str(children[0])
+        return children[0][1:-1]
 
     def visit_squote_string(self, node, children):
-        return str(children[0])
+        return children[0][1:-1]
 
     def visit_dquote3_string(self, node, children):
-        return str(children[0])
+        return children[0][3:-3]
 
     def visit_squote3_string(self, node, children):
-        return str(children[0])
+        return children[0][3:-3]
 
     def decode_string(self, txt):
         out = ''
@@ -135,11 +133,13 @@ class MuvVisitor(PTNodeVisitor):
         return out
 
     def visit_raw_string_literal(self, node, children):
+        return children[0]
+
+    def visit_esc_string_literal(self, node, children):
         return self.decode_string(children[0])
 
     def visit_string_literal(self, node, children):
-        txt = self.decode_string(children[0])
-        return mn.MuvNodeString(node.position, txt)
+        return mn.MuvNodeString(node.position, children[0])
 
     def visit_dbref(self, node, children):
         return mn.MuvNodeDbRef(node.position, children[0].value)
@@ -281,7 +281,7 @@ class MuvVisitor(PTNodeVisitor):
         return children[0]
 
     def visit_leaf_variable(self, node, children):
-        varname = str(children[0])
+        varname = "".join(children)
         return mn.MuvNodeVarFetch(
             node.position,
             LValue(varname, [], node.position)
@@ -685,7 +685,9 @@ class MuvVisitor(PTNodeVisitor):
                         val,
                         using_clause,
                     ),
-                    ifclause=stmt,
+                    ifclause=mn.MuvNodeExprList(
+                        stmt.position, stmt, "break"
+                    )
                 )
             )
         if dflt_clause:
@@ -699,7 +701,7 @@ class MuvVisitor(PTNodeVisitor):
         )
 
     def visit_gstmt_include(self, node, children):
-        filename = children[0]
+        filename = children[0].value
         self.muvparser.include_file(filename)
         return None
 
@@ -768,7 +770,7 @@ class MuvVisitor(PTNodeVisitor):
         return mn.MuvNodeCommand(node.position, "fmtstring", *args)
 
     def visit_raw_muf(self, node, children):
-        raw = children[0]
+        raw = children[0].value
         return mn.MuvNodeStatements(node.position, raw)
 
     def visit_stmt_raw_muf(self, node, children):
@@ -800,6 +802,15 @@ class MuvVisitor(PTNodeVisitor):
         return '::'
 
     def visit_ns_parts(self, node, children):
+        return "".join(children)
+
+    def visit_NS_IDENT(self, node, children):
+        return "".join(children)
+
+    def visit_VAR_IDENT(self, node, children):
+        return "".join(children)
+
+    def visit_CONST_IDENT(self, node, children):
         return "".join(children)
 
     def visit_FUNC_IDENT(self, node, children):
@@ -913,7 +924,7 @@ class MuvVisitor(PTNodeVisitor):
             retcount=extern_type,
             argcount=argcnt,
             varargs=varargs,
-            code=code,
+            code=code.value,
         )
 
     def visit_KW_PUBLIC(self, node, children):

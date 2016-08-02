@@ -1,0 +1,4 @@
+include "!fb6/regex";
+func main(arg) {
+    return regex::ALL;
+}

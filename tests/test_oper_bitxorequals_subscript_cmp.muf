@@ -1,8 +1,7 @@
 ( Generated from test_oper_bitxorequals_subscript_in.muv by the MUV compiler. )
 (   https://github.com/revarbat/muv )
 : _main[ _arg -- ret ]
-    var _a
-    { 13 42 }list _a !
+    { 13 42 }list var! _a
     _a @ 1 over over [] 13 bitxor rot rot ->[] _a !
     _a @
 ;
@@ -10,3 +9,4 @@
     "me" match me ! me @ location loc ! trig trigger !
     _main
 ;
+

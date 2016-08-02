@@ -7,12 +7,12 @@
         me @ desc _bar !
     catch_detailed var! _err
         _err @ me @ swap notify
-    then
+    endcatch
     0 try
         me @ osucc _bar !
     catch_detailed pop
 
-    then
+    endcatch
     0
 ;
 : __start

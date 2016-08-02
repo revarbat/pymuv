@@ -1,19 +1,40 @@
-func quotes(arg) {
-    var a = "Test('')";
-    var b = "Test(\"\")";
-    var c = 'Test("")';
-    var d = 'Test("")';
-    var e = "it's";
-    var f = 'it\'s';
-    var g = 'a"b';
-    var h = "a'b";
-    var i = """abc"def""";
-    var j = """abc
-               def""";
-    var k = '''abc'def''';
-    var l = r'abc\rdef';
-    var m = r"abc\rdef";
-    var n = r'''abc"\r'def''';
-    var o = r"""abc"\r'def""";
+func main(arg) {
+    " ab ";
+    "a'b";
+    "a\"b";
+    "a\rb";
+    "a\[b";
+    r"a'b";
+    r"a\rb";
+
+    ' ab ';
+    'a"b';
+    'a\'b)';
+    'a\rb';
+    'a\[b';
+    r'a"b';
+    r'a\rb';
+
+    """ ab """;
+    """a'b""";
+    """a\"b""";
+    """a\rb""";
+    """a\[b""";
+    r""" ab """;
+    r"""a"b""";
+    r"""a\rb""";
+    """a
+       b""";
+
+    ''' ab ''';
+    '''a'b''';
+    '''a\"b''';
+    '''a\rb''';
+    '''a\[b''';
+    r''' ab ''';
+    r'''a"b''';
+    r'''a\rb''';
+    '''a
+       b''';
 }
 

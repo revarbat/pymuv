@@ -8,8 +8,8 @@
     begin
         _i @ 4 <
     while
-        { "Fee" "Fie" "Foe" "Fum" }list _i @ [] _out @ []<- _out !
-        _i ++ pop
+        _out @ { "Fee" "Fie" "Foe" "Fum" }list _i @ [] swap []<- _out !
+        _i ++
     repeat
     _out @
 ;
@@ -17,9 +17,9 @@
     { }list var! _out
     0 var! _i
     begin
-        _i ++ 10 <
+        _i @ _i ++ 10 <
     while
-        _gen _out @ []<- _out !
+        _out @ _gen swap []<- _out !
     repeat
     _out @
 ;

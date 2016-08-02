@@ -2,7 +2,7 @@
 (   https://github.com/revarbat/muv )
 : _main[ _arg -- ret ]
     42 var! _a
-    3 _a @ swap -1 * bitshift _a !
+    _a @ 3 -1 * bitshift _a !
     _a @
 ;
 : __start

@@ -1,0 +1,12 @@
+func foo(a) {
+    return a+1;
+}
+
+func bar() {
+    return 2;
+}
+
+func main(arg) {
+    foo(2);
+    bar();
+}

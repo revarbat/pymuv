@@ -15,7 +15,11 @@ class Settable(object):
 
     def set_expr(self, ctx):
         cnt = len(self.settables)
-        out = "0 {cnt} [..] array_vals pop\n{exprs}".format(
+        if ctx.assign_level > 1:
+            fmt = "dup 0 {cnt} [..] array_vals pop\n{exprs}"
+        else:
+            fmt = "0 {cnt} [..] array_vals pop\n{exprs}"
+        out = fmt.format(
             cnt=cnt-1,
             exprs=" ".join(
                 x.set_expr(ctx)
@@ -24,9 +28,15 @@ class Settable(object):
         )
         return out
 
-    def oper_set_expr(self, ctx):
+    def oper_set_expr(self, ctx, oper, val):
         raise MuvError(
             "Cannot use tuple in left side of operator-assignment expression.",
+            position=self.settables[0].position
+        )
+
+    def unary_set_expr(self, ctx, oper, postoper=False):
+        raise MuvError(
+            "Cannot use tuple with increment/decrement operators.",
             position=self.settables[0].position
         )
 
