@@ -1,5 +1,5 @@
 ( Generated from test_literal_string3_in.muv by the MUV compiler. )
-(   https://github.com/revarbat/muv )
+(   https://github.com/revarbat/pymuv )
 
 : _main[ _arg -- ret ]
     "This\ris\ra\rtest" var! _foo

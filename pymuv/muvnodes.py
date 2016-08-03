@@ -32,6 +32,42 @@ class MuvNode(object):
     def indent(self, txt, ind='    '):
         return "\n".join((ind + l if l else l) for l in txt.split('\n'))
 
+    def annotate(self, ctx, txt, force=False):
+        if ctx.debug:
+            line, col = ctx.parsers[-1].pos_to_linecol(self.position)
+            if force or len(ctx.filenames) == 1:
+                txt = "(MUV:L%d) %s" % (line, txt)
+        return txt
+
+    def strip_extra_annotations(self, txt):
+        out = ''
+        prevline = -2
+        currtag = None
+        while txt:
+            if '(MUV:L' not in txt:
+                out += txt
+                txt = ''
+                break
+            pre, txt = txt.split('(MUV:L', 1)
+            if currtag and pre.strip():
+                out += currtag
+                currtag = None
+            out += pre
+            if not re.match(r'[0-9]+\) ', txt):
+                out += "(MUV:L" + txt
+                txt = ''
+                break
+            line, txt = txt.split(') ', 1)
+            currline = -1
+            try:
+                currline = int(line)
+            except ValueError:
+                pass
+            if currline != prevline:
+                currtag = "(MUV:L%d) " % currline
+                prevline = currline
+        return re.sub(r'(\(MUV:L[0-9]+\) )+(\(MUV:L[0-9]+\))', r'\2', out)
+
 
 class MuvNodeNull(MuvNode):
     def __init__(self, pos):
@@ -48,7 +84,7 @@ class MuvNodeInteger(MuvNode):
         self.valtype = "integer"
 
     def generate_code(self, ctx):
-        return str(self.value)
+        return self.annotate(ctx, str(self.value))
 
 
 class MuvNodeFloat(MuvNode):
@@ -58,7 +94,7 @@ class MuvNodeFloat(MuvNode):
         self.valtype = "float"
 
     def generate_code(self, ctx):
-        return str(self.value)
+        return self.annotate(ctx, str(self.value))
 
 
 class MuvNodeString(MuvNode):
@@ -73,7 +109,8 @@ class MuvNodeString(MuvNode):
         out = out.replace('\r', '\x5cr')
         out = out.replace('\n', '\x5cr')
         out = out.replace('\x1b', '\x5c[')
-        return '"%s"' % out
+        out = '"%s"' % out
+        return self.annotate(ctx, out)
 
 
 class MuvNodeDbRef(MuvNode):
@@ -93,10 +130,11 @@ class MuvNodeKeyValPair(MuvNode):
         self.val = val
 
     def generate_code(self, ctx):
-        return "{key} {val}".format(
+        out = "{key} {val}".format(
             key=self.key.generate_code(ctx),
             val=self.val.generate_code(ctx),
         )
+        return self.annotate(ctx, out)
 
 
 class MuvNodeGlobalVar(MuvNode):
@@ -108,13 +146,13 @@ class MuvNodeGlobalVar(MuvNode):
     def generate_code(self, ctx):
         realname = ctx.declare_global_var(self.name)
         if self.initval is not None:
-            ctx.add_init(
-                "{expr} {var} !".format(
-                    expr=self.initval.generate_code(ctx),
-                    var=realname
-                )
+            init = "{expr} {var} !".format(
+                expr=self.initval.generate_code(ctx),
+                var=realname
             )
-        return 'lvar %s' % realname
+            ctx.add_init(init)
+        out = 'lvar %s' % realname
+        return self.annotate(ctx, out)
 
 
 class MuvNodeGlobalConst(MuvNode):
@@ -146,7 +184,8 @@ class MuvNodeFuncVar(MuvNode):
 
     def generate_code(self, ctx):
         realname = ctx.declare_variable(self.name)
-        return "var {var}".format(var=realname)
+        out = "var {var}".format(var=realname)
+        return self.annotate(ctx, out)
 
 
 class MuvNodeVarFetch(MuvNode):
@@ -155,7 +194,8 @@ class MuvNodeVarFetch(MuvNode):
         self.var = var
 
     def generate_code(self, ctx):
-        return self.var.get_expr(ctx)
+        out = self.var.get_expr(ctx)
+        return self.annotate(ctx, out)
 
 
 class MuvNodeVarAssign(MuvNode):
@@ -170,6 +210,7 @@ class MuvNodeVarAssign(MuvNode):
             expr=self.expr.generate_code(ctx),
             setexp=self.var.set_expr(ctx),
         )
+        out = self.annotate(ctx, out)
         ctx.assign_level -= 1
         return out
 
@@ -184,6 +225,7 @@ class MuvNodeVarOperAssign(MuvNode):
     def generate_code(self, ctx):
         ctx.assign_level += 1
         out = self.var.oper_set_expr(ctx, self.oper, self.expr)
+        out = self.annotate(ctx, out)
         ctx.assign_level -= 1
         return out
 
@@ -194,7 +236,8 @@ class MuvNodeVarDel(MuvNode):
         self.var = var
 
     def generate_code(self, ctx):
-        return self.var.del_expr(ctx)
+        out = self.var.del_expr(ctx)
+        return self.annotate(ctx, out)
 
 
 class MuvNodePostfixExpr(MuvNode):
@@ -209,11 +252,12 @@ class MuvNodePostfixExpr(MuvNode):
             ctx.assign_level += 1
             out = lval.unary_set_expr(ctx, self.oper, postoper=True)
             ctx.assign_level -= 1
-            return out
-        return "{expr} {oper}".format(
-            expr=self.expr.generate_code(ctx),
-            oper=self.oper,
-        )
+        else:
+            out = "{expr} {oper}".format(
+                expr=self.expr.generate_code(ctx),
+                oper=self.oper,
+            )
+        return self.annotate(ctx, out)
 
 
 class MuvNodePrefixExpr(MuvNode):
@@ -224,20 +268,21 @@ class MuvNodePrefixExpr(MuvNode):
 
     def generate_code(self, ctx):
         if self.oper in ['+', '-']:
-            return "0 {expr} {oper}".format(
+            out = "0 {expr} {oper}".format(
                 expr=self.expr.generate_code(ctx),
                 oper=self.oper,
             )
-        if isinstance(self.expr, MuvNodeVarFetch):
+        elif isinstance(self.expr, MuvNodeVarFetch):
             lval = self.expr.var
             ctx.assign_level += 1
             out = lval.unary_set_expr(ctx, self.oper)
             ctx.assign_level -= 1
-            return out
-        return "{expr} {oper}".format(
-            expr=self.expr.generate_code(ctx),
-            oper=self.oper,
-        )
+        else:
+            out = "{expr} {oper}".format(
+                expr=self.expr.generate_code(ctx),
+                oper=self.oper,
+            )
+        return self.annotate(ctx, out)
 
 
 class MuvNodeBinaryExpr(MuvNode):
@@ -255,7 +300,7 @@ class MuvNodeBinaryExpr(MuvNode):
             expr2=self.expr2.generate_code(ctx),
         )
         ctx.assign_level -= 1
-        return out
+        return self.annotate(ctx, out)
 
 
 class MuvNodeLogicalOr(MuvNode):
@@ -265,7 +310,7 @@ class MuvNodeLogicalOr(MuvNode):
         self.expr2 = expr2
 
     def generate_code(self, ctx):
-        return (
+        out = (
             "{expr1} dup not if pop\n"
             "{expr2}\n"
             "then"
@@ -273,6 +318,7 @@ class MuvNodeLogicalOr(MuvNode):
             expr1=self.expr1.generate_code(ctx),
             expr2=self.indent(self.expr2.generate_code(ctx)),
         )
+        return self.annotate(ctx, out)
 
 
 class MuvNodeLogicalAnd(MuvNode):
@@ -282,7 +328,7 @@ class MuvNodeLogicalAnd(MuvNode):
         self.expr2 = expr2
 
     def generate_code(self, ctx):
-        return (
+        out = (
             "{expr1} dup if pop\n"
             "{expr2}\n"
             "then"
@@ -290,6 +336,7 @@ class MuvNodeLogicalAnd(MuvNode):
             expr1=self.expr1.generate_code(ctx),
             expr2=self.indent(self.expr2.generate_code(ctx)),
         )
+        return self.annotate(ctx, out)
 
 
 class MuvNodeExprList(MuvNode):
@@ -298,9 +345,10 @@ class MuvNodeExprList(MuvNode):
         self.children = list(children)
 
     def generate_code(self, ctx):
-        return " ".join(
+        out = " ".join(
             str_or_expr(child, ctx) for child in self.children
         )
+        return self.annotate(ctx, out)
 
 
 class MuvNodeStatements(MuvNode):
@@ -322,7 +370,7 @@ class MuvNodeStatements(MuvNode):
         ]
         out = "\n".join(x for x in statements if x)
         ctx.scope_pop()
-        return out
+        return self.annotate(ctx, out)
 
 
 class MuvNodeCommand(MuvNode):
@@ -337,7 +385,7 @@ class MuvNodeCommand(MuvNode):
         outlist.append(self.command)
         out = " ".join(x for x in outlist if x)
         ctx.assign_level -= 1
-        return out
+        return self.annotate(ctx, out)
 
 
 class MuvNodeWrappedExpr(MuvNode):
@@ -348,14 +396,34 @@ class MuvNodeWrappedExpr(MuvNode):
         self.children = children
 
     def generate_code(self, ctx):
-        return "{pfx} {infix}{sfx}".format(
-            pfx=self.prefix,
-            sfx=self.suffix,
-            infix="".join(
-                "%s " % x.generate_code(ctx)
-                for x in self.children
-            ),
-        )
+        bodyparts = [
+            item for item in (
+                x.generate_code(ctx) for x in self.children
+            ) if item
+        ]
+        body = ""
+        currlen = 0
+        for item in bodyparts:
+            itemlen = len(item)
+            if currlen:
+                body += " "
+                currlen += 1
+            body += item
+            if currlen + itemlen > 40:
+                body += "\n"
+                currlen = 0
+            else:
+                currlen += itemlen
+        if body.endswith('\n'):
+            body = body[:-1]
+        if not body:
+            out = "{0} {1}".format(self.prefix, self.suffix)
+        elif "\n" in body:
+            body = self.indent(body)
+            out = "{0}\n{1}\n{2}".format(self.prefix, body, self.suffix)
+        else:
+            out = "{0} {1} {2}".format(self.prefix, body, self.suffix)
+        return self.annotate(ctx, out)
 
 
 class MuvNodeIfElse(MuvNode):
@@ -394,7 +462,7 @@ class MuvNodeIfElse(MuvNode):
                 body=self.indent(self.ifclause.generate_code(ctx)),
             )
         ctx.scope_pop()
-        return out
+        return self.annotate(ctx, out)
 
 
 class MuvNodeForLoop(MuvNode):
@@ -427,7 +495,7 @@ class MuvNodeForLoop(MuvNode):
             body=self.indent(self.body.generate_code(ctx)),
         )
         ctx.scope_pop()
-        return out
+        return self.annotate(ctx, out)
 
 
 class MuvNodeForEachLoop(MuvNode):
@@ -452,7 +520,7 @@ class MuvNodeForEachLoop(MuvNode):
             body=self.indent(self.body.generate_code(ctx)),
         )
         ctx.scope_pop()
-        return out
+        return self.annotate(ctx, out)
 
 
 class MuvNodeWhile(MuvNode):
@@ -474,7 +542,7 @@ class MuvNodeWhile(MuvNode):
             body=self.indent(self.body.generate_code(ctx)),
         )
         ctx.scope_pop()
-        return out
+        return self.annotate(ctx, out)
 
 
 class MuvNodeUntil(MuvNode):
@@ -496,7 +564,7 @@ class MuvNodeUntil(MuvNode):
             body=self.indent(self.body.generate_code(ctx)),
         )
         ctx.scope_pop()
-        return out
+        return self.annotate(ctx, out)
 
 
 class MuvNodeDoWhile(MuvNode):
@@ -517,7 +585,7 @@ class MuvNodeDoWhile(MuvNode):
             body=self.indent(self.body.generate_code(ctx)),
         )
         ctx.scope_pop()
-        return out
+        return self.annotate(ctx, out)
 
 
 class MuvNodeDoUntil(MuvNode):
@@ -538,7 +606,7 @@ class MuvNodeDoUntil(MuvNode):
             body=self.indent(self.body.generate_code(ctx)),
         )
         ctx.scope_pop()
-        return out
+        return self.annotate(ctx, out)
 
 
 class MuvNodeSwitch(MuvNode):
@@ -565,7 +633,7 @@ class MuvNodeSwitch(MuvNode):
             )
         )
         ctx.scope_pop()
-        return out
+        return self.annotate(ctx, out)
 
 
 class MuvNodeTryCatch(MuvNode):
@@ -590,7 +658,7 @@ class MuvNodeTryCatch(MuvNode):
             vexp=vexp,
         )
         ctx.scope_pop()
-        return out
+        return self.annotate(ctx, out)
 
 
 class MuvNodeNamespace(MuvNode):
@@ -608,7 +676,7 @@ class MuvNodeNamespace(MuvNode):
         ]
         out = "\n".join(x for x in bodyparts if x)
         ctx.set_namespace(curr_ns)
-        return out
+        return self.annotate(ctx, out)
 
 
 class MuvNodeUsingNamespace(MuvNode):
@@ -643,6 +711,7 @@ class MuvNodeExtern(MuvNode):
             varargs=self.varargs,
             retcount=self.retcount,
             is_extern=True,
+            pos=self.position,
             code=self.code,
         )
         return ''
@@ -684,28 +753,19 @@ class MuvNodeFuncDef(MuvNode):
             self.funcname,
             len(self.args),
             varargs=self.varargs,
+            pos=self.position,
             is_public=self.public,
         )
-        self.last_function = actual
-        args = "".join(
-            "%s " % ctx.declare_variable(v)
-            for v in self.args
-        )
-        fmt = (
-            ": {funcname}[ {args}-- ret ]\n"
-            "{body}\n"
-            ";"
-        )
+        args = "".join("%s " % ctx.declare_variable(v) for v in self.args)
+        fmt = ": {funcname}[ {args}-- ret ]\n{body}\n;"
         if self.public:
-            fmt += (
-                "\npublic {funcname}"
-                "\n$libdef {funcname}"
-            )
+            fmt += "\npublic {funcname}\n$libdef {funcname}"
         out = fmt.format(
             funcname=actual,
             args=args,
             body=self.indent(self.body.generate_code(ctx)),
         )
+        out = self.annotate(ctx, out)
         ctx.scope_pop()
         ctx.reset_function_local_data()
         return out
@@ -733,7 +793,7 @@ class MuvNodeFuncAddr(MuvNode):
                 position=self.position,
             )
         out = "'{func}".format(func=finfo.code)
-        return out
+        return self.annotate(ctx, out)
 
 
 class MuvNodeIndex(MuvNode):
@@ -747,7 +807,7 @@ class MuvNodeIndex(MuvNode):
             expr=self.expr.generate_code(ctx),
             idx=self.idx.generate_code(ctx),
         )
-        return out
+        return self.annotate(ctx, out)
 
 
 class MuvNodeAddrCall(MuvNode):
@@ -762,7 +822,7 @@ class MuvNodeAddrCall(MuvNode):
             args="".join("%s " % x for x in args if x),
             expr=self.expr.generate_code(ctx),
         )
-        return out
+        return self.annotate(ctx, out)
 
 
 class MuvNodeFuncCall(MuvNode):
@@ -825,12 +885,12 @@ class MuvNodeFuncCall(MuvNode):
             out += " 0"
         elif finfo.retcount > 1:
             out = "{ %s }list" % out
-        return out
+        return self.annotate(ctx, out)
 
 
-class MuvNodeProgram(MuvNode):
+class MuvNodeSourceFile(MuvNode):
     def __init__(self, pos, *children):
-        super(MuvNodeProgram, self).__init__("PROGRAM", pos)
+        super(MuvNodeSourceFile, self).__init__("SOURCEFILE", pos)
         self.children = list(children)
 
     def generate_code(self, ctx):
@@ -839,16 +899,49 @@ class MuvNodeProgram(MuvNode):
             for child in self.children
         ]
         out = "\n".join(x for x in children if x)
+        out = self.annotate(ctx, out)
+        out = self.strip_extra_annotations(out)
+        return out
+
+
+class MuvNodeProgram(MuvNode):
+    def __init__(self, pos, code):
+        super(MuvNodeProgram, self).__init__("PROGRAM", pos)
+        self.code = code
+
+    def generate_code(self, ctx):
         replacements = [
-            (r' swap swap', r''),
-            (r' 0 pop', r''),
-            (r'swap \+', r'+'),
-            (r'swap \*', r'*'),
-            (r'swap bitor', r'bitor'),
-            (r'swap bitxor', r'bitxor'),
-            (r'swap bitand', r'bitand'),
-            (r'(\w+) @ \1 (\+\+|--) pop', r'\1 \2'),
+            (r' swap swap\b', r''),
+            (r' 0 pop\b', r''),
+            (r'\bswap \+', r'+'),
+            (r'\bswap \*', r'*'),
+            (r'\bswap bitor\b', r'bitor'),
+            (r'\bswap bitxor\b', r'bitxor'),
+            (r'\bswap bitand\b', r'bitand'),
+            (r'(\w+) @ \1 (\+\+|--) pop\b', r'\1 \2'),
         ]
+        code = self.code.generate_code(ctx)
+        inits = ctx.init_statements
+        inits.append(ctx.last_function)
+        if ctx.filenames[-1]:
+            filetext = " from {0}".format(ctx.filenames[-1])
+        else:
+            filetext = ''
+        head = (
+            "( Generated{filetext} by the MUV compiler. )\n"
+            "(   https://github.com/revarbat/pymuv )"
+        ).format(filetext=filetext)
+        if ctx.last_func_pos:
+            self.position = ctx.last_func_pos
+        init_code = ": __start\n{inits}\n;".format(
+            inits=self.indent("\n".join(inits))
+        )
+        init_code = self.annotate(ctx, init_code, force=True)
+        out = "{head}\n{code}\n{inits}".format(
+            head=head,
+            code=code,
+            inits=init_code,
+        )
         for pat, repl in replacements:
             out = re.sub(pat, repl, out)
         return out

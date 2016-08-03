@@ -1,5 +1,5 @@
 ( Generated from test_literal_string2_in.muv by the MUV compiler. )
-(   https://github.com/revarbat/muv )
+(   https://github.com/revarbat/pymuv )
 : _main[ _arg -- ret ]
     "Multi-\rline\rstring"
 ;
@@ -7,4 +7,3 @@
     "me" match me ! me @ location loc ! trig trigger !
     _main
 ;
-

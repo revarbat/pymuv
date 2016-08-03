@@ -1,5 +1,5 @@
 ( Generated from test_literal_dbref_negative_one_in.muv by the MUV compiler. )
-(   https://github.com/revarbat/muv )
+(   https://github.com/revarbat/pymuv )
 : _main[ _arg -- ret ]
     #-1
 ;

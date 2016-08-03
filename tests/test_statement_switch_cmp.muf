@@ -1,5 +1,5 @@
 ( Generated from test_statement_switch_in.muv by the MUV compiler. )
-(   https://github.com/revarbat/muv )
+(   https://github.com/revarbat/pymuv )
 
 : _complex_match[ _v1 _v2 -- ret ]
     _v1 @ number? dup if pop

@@ -1,7 +1,5 @@
 ( Generated from test_tuple_assign_in.muv by the MUV compiler. )
-(   https://github.com/revarbat/muv )
-
-
+(   https://github.com/revarbat/pymuv )
 : _gen[ -- ret ]
     0 var! _i
     { }list var! _out
@@ -45,4 +43,3 @@
     "me" match me ! me @ location loc ! trig trigger !
     _main
 ;
-

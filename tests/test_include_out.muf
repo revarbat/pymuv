@@ -1,10 +1,8 @@
-( Generated from test_include_in.muv by the MUV compiler. )
-(   https://github.com/revarbat/muv )
-
-
 : _bass[ -- ret ]
     "THUMP!"
 ;
+( Generated from test_include_in.muv by the MUV compiler. )
+(   https://github.com/revarbat/pymuv )
 : _foof[ _arg -- ret ]
     _bass
 ;
@@ -12,4 +10,3 @@
     "me" match me ! me @ location loc ! trig trigger !
     _foof
 ;
-

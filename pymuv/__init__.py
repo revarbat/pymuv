@@ -21,7 +21,7 @@ def main():
     opts = parser.parse_args()
 
     muvparser = MuvParser()
-    muvparser.debug = opts.debug
+    muvparser.set_debug(opts.debug)
     muvparser.include_dir = opts.include_dir
     try:
         if opts.output:

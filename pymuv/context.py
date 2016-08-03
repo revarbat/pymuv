@@ -10,17 +10,19 @@ from pymuv.errors import MuvExceptionAlreadyDeclared
 
 class FuncInfo(object):
     def __init__(
-                self, funcname,
+                self, pos, funcname,
                 argcount=0,
                 varargs=False,
                 retcount=1,
                 is_extern=False,
-                code=None
+                code=None,
             ):
+        self.position = pos
         self.funcname = funcname
         self.argcount = argcount
         self.varargs = varargs
         self.retcount = retcount
+        self.is_extern = is_extern
         self.is_extern = is_extern
         self.code = code if code else funcname
 
@@ -53,6 +55,9 @@ class Scope(object):
 
 class Context(object):
     def __init__(self):
+        self.parsers = []
+        self.filenames = []
+        self.debug = False
         self.scopes = [Scope()]
         self.func_realvars = {}
         self.curr_namespace = '::'
@@ -62,6 +67,7 @@ class Context(object):
         self.init_statements = []
         self.functions = {}
         self.last_function = None
+        self.last_func_pos = None
         self.assign_level = 0
 
         # Standard Global Variables
@@ -81,9 +87,7 @@ class Context(object):
         self.declare_function(
             "tell", 1, retcount=0, is_extern=True, code="me @ swap notify")
         self.declare_function(
-            "count", 1, retcount=1, is_extern=True,
-            code="array_count"
-        )
+            "count", 1, retcount=1, is_extern=True, code="array_count")
         self.declare_function(
             "cat", 1, varargs=True, retcount=1, is_extern=True,
             code="array_interpret"
@@ -231,7 +235,8 @@ class Context(object):
                 retcount=1,
                 is_extern=False,
                 code=None,
-                is_public=False
+                is_public=False,
+                pos=None
             ):
         canonical = self.canonical_name(name)
         actual = self.actualize_name(name)
@@ -240,7 +245,7 @@ class Context(object):
         if not code:
             code = actual
         self.functions[canonical] = FuncInfo(
-            actual,
+            pos, actual,
             argcount=argcount,
             varargs=varargs,
             retcount=retcount,
@@ -248,6 +253,7 @@ class Context(object):
             code=code
         )
         self.last_function = actual
+        self.last_func_pos = pos
         return actual
 
     def reset_function_local_data(self):

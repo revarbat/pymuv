@@ -1,5 +1,5 @@
 ( Generated from test_externs_in.muv by the MUV compiler. )
-(   https://github.com/revarbat/muv )
+(   https://github.com/revarbat/pymuv )
 
 : _main[ -- ret ]
     var _v

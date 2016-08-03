@@ -1,6 +1,5 @@
 ( Generated from test_globalvars_in.muv by the MUV compiler. )
-(   https://github.com/revarbat/muv )
-
+(   https://github.com/revarbat/pymuv )
 lvar _foo
 lvar _bar
 lvar _fee
@@ -15,4 +14,3 @@ lvar _fee
     43 _bar !
     _main
 ;
-

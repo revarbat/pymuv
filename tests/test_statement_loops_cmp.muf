@@ -1,5 +1,5 @@
 ( Generated from test_statement_loops_in.muv by the MUV compiler. )
-(   https://github.com/revarbat/muv )
+(   https://github.com/revarbat/pymuv )
 
 : _loopy[ _count -- ret ]
     1 var! _i

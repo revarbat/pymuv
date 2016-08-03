@@ -8,7 +8,7 @@ from arpeggio import (
     ParserPython, visit_parse_tree, NoMatch,
 )
 
-from pymuv.grammar import program, comment
+from pymuv.grammar import program, source_file, comment
 from pymuv.errors import MuvError
 from pymuv.context import Context
 from pymuv.visitor import MuvVisitor
@@ -17,10 +17,12 @@ from pymuv.visitor import MuvVisitor
 class MuvParser(object):
     def __init__(self):
         self.input_sources = ''
-        self.context = Context()
-        self.debug = False
         self.output = sys.stdout
         self.include_dir = None
+        self.context = Context()
+
+    def set_debug(self, val=True):
+        self.context.debug = val
 
     def print_error(self, filename, line, col, msg):
         srclines = self.input_sources.split("\n")
@@ -94,17 +96,19 @@ class MuvParser(object):
         expected = " or ".join(sorted(list(unique_rules.keys())))
         return expected
 
-    def parse_string(self, src, filename=None):
+    def parse_string(self, src, grammar=program, filename=None):
         oldsrcs = self.input_sources
         self.input_sources = src
         parser = ParserPython(
-            program,
+            grammar,
             comment_def=comment,
             skipws=True,
             reduce_tree=False,
             memoization=True,
             debug=False,
         )
+        self.context.parsers.append(parser)
+        self.context.filenames.append(filename)
         try:
             parse_tree = parser.parse(self.input_sources)
             visitor = MuvVisitor(debug=False)
@@ -123,43 +127,32 @@ class MuvParser(object):
             return None
         finally:
             self.input_sources = oldsrcs
+            self.context.parsers.pop()
+            self.context.filenames.pop()
 
     def parse_file(self, infile):
         with open(infile) as f:
             src = f.read()
-
-        print(
-            "( Generated from {0} by the MUV compiler. )".format(infile),
-            file=self.output
-        )
-        print("(   https://github.com/revarbat/muv )", file=self.output)
-
-        out = self.parse_string(src)
-        if not out:
-            return
-        print(out, file=self.output)
-        out = (
-            ": __start\n"
-            "{inits}{main}\n"
-            ";\n"
-        ).format(
-            inits="".join(
-                "    %s\n" % x for x in self.context.init_statements
-            ),
-            main="    %s" % self.context.last_function,
-        )
-        print(out, file=self.output)
+        out = self.parse_string(src, grammar=program, filename=infile)
+        if out:
+            print(out, file=self.output)
 
     def include_file(self, infile):
         self.context.scope_push()
         if infile.startswith('!'):
-            src = resource_string(__name__, "incls/%s" % infile[1:])
+            infile = infile[1:]
+            src = resource_string(__name__, "incls/%s" % infile)
             src = src.decode("utf-8", errors="strict")
         else:
             with open(infile) as f:
                 src = f.read()
-        out = self.parse_string(src)
-        print(out, file=self.output)
+        try:
+            out = self.parse_string(
+                src, grammar=source_file, filename=infile)
+            if out:
+                print(out, file=self.output)
+        finally:
+            self.context.scope_pop()
 
 
 # vim: set ts=4 sw=4 et ai hlsearch nowrap :

@@ -88,6 +88,6 @@ Each line of MUV will add code like: ``"foo.muv:23" pop`` to the MUF output::
 
 Links
 =====
-- Language reference: <https://github.com/revarbat/muv/blob/master/REFERENCE.md>
+- Language reference: <https://github.com/revarbat/pymuv/blob/master/LANGUAGE.rst>
 
 

@@ -1,6 +1,5 @@
 ( Generated from test_statement_try_catch_in.muv by the MUV compiler. )
-(   https://github.com/revarbat/muv )
-
+(   https://github.com/revarbat/pymuv )
 : _trys[ -- ret ]
     var _bar
     0 try
@@ -19,4 +18,3 @@
     "me" match me ! me @ location loc ! trig trigger !
     _trys
 ;
-

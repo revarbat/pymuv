@@ -972,9 +972,12 @@ class MuvVisitor(PTNodeVisitor):
     def visit_global_statements(self, node, children):
         return children
 
-    def visit_program(self, node, children):
+    def visit_source_file(self, node, children):
         children = children[0]
-        return mn.MuvNodeProgram(node.position, *children)
+        return mn.MuvNodeSourceFile(node.position, *children)
+
+    def visit_program(self, node, children):
+        return mn.MuvNodeProgram(node.position, children[0])
 
 
 # vim: set ts=4 sw=4 et ai hlsearch nowrap :

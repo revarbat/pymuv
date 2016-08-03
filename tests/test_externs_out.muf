@@ -1,6 +1,5 @@
 ( Generated from test_externs_in.muv by the MUV compiler. )
-(   https://github.com/revarbat/muv )
-
+(   https://github.com/revarbat/pymuv )
 : _main[ -- ret ]
     var _v
     voidfoo 0 _v !
@@ -20,4 +19,3 @@
     "me" match me ! me @ location loc ! trig trigger !
     _main
 ;
-

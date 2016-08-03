@@ -1,5 +1,5 @@
 ( Generated from test_tuple_assign_in.muv by the MUV compiler. )
-(   https://github.com/revarbat/muv )
+(   https://github.com/revarbat/pymuv )
 
 
 : _gen[ -- ret ]

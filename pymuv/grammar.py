@@ -1158,8 +1158,12 @@ def global_statements():
     return ZeroOrMore([global_statement, nsdecl])
 
 
-def program():
+def source_file():
     return global_statements, EOF
+
+
+def program():
+    return [source_file]
 
 
 # vim: set ts=4 sw=4 et ai hlsearch nowrap :

@@ -1,5 +1,5 @@
 ( Generated from test_function_one_arg_in.muv by the MUV compiler. )
-(   https://github.com/revarbat/muv )
+(   https://github.com/revarbat/pymuv )
 : _sub[ _a -- ret ]
     _a @
 ;
@@ -10,4 +10,3 @@
     "me" match me ! me @ location loc ! trig trigger !
     _main
 ;
-

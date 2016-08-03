@@ -1,5 +1,5 @@
 ( Generated from test_namespace2_in.muv by the MUV compiler. )
-(   https://github.com/revarbat/muv )
+(   https://github.com/revarbat/pymuv )
 lvar foo__fee
 : foo__abc[ _a -- ret ]
     foo__fee @ _a @ +
@@ -16,4 +16,3 @@ lvar foo__fee
     42 foo__fee !
     _main
 ;
-
