@@ -4,7 +4,7 @@ import os
 import glob
 from setuptools import setup
 
-VERSION = "0.7.0"
+VERSION = "0.8.0"
 
 
 def find_data_files(source, target, patterns):
@@ -51,7 +51,7 @@ setup(
     package_data={'pymuv': ["incls/fb6/*"]},
     license='MIT License',
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 4 - Beta',
         'Environment :: Console',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
