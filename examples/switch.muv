@@ -1,3 +1,5 @@
+$language "muv"
+
 include "!fb6/prims";
 
 extern single type(val);

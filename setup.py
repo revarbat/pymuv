@@ -4,7 +4,7 @@ import os
 import glob
 from setuptools import setup
 
-VERSION = "0.9.0"
+VERSION = "0.9.1"
 
 
 def find_data_files(source, target, patterns):
@@ -69,5 +69,9 @@ setup(
     entry_points={
         'console_scripts': ['pymuv=pymuv:main'],
     },
-    install_requires=['setuptools'],
+    install_requires=[
+        'setuptools',
+        'Arpeggio>=1.5',
+        'six>=1.10.0',
+    ],
 )

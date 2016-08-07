@@ -1,3 +1,5 @@
+$language "muv"
+
 func main(arg, blarg)
 {
     var a = 3;
