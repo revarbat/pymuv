@@ -1,5 +1,6 @@
 ( Generated from test_literal_int_variants_in.muv by the MUV compiler. )
 (   https://github.com/revarbat/pymuv )
+
 : _main[ _arg -- ret ]
     {
         99 98 97 96 95 195935983 195935983 12345678

@@ -1,0 +1,5 @@
+func main(arg) {
+    var opts = 0;
+    if (!opts) return;
+}
+

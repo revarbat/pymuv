@@ -239,7 +239,7 @@ class MuvVisitor(PTNodeVisitor):
         return "="
 
     def visit_COMP_NEQ(self, node, children):
-        return "!="
+        return "= not"
 
     def visit_COMP_STREQ(self, node, children):
         return "strcmp not"
@@ -428,13 +428,17 @@ class MuvVisitor(PTNodeVisitor):
     def visit_unary_expr(self, node, children):
         if len(children) == 1:
             return children[0]
-        if str(children[0]) == "+":
+        oper = str(children[0])
+        if oper == "+":
             return children[1]
-        return mn.MuvNodePrefixExpr(
-            node.position,
-            children[0],
-            children[1],
-        )
+        if oper == "-":
+            return mn.MuvNodeBinaryExpr(
+                node.position,
+                children[1], "*", mn.MuvNodeInteger(node.position, -1)
+            )
+        if oper in ["++", "--"]:
+            return mn.MuvNodePrefixExpr(node.position, oper, children[1])
+        return mn.MuvNodeExprList(node.position, children[1], oper)
 
     def visit_power_expr(self, node, children):
         return self.left_associate_tree(children)
@@ -633,7 +637,10 @@ class MuvVisitor(PTNodeVisitor):
         return children[0]
 
     def visit_using_comparator(self, node, children):
-        return mn.MuvNodeStatements(node.position, children[0])
+        comp = children[0]
+        if str(comp) in ["strcmp", "stringcmp"]:
+            return mn.MuvNodeExprList(node.position, comp, "not")
+        return mn.MuvNodeExprList(node.position, comp)
 
     def visit_using_raw_muf(self, node, children):
         return mn.MuvNodeStatements(node.position, children[0])
@@ -643,7 +650,7 @@ class MuvVisitor(PTNodeVisitor):
 
     def visit_expr_using(self, node, children):
         if len(children) == 1:
-            children.append('=')
+            children.append(mn.MuvNodeExprList(node.position, "="))
         return children
 
     def visit_case_clause(self, node, children):
@@ -702,7 +709,11 @@ class MuvVisitor(PTNodeVisitor):
 
     def visit_gstmt_include(self, node, children):
         filename = children[0].value
-        self.muvparser.include_file(filename)
+        muvparser = self.muvparser
+        if muvparser.debug:
+            line = muvparser.get_parse_line(children[0].position)
+            muvparser.output += '\n(MUV:L%d) ' % line
+        muvparser.include_file(filename, children[0].position)
         return None
 
     def visit_KW_TOP(self, node, children):

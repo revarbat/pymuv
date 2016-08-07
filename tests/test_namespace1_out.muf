@@ -1,5 +1,6 @@
 ( Generated from test_namespace1_in.muv by the MUV compiler. )
 (   https://github.com/revarbat/pymuv )
+
 lvar foo__ltuaa
 : foo__abc[ _a -- ret ]
     foo__ltuaa @ _a @ +

@@ -1,5 +1,6 @@
 ( Generated from test_consts_in.muv by the MUV compiler. )
 (   https://github.com/revarbat/pymuv )
+
 : _main[ _arg -- ret ]
     3.14159 2.71828 /
 ;

@@ -802,6 +802,8 @@ def usable_comparator():
         COMP_GTE,
         COMP_IN,
         COMP_STREQ,
+        "strcmp",
+        "stringcmp",
     ]
 
 

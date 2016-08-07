@@ -1,0 +1,19 @@
+func main(a) {
+    switch(a using strcmp) {
+        case("1") tell("One");
+        case("2") tell("Two");
+    }
+    switch(a using stringcmp) {
+        case("1") tell("One");
+        case("2") tell("Two");
+    }
+    switch(a using eq) {
+        case("1") tell("One");
+        case("2") tell("Two");
+    }
+    switch(3) {
+        case(1) tell("One");
+        case(2) tell("Two");
+    }
+}
+

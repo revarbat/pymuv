@@ -91,3 +91,6 @@ ENV/
 # Vim swap files
 .*.swp
 
+# OS X cruft
+.DS_Store
+

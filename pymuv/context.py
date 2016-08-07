@@ -69,6 +69,7 @@ class Context(object):
         self.last_function = None
         self.last_func_pos = None
         self.assign_level = 0
+        self.optimization_level = 1
 
         # Standard Global Variables
         self.declare_global_var("me", sys=True)

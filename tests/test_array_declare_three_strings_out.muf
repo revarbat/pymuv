@@ -1,5 +1,6 @@
 ( Generated from test_array_declare_three_strings_in.muv by the MUV compiler. )
 (   https://github.com/revarbat/pymuv )
+
 : _main[ _arg -- ret ]
     { "abc" "def" "ghi" }list
 ;

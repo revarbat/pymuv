@@ -32,41 +32,32 @@ class MuvNode(object):
     def indent(self, txt, ind='    '):
         return "\n".join((ind + l if l else l) for l in txt.split('\n'))
 
-    def annotate(self, ctx, txt, force=False):
+    def annotate(self, ctx, txt, force=False, pos=None, lineoff=0):
         if ctx.debug:
-            line, col = ctx.parsers[-1].pos_to_linecol(self.position)
+            if not pos:
+                pos = self.position
+            line, col = ctx.parsers[-1].pos_to_linecol(pos)
             if force or len(ctx.filenames) == 1:
-                txt = "(MUV:L%d) %s" % (line, txt)
+                txt = "(MUV:L%d) %s" % (line + lineoff, txt)
         return txt
 
     def strip_extra_annotations(self, txt):
         out = ''
+        txt = re.sub(r'(\(MUV:L\d+\) )+(\(MUV:L\d+\) )', r'\2', txt)
         prevline = -2
-        currtag = None
         while txt:
-            if '(MUV:L' not in txt:
+            m = re.match(r'(?ms)(.*?)\(MUV:L(\d+)\) (.*)', txt)
+            if not m:
                 out += txt
                 txt = ''
                 break
-            pre, txt = txt.split('(MUV:L', 1)
-            if currtag and pre.strip():
-                out += currtag
-                currtag = None
-            out += pre
-            if not re.match(r'[0-9]+\) ', txt):
-                out += "(MUV:L" + txt
-                txt = ''
-                break
-            line, txt = txt.split(') ', 1)
-            currline = -1
-            try:
-                currline = int(line)
-            except ValueError:
-                pass
-            if currline != prevline:
-                currtag = "(MUV:L%d) " % currline
-                prevline = currline
-        return re.sub(r'(\(MUV:L[0-9]+\) )+(\(MUV:L[0-9]+\))', r'\2', out)
+            out += m.group(1)
+            line = m.group(2)
+            txt = m.group(3)
+            if line != prevline:
+                prevline = line
+                out += "(MUV:L%s) " % line
+        return out
 
 
 class MuvNodeNull(MuvNode):
@@ -432,7 +423,7 @@ class MuvNodeIfElse(MuvNode):
             cond=None,
             ifclause=None,
             elseclause=None
-    ):
+            ):
         super(MuvNodeIfElse, self).__init__("IF", pos)
         self.conditional = cond
         self.ifclause = ifclause
@@ -741,10 +732,15 @@ class MuvNodeFuncDef(MuvNode):
                     )
                 )
         last = body
+        self.lastpos = None
         while last and type(last) in [MuvNodeStatements, MuvNodeExprList]:
+            self.lastpos = last.position
             last = last.children[-1]
+        if isinstance(last, MuvNode):
+            self.lastpos = last.position
         if isinstance(last, MuvNodeCommand):
             last.command = ''
+            self.lastpos = last.position
         self.body = body
 
     def generate_code(self, ctx):
@@ -757,13 +753,14 @@ class MuvNodeFuncDef(MuvNode):
             is_public=self.public,
         )
         args = "".join("%s " % ctx.declare_variable(v) for v in self.args)
-        fmt = ": {funcname}[ {args}-- ret ]\n{body}\n;"
+        fmt = ": {funcname}[ {args}-- ret ]\n{body}\n{end}"
         if self.public:
             fmt += "\npublic {funcname}\n$libdef {funcname}"
         out = fmt.format(
             funcname=actual,
             args=args,
             body=self.indent(self.body.generate_code(ctx)),
+            end=self.annotate(ctx, ';', pos=self.lastpos, lineoff=1),
         )
         out = self.annotate(ctx, out)
         ctx.scope_pop()
@@ -910,38 +907,31 @@ class MuvNodeProgram(MuvNode):
         self.code = code
 
     def generate_code(self, ctx):
-        replacements = [
-            (r' swap swap\b', r''),
-            (r' 0 pop\b', r''),
-            (r'\bswap \+', r'+'),
-            (r'\bswap \*', r'*'),
-            (r'\bswap bitor\b', r'bitor'),
-            (r'\bswap bitxor\b', r'bitxor'),
-            (r'\bswap bitand\b', r'bitand'),
-            (r'(\w+) @ \1 (\+\+|--) pop\b', r'\1 \2'),
-        ]
         code = self.code.generate_code(ctx)
         inits = ctx.init_statements
         inits.append(ctx.last_function)
-        if ctx.filenames[-1]:
-            filetext = " from {0}".format(ctx.filenames[-1])
-        else:
-            filetext = ''
-        head = (
-            "( Generated{filetext} by the MUV compiler. )\n"
-            "(   https://github.com/revarbat/pymuv )"
-        ).format(filetext=filetext)
         if ctx.last_func_pos:
             self.position = ctx.last_func_pos
         init_code = ": __start\n{inits}\n;".format(
             inits=self.indent("\n".join(inits))
         )
         init_code = self.annotate(ctx, init_code, force=True)
-        out = "{head}\n{code}\n{inits}".format(
-            head=head,
+        out = "{code}\n{inits}".format(
             code=code,
             inits=init_code,
         )
+        replacements = []
+        if ctx.optimization_level >= 1:
+            replacements += [
+                (r' swap swap\b', r''),
+                (r' 0 pop\b', r''),
+                (r'\bswap \+', r'+'),
+                (r'\bswap \*', r'*'),
+                (r'\bswap bitor\b', r'bitor'),
+                (r'\bswap bitxor\b', r'bitxor'),
+                (r'\bswap bitand\b', r'bitand'),
+                (r'(\w+) @ \1 (\+\+|--) pop\b', r'\1 \2'),
+            ]
         for pat, repl in replacements:
             out = re.sub(pat, repl, out)
         return out

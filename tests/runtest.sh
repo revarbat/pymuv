@@ -8,9 +8,8 @@ runtest() {
     outfile="test_$1_out.muf"
     cmpfile="test_$1_cmp.muf"
 
-    incldir=$(dirname $(pwd))/incls
     echo "Checking test $1"
-    $MUV -I $incldir -o $outfile $infile
+    $MUV -o $outfile $infile
     if [[ -e $cmpfile ]] ; then
         diff -c -b -B -w $cmpfile $outfile
     else

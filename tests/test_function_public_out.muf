@@ -1,5 +1,6 @@
 ( Generated from test_function_public_in.muv by the MUV compiler. )
 (   https://github.com/revarbat/pymuv )
+
 : loopy[ _count -- ret ]
     { "foo" "bar" "baz" }list var! _l
     _l @ foreach

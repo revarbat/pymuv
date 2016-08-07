@@ -24,25 +24,25 @@
     2 var! _i
     _i @ var! _swvar
     begin
-        _swvar @ 1 "=" if
+        _swvar @ 1 = if
             "One." me @ swap notify break
         then
-        _swvar @ 2 "=" if
+        _swvar @ 2 = if
             "Two." me @ swap notify break
         then
-        _swvar @ 3 "=" if
+        _swvar @ 3 = if
             "Three." me @ swap notify break
         then
     repeat
     _arg @ var! _swvar2
     begin
-        _swvar2 @ "greet" strcmp if
+        _swvar2 @ "greet" strcmp not if
             "Hello." me @ swap notify break
         then
-        _swvar2 @ "who" strcmp if
+        _swvar2 @ "who" strcmp not if
             "I'm called MUV." me @ swap notify break
         then
-        _swvar2 @ "what" strcmp if
+        _swvar2 @ "what" strcmp not if
             "I'm a nicer language to use than MUF." me @ swap notify break
         then
         "I don't understand." me @ swap notify break
@@ -81,4 +81,3 @@
     "me" match me ! me @ location loc ! trig trigger !
     _main
 ;
-

@@ -1,5 +1,6 @@
 ( Generated from test_oper_logical_xor_in.muv by the MUV compiler. )
 (   https://github.com/revarbat/pymuv )
+
 : _main[ _arg -- ret ]
     1 1 xor
 ;

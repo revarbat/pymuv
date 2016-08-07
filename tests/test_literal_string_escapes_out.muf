@@ -1,5 +1,6 @@
 ( Generated from test_literal_string_escapes_in.muv by the MUV compiler. )
 (   https://github.com/revarbat/pymuv )
+
 : _main[ _arg -- ret ]
     "A string with\rnewlines and \[[1mstuff\[[0m."
 ;

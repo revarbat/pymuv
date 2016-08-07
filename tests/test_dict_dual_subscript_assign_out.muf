@@ -1,5 +1,6 @@
 ( Generated from test_dict_dual_subscript_assign_in.muv by the MUV compiler. )
 (   https://github.com/revarbat/pymuv )
+
 : _main[ _arg -- ret ]
     {
         "foo" { "fee" 0 "fie" 2 "foe" 7 "fum" 9 }dict

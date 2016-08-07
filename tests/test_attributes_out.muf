@@ -1,5 +1,6 @@
 ( Generated from test_attributes_in.muv by the MUV compiler. )
 (   https://github.com/revarbat/pymuv )
+
 : _sub[ _a _b _c -- ret ]
     { _a @ _b @ _c @ }list array_interpret
 ;

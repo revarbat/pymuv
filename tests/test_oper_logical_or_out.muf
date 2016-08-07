@@ -1,5 +1,6 @@
 ( Generated from test_oper_logical_or_in.muv by the MUV compiler. )
 (   https://github.com/revarbat/pymuv )
+
 : _main[ _arg -- ret ]
     1 dup not if pop
         1
