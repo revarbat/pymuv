@@ -78,13 +78,13 @@ include single or double character quotes in the string::
 
     """It's a "test"."""
 
-or:
+or::
 
     '''It's a "test".'''
 
-To make it easier to give regexp patterns with backslashes, you can give
-raw strings by preceeding a regular string of any type with a single ``r``.
-Raw strings are not processed for backslash escaped characters::
+To make it easier to give regexp patterns with backslashes, you can give raw
+strings by preceeding a regular string of any type with a single ``r``.  Raw
+strings are not processed for backslash escaped characters::
 
     r"http://\([a-z0-9._-]+\)"
     r'http://\([a-z0-9._-]+\)'
@@ -117,11 +117,12 @@ You can declare global variables at the toplevel scope like::
     var myglobal;
     var answer = 42;
 
-The global variables ``me`` and ``loc`` are pre-defined for all programs.
+The global variables ``me``, ``loc``, ``trigger`` and ``command`` are
+pre-defined for all programs.
 
 
-Functions
-=========
+Function Declarations
+=====================
 
 You can declare a function like this::
 
@@ -136,8 +137,8 @@ With arguments, you can declare it like this::
     }
 
 If you need a variable number of arguments for a function, you can put a ``*``
-after the last argument, to indicate that all extra arguments will by passed
-as a list in the last argument variable::
+after the last variable, to indicate that the last variable will receive all
+remaining arguments, in a list::
 
     func concat(args*) {
         return array_interpret(args);
@@ -152,12 +153,12 @@ other MUF programs, you can declare it like this::
 
 Functions return the value given to the ``return`` command.  ie: ``return 42;``
 will return the integer value ``42`` from the function.  If the end of the
-function is reached with no ``return`` executing, then the function will return
-the integer ``0``.
+function is reached with no ``return`` executing, then the function will
+return the integer ``0``.
 
 
-Calls
-=====
+Function Calls
+==============
 
 You can call functions you have declared, and many builtin MUF primitives in
 this way::
@@ -188,9 +189,9 @@ name within different scopes::
         var x = "C";
         for (var x in ["F", "A", "D"]) {
             if (x eq "A") {
-            tell(x);
+                tell(x);
                 var x = "B";
-            tell(x);
+                tell(x);
             }
         }
         tell(x);
@@ -203,8 +204,8 @@ will output the following::
     C
 
 
-Constants
-=========
+Constant Declarations
+=====================
 
 You can declare constants using the syntax::
 
@@ -213,8 +214,8 @@ You can declare constants using the syntax::
 By convention, the constant name should be all uppercase.
 
 
-Built-Ins
-=========
+Built-Ins Functions
+===================
 
 MUV has several built-in commands available to all programs:
 
@@ -286,9 +287,7 @@ You can include the code from other MUV files by using the ``include`` command::
     include "otherfile.muv";
 
 You can include standard MUV files by preceeding the filename with a ``!``.
-This tells ``include`` to look for the file in the system-wide MUV includes
-directory, which is usually in ``/us/local/share/muv/incls``.
-
+This tells ``include`` to look for the file in the system-wide MUV includes.
 One important standard include file is ``!fb6/prims``::
 
     include "!fb6/prims";
@@ -310,13 +309,13 @@ ordering.  The only exceptions are:
 | ``fmtstring``    | ``fmtstring()``    | Argument ordering completely reversed.  |
 +------------------+--------------------+-----------------------------------------+
 
-Since MUF has kind of a messy namespace, you can *instead* include files with
-just the primitives you need, renamed a bit more sensibly.  For example, if
-you include the file ``!fb6/obj`` You can get access to the standard fb6 object
-related primitives, renamed into the ``obj`` namespace such that MUF primitives
-like ``name`` and ``set`` are renamed to ``obj::name()`` and ``obj::set()``, leading
-to far less namespace polution.  The standard namespaced include files are as
-follows, in order of likely importance:
+Since MUF has kind of a messy namespace, you can *instead* include files
+with just the primitives you need, renamed a bit more sensibly.  For example,
+if you include the file ``!fb6/obj`` You can get access to the standard
+fb6 object related primitives, renamed into the ``obj::`` namespace such
+that MUF primitives like ``name`` and ``set`` are renamed to ``obj::name()``
+and ``obj::set()``, leading to far less namespace polution.  The standard
+namespaced include files are as follows, in order of likely importance:
 
 +------------------+----------------+---------------------------------------------+
 |   Include File   |   NameSpace    |              What it declares               |
@@ -368,33 +367,26 @@ follows, in order of likely importance:
 | ``fb6/argparse`` | ``argparse::`` | Cmd-line argument parsing.                  |
 +------------------+----------------+---------------------------------------------+
 
-NOTE: You should either use ``include "!fb6/prims";`` *or* include one or more
-of the namespaced files.  If you include from both, it should still work, but
-it misses the point of using namespaces.
+NOTE: It doesn't make much sense to include *both* ``!fb6/prims`` *and* one
+or more of the namespaced files.  If you include from both, it should still
+work, but it really misses the point of using namespaces.
 
 
 Expressions
 ===========
 
-Basic Math:
+Basic Math
+----------
 - Addition: ``2 + 3``
 - Subtraction: ``5 - 2``
 - Multiplication: ``5 * 2``
 - Division: ``10 / 2``
 - Modulo: ``7 % 3``
+- Grouping: ``2 * (3 + 4)``
 
-Numeric Comparisons:
-- Equals: ``x == 2``
-- Not Equals: ``x != 2``
-- Greater Than: ``x > 2``
-- Less Than: ``x < 2``
-- Greater Than or Equals: ``x >= 2``
-- Less Than or Equals: ``x <= 2``
 
-String Comparisons:
-- Case sensitive equals: ``x eq "foo"``
-
-Bitwise Math:
+Bitwise Math
+------------
 - Bitwise AND: ``6 & 4``
 - Bitwise OR: ``8 | 4``
 - Bitwise XOR: ``6 ^ 4``
@@ -402,18 +394,9 @@ Bitwise Math:
 - BitShift Left: ``1 << 4``
 - BitShift Right: ``128 >> 3``
 
-Logical Operations:
-- Logical OR: ``x == 2 || x == 10``
-- Logical AND: ``x > 2 && x < 10``
-- Logical XOR: ``x > 2 ^^ x < 10``
-- Logical NOT: ``!x``
 
-Note: Logical expressions support shortcutting.
-If the left half of a logical ``||`` (OR) is true, the right half isn't evaluated at all.
-If the left half of a logical ``&&`` (AND) is false, the right half isn't evaluated at all.
-Both sides of a logical ``^^`` (XOR) are always evaluated.
-
-Assignment:
+Assignment
+----------
 - Simple assignment: ``x = 23``
 - Add and assign: ``x += 2`` is the same as ``x = x + 2``
 - Subtract and assign: ``x -= 2`` is the same as ``x = x - 2``
@@ -426,38 +409,123 @@ Assignment:
 - BitShift Left and assign: ``x <<= 2`` is the same as ``x = x << 2``
 - BitShift Right and assign: ``x >>= 2`` is the same as ``x = x >> 2``
 
-Array Operations:
-- Test if value in array: ``x in [1, 2, 3, 5, 7, 11, 13, 17, 19]``.
-- Array subscript: ``x[2]`` returns the third item of the given array in ``x``.
-- Array subscript assignment: ``x[2] = 42`` sets the third element of the array
-  in ``x`` to ``42``.
 
-Miscellaneous:
-- Grouping: ``2 * (3 + 4)``
-- Ternary operator: ``x>0 ? 1 : 2`` Returns 1 if x > 0, otherwise returns 2.
+Numeric Comparisons
+-------------------
+- Equals: ``x == 2``
+- Not Equals: ``x != 2``
+- Greater Than: ``x > 2``
+- Less Than: ``x < 2``
+- Greater Than or Equals: ``x >= 2``
+- Less Than or Equals: ``x <= 2``
 
-These expressions can be combined in surprising ways::
+
+String Comparisons
+------------------
+- Case sensitive equals: ``x eq "foo"``
+
+
+Array Operations
+----------------
+- Test if value is in array: ``x in [1, 2, 3, 5, 7, 11, 13, 17, 19]``.
+- Array subscript: ``x[2]`` returns the third item of the array in the
+  variable ``x``.
+- Array subscript assignment: ``x[2] = 42`` sets the third element of the
+  array in ``x`` to ``42``.
+
+
+Logical Operations
+------------------
+- Logical OR: ``x == 2 || x == 10``
+- Logical AND: ``x > 2 && x < 10``
+- Logical XOR: ``x > 2 ^^ x < 10``
+- Logical NOT: ``!x``
+
+
+Note: Logical expressions support shortcutting.  If the left half of a
+logical ``||`` (OR) is true, the right half isn't evaluated at all. If the
+left half of a logical ``&&`` (AND) is false, the right half isn't evaluated
+at all.  Both sides of a logical ``^^`` (XOR) are always evaluated.
+
+The intrinsic short-cutting in logical ``&&`` (AND) and ``||`` (OR) operators
+can also have other uses.  The ``&&`` (AND) operator can be used to chain
+successful calls, such as::
+
+    function1(x) && function2(x) && function3(x)
+
+Each function in the chain is only called if every previous function in the
+chain returned a true value.  The final value returned will either be the
+first false value returned, or the true value returned by the last call.
+
+Possibly even more useful, if you have a series of functions that return
+a false value on success, and a non-false value on failure, you can chain
+these calls with ``||`` (OR) operators, and get an overall failure code
+(or string) for the chain::
+
+    function1(x) || function2(x) || function3(x)
+
+Each function in this chain is only called if every previous function in the
+chain returned a false (success!) value.  The final value returned will either
+be the first true (error code/str) value returned, or the false (success!)
+value returned by the last call.
+
+The ``||`` (OR) operator is also useful in returning default values::
+
+    function1(x) || 42
+
+This will return the result from ``function1()``, unless it is a value that
+evaluates as false, in which case ``42`` will be returned.
+
+Interestingly, you can combine ``&&`` (AND) and ``||`` (OR) to provide
+alternate values for both success and failure, but only if you use the
+logical operators in that order, and if the success expression evaluates
+as true::
+
+    test() && "success" || "failure"
+
+This will return ``"success"`` if the result of ``test()`` was true, and
+``"failure"`` if it was false.
+
+
+The Conditional Operator
+------------------------
+If you need to provide two different results, based on the result of a third
+expression, you can use the conditional operator::
+
+    x>0 ? 1 : 2
+
+This will return 1 if x > 0, otherwise it will return 2.
+
+WARNING: since some identifiers in MUV can end in ``?`` (ie: ``awake?``) you
+will need to put a space between an identifier and the ``?`` in a conditional
+expression, otherwise you may get odd syntax errors::
+
+    var success = result ? "Yes" : "No";
+
+You may have noticed that you can also use logical operators to get much the
+same results with slightly different syntax, and only two extra characters::
+
+    var success = result && "Yes" || "No";
+
+There are a few important differences to be aware of, though:
+
+- If the true branch of a logical operator expression tries to return a false
+  value, then the false branch gets erroneously evaluated as well, and its
+  result is returned instead.
+- The conditional operator generates simpler and more efficient code.
+- The conditional operator is explicitly providing alternate values, so it
+  makes for clearer code, compared to abusing logical operator side effects.
+
+
+Chaining Expressions
+--------------------
+All these expressions can be combined and chained in surprisingly complex
+ways::
 
     var y = [[4, 5, 6], 3];
     var z = 1;
     var x = y[0][1] = 43 * (z += 1 << 3);
 
-The intrinsic short-cutting in logical ``&&`` (AND) and ``||`` (OR) operators can
-also have other uses.  The ``&&`` (AND) operator can be used to chain successful
-calls, such as::
-
-    var success = function1(x) && function2(x) && function3(x);
-
-Each function in the chain is only called if every previous function in the
-chain returned a true value.  The value assigned to ``success`` will either be
-the first false value returned, or the true value returned by the last call.
-
-The ``||`` (OR) operator is useful in assigning default values::
-
-    var foo = function1(x) || 42;
-
-This will set ``foo`` to the value returned from ``function1()``, unless it is a
-value that evaluates as false, in which case ``foo`` is set to ``42`` instead.
 
 
 Arrays
@@ -542,8 +610,8 @@ Dictionaries
 
 Dictionaries are a special type of array, where the keys are not necessarily
 numeric, and they don't have to be contiguous.  You can use many of the same
-functions and primitives with dictionaries that you use with list arrays.  MUV
-Dictionaries are functionally like hash tables in other languages.
+functions and primitives with dictionaries that you use with list arrays.
+MUV Dictionaries are functionally like hash tables in other languages.
 
 Defining a dictionary is similar to defining a list array, except you also
 specify the keys::
@@ -567,9 +635,11 @@ the same with a list array::
     del(mydict["one"]);
 
 
-Conditionals
-============
+Conditional Statements
+======================
 
+If Statements
+-------------
 You can use the ``if`` statement for conditional code execution::
 
     if (x > 3)
@@ -581,7 +651,8 @@ Which is the same as::
         tell("Greater!");
     }
 
-If you need an else clause, you can write it like this::
+If you need an else clause, to evaluate if the test was false, you can write
+it like this::
 
     if (x < 0) {
         tell("Negative!");
@@ -589,8 +660,11 @@ If you need an else clause, you can write it like this::
         tell("Positive!");
     }
 
+
+Post-Conditionals
+-----------------
 For a single statement, you can conditionally execute it using a trailing
-conditional ``if`` or ``unless`` clause like::
+``if`` or ``unless`` clause like::
 
     tell("Odd!") if (x%2);
 
@@ -598,8 +672,20 @@ or::
 
     tell("Even!") unless(x%2);
 
+
+Switch Statements
+-----------------
 If you need to compare a value against a lot of options, you can use the
 ``switch`` - ``case`` statement::
+
+    switch (val) {
+        case(1) tell("One!");
+        case(2) tell("Two!");
+        case(3) tell("Three!");
+    }
+
+The optional ``default`` clause allows you to execute code if no ``case``
+matches::
 
     switch (val) {
         case(1) tell("One!");
@@ -608,25 +694,11 @@ If you need to compare a value against a lot of options, you can use the
         default tell("Something else!");
     }
 
-The default clause is optional::
-
-    switch (val) {
-        case(1) {
-            tell("One!");
-        }
-        case(2) {
-            tell("Two!");
-        }
-        case(3) {
-            tell("Three!");
-        }
-    }
-
-With the ``using`` clause, you can specify a primitive or function that takes
-two arguments to use for comparisons.  When the comparison function or
-primitive returns true, then a match is found.  When ``using strcmp`` it special
-cases the comparison to actually be ``strcmp not``.  The same applies for
-``stringcmp``::
+With the ``using`` clause, you can specify a primitive or function that
+takes two arguments to use for comparisons.  When the comparison function
+or primitive returns true, then a match is found.  When you specify
+``using strcmp`` it special-cases the comparison to actually be ``strcmp not``.
+The same applies for ``stringcmp``, which is translated to ``stringcmp not``::
 
     switch (val using strcmp) {
         case("one") {
@@ -638,10 +710,13 @@ cases the comparison to actually be ``strcmp not``.  The same applies for
         case("three") {
             tell("Third!");
         }
+        default {
+            tell("Something else!")
+        }
     }
 
-You can also specify built-in comparisons like ``eq``, ``in``, or ``=``.  Only the
-first ``case`` with a successful match will be executed::
+You can also specify built-in comparison operators like ``eq``, ``in``, or
+``=``.  Only the first ``case`` with a successful match will be executed::
 
     switch (val using eq) {
         case("one") tell("First!");
@@ -701,41 +776,68 @@ machine::
     }
 
 
-Loops
-=====
+Loop Statements
+===============
+There are several types of loops available.
 
-There are several types of loops available::
+While Loops
+-----------
+While loops will repeat as long as the condition evaluates true.
+The condition is checked before each loop::
 
     var i = 10;
     while (i > 0) {
         tell(intostr(i--));
     }
 
-    i = 10;
+Until Loops
+-----------
+Until loops will repeat as long as the condition evaluates false.
+The condition is checked before each loop::
+
+    var i = 10;
     until (i == 0) {
         tell(intostr(i--));
     }
 
-    i = 10;
+Do-While Loops
+--------------
+Do-While loops will repeat as long as the condition evaluates true.
+The condition is checked after each loop.  The loop will execute at
+least once::
+
+    var i = 10;
     do {
         tell(intostr(i--));
     } while(i > 0);
 
-    i = 10;
+Do-Until Loops
+--------------
+Do-Until loops will repeat as long as the condition evaluates false.
+The condition is checked after each loop.  The loop will execute at
+least once::
+
+    var i = 10;
     do {
         tell(intostr(i--));
     } until(i == 0);
 
+For Loops
+---------
+For loops come in a few varieties. The first version counts up
+from one number to another, inclusive::
+
     // Count from 1 up to 10, inclusive
-    for (i in 1 => 10) {
+    for (var i in 1 => 10) {
         tell(intostr(i));
     }
+
+With a ``by`` clause, you can count down, or by a different increment::
 
     // Count from 10 down to 1, inclusive
-    for (i in 10 => 1 by -1) {
+    for (var i in 10 => 1 by -1) {
         tell(intostr(i));
     }
-
 
 You can also iterate arrays/lists/dictionaries like this::
 
@@ -743,7 +845,7 @@ You can also iterate arrays/lists/dictionaries like this::
     for (var letter in letters)
         tell(letter);
 
-or, to get both index/key and value::
+Or, to get both index/key and value::
 
     for (var idx => var letter in ["a", "b", "c", "d", "e"])
         tell(cat(idx, letter));
@@ -776,7 +878,8 @@ You can use any variation of for loop for making comprehensions::
 
     var odd_thirds = [for (x in 1 => 100 by 3) if (x % 2) x];
 
-You can also filter a list or dictionary by adding an ``if`` or ``unless`` clause::
+You can also filter a list or dictionary by adding an ``if`` or ``unless``
+clause::
 
     var nums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     var x;
@@ -803,11 +906,11 @@ You can also use tuple assignment inside a loop or comprehension::
 
     var foo = [for (<a, b> in list_generator()) if (a != b) a + b];
 
- Note that the space between the > and = of the tuple assignment is important!
+Note that the space between the > and = of the tuple assignment is important!
 
 
-Exceptions
-==========
+Exception Handling
+==================
 
 You can trap errors with the ``try`` - ``catch`` construct::
 
@@ -821,7 +924,8 @@ The variable given to the ``catch`` command will, when an error is received,
 have a dictionary stored in it with the following values:
 
 ``error``
-    The error string that was emitted by the MUF instruction that threw an error.
+    The error string that was emitted by the MUF instruction that threw an
+    error.
 
 ``instr``
     The name of the MUF instruction that threw the error.
@@ -830,8 +934,8 @@ have a dictionary stored in it with the following values:
     The MUF line that threw the error.
 
 ``program``
-    The program that the error was thrown in.  This might not be the same as the
-    current program, if the error occurred inside a call.
+    The program that the error was thrown in.  This might not be the same as
+    the current program, if the error occurred inside a call.
 
 If you don't care about the exception details, you can just not specify the
 variable::
@@ -856,16 +960,18 @@ If you need to throw your own custom exception, you can do it like::
 MUF Interaction
 ===============
 
-Sometimes you need to interact with other MUF programs, by reading or storing
-data on the MUF stack.  You can do that with the ``top`` and ``push(...)``
-constructs. Also, you can specify raw MUF code with the ``muf("...")`` command.
+Sometimes you need to interact with other MUF programs, by reading or
+storing data on the MUF stack.  You can do that with the ``top`` and
+``push(...)`` constructs. Also, you can specify raw MUF code with the
+``muf("...")`` command.
 
-The special variable ``top`` refers to the top of the stack.  You can "pop" the
-top of the stack and store it in a variable like::
+The special variable ``top`` refers to the top of the stack.  You can "pop"
+the top item off of the stack and store it in a variable like::
 
     var foo = top;
 
-You can "push" a value onto the top of the stack with the ``push(...)`` command::
+You can "push" a value onto the top of the stack with the ``push(...)``
+command::
 
     push("Hi!");
 
@@ -877,9 +983,11 @@ The ``push(...)`` command will return the value of the last item pushed.:
 
     var v = push(13, 42);
 
-Will leave ``13`` and ``42`` on the stack, and the value of ``v`` will be set to ``42``.
+Will leave ``13`` and ``42`` on the stack, and the value of ``v`` will be
+set to ``42``.
 
-You can specify raw MUF code by passing it as a string to the ``muf(...)`` command::
+You can specify raw MUF code by passing it as a string to the ``muf(...)``
+command::
 
     muf('{ "Hello, " args @ }list array_interpret out !');
 
@@ -891,7 +999,8 @@ IMPORTANT: If you use the ``muf(...)`` command inside a function or in a const
 definition, make sure that the MUF code it gives will leave exactly one item
 on the stack!
 
-If you need it, you can also use raw MUF code in the using clause of a ``switch``::
+If you need it, you can also use raw MUF code in the using clause of a
+``switch``::
 
     switch (val using muf('"*" strcat smatch')) {
         case("1") tell("Starts with 1");
@@ -900,8 +1009,8 @@ If you need it, you can also use raw MUF code in the using clause of a ``switch`
     }
 
 
-Externs
-=======
+Extern Declarations
+===================
 
 If new primitives are added to MUF that MUV doesn't know about, or if you need
 to call external libraries, you can use an ``extern`` declaration to let MUV
@@ -943,11 +1052,11 @@ The arguments for the extern will be the topmost stack items, with the first
 argument being deepest on the stack.  In the case of varargs, like above, the
 topmost stack item will be a list containing all the remaining args.  If the
 extern is ``void``, then nothing is expected to be left on the stack.  If the
-extern is ``single``, then one item is expected to be left on the stack.  If the
-extern is ``multiple``, then all items left on the stack will be bundled into a
-list to be returned to the caller.
+extern is ``single``, then one item is expected to be left on the stack.  If
+the extern is ``multiple``, then all items left on the stack will be bundled
+into a list to be returned to the caller.
 
-The raw MUF code given is used INSTEAD of a call to the name of the declared
+The raw MUF code given is used *instead* of a call to the name of the declared
 extern.  A normal extern::
 
     extern single foo();
@@ -969,6 +1078,7 @@ the MUF output code.  These include:
 | Directive        | What it Does                                         |
 +==================+======================================================+
 | $language "muv"  | Allow future MUCK servers to determine this is MUV.  |
+|                  | All MUV programs should start with this directive.   |
 +------------------+------------------------------------------------------+
 | $warn "msg"      | Prints msg as a MUV compiler warning.                |
 +------------------+------------------------------------------------------+
@@ -997,29 +1107,28 @@ When you are debugging a program compiled into MUF from MUV, there are
 a few things you should be aware of:
 
 - If you add a ``-d`` to the muv command-line, debugging code will be inserted
-  throughout the MUF output. This takes the form of strings that show the MUV
-  source file and line that generated the current MUF code.  This then gets
-  immediately popped. ie: ``"foo.muv:23" pop`` This is very useful with MUF
-  stack traces.
+  throughout the MUF output. This mostly takes the form of comments that show
+  the MUV source line that generated the current MUF code.  These comments take
+  the form ``(MUV:L123)`` where 123 is the line number.
 - To prevent namespace collision with the built-in primitives of MUF, the
   non-public functions and variables that MUV generates are renamed slightly
   from what was given in the MUV sources.
-- To keep consistent with expressions returning values, some extra ``dup``s
-  and ``pop``s will appear throughout the code.  Some of this will get optimized
-  out by the MUF compiler, and some won't, but they are very fast primitives
-  that shouldn't affect performance *too* horribly.  This is all because you
-  can chain expressions in MUV.
+- To keep consistent with expressions returning values, some extra ``dup``
+  and ``pop`` statements may appear throughout the code.  Some of this will
+  get optimized out by the MUF compiler, and some won't, but they are very
+  fast primitives that shouldn't affect performance much.
 - Calls to an ``extern void`` defined primitive or function will be followed
   by a ``0`` to fake that the call returned ``0``.
 - Calls to an ``extern multiple`` defined primitive or function will be
-  wrapped in ``{`` and ``}list`` to collapse the multiple return values into
-  a single list array.
+  wrapped in ``{`` and ``}list`` to collapse the multiple return values
+  into a single list array.
 - Because in MUV *all* calls have a return value, for those functions that
-  don't have a ``return`` statement, a ``0`` is put at the end of a generated
+  don't end in a ``return`` statement, a ``0`` is put at the end of a generated
   function, just in case.
 
 For example, the following MUV source::
 
+    $language "muv"
     extern void tellme(msg) = "me @ swap notify";
     extern single toupper(s);
     extern multiple stats(who);
@@ -1031,25 +1140,25 @@ For example, the following MUV source::
 
 Will compile to MUF as::
 
-    ( Generated from foo.muv by the MUV compiler. )
-    (   https://github.com/revarbat/muv )
-    lvar _gvar
-    : _foo[ _bar -- ret ]
-        var _baz
-        "foo.muv:6" pop
-        _bar @ toupper me @ swap notify
-        "foo.muv:7" pop
-        { me @ stats }list dup _baz ! pop
+    ( Generated by the MUV compiler. )
+    (   https://github.com/revarbat/pymuv )
+    (MUV:L4) lvar _gvar
+    (MUV:L5) : _foo[ _bar -- ret ]
+        (MUV:L6) _bar @ toupper me @ swap notify
+        (MUV:L7) { me @ stats }list var! _baz
         0
-    ;
-    : __start
+    (MUV:L8) ;
+    (MUV:L5) : __start
         "me" match me ! me @ location loc ! trig trigger !
-        42 _gvar !
+        (MUV:L4) 42 _gvar !
         _foo
     ;
 
 There are several things to note here:
 
+- The program starts with ``$language "muv"``
+- There are comments like (MUV:L123) throughout the code, to indicate what
+  MUV source line originated the MUF code following the comment.
 - The user declared global variable ``gvar`` has been renamed to ``_gvar``
 - The user declared function ``foo`` has been renamed to ``_foo``.
 - The user declared scoped variables ``bar`` and ``baz`` have been renamed
@@ -1062,10 +1171,6 @@ There are several things to note here:
 - Since ``stats()`` is declared to return ``multiple`` values, the entire
   expression is wrapped in ``{`` and ``}list`` to collapse all those values
   into a single list array.
-- When storing a value in the variable ``baz``, a ``dup`` is performed on the
-  value, just in case that value is needed for chained assigns, or in
-  another expression.
-- Since that value was NOT needed after all, it it ``pop``ed away.
 - As the function ``foo()`` ends without a ``return`` statement at the end,
   a ``0`` is pushed onto the stack, so ``foo()`` always returns at least ``0``.
 - The ``__start`` function is added to the end of the progam, to perform
@@ -1073,5 +1178,3 @@ There are several things to note here:
   function.  Note: this means global variables in libraries may not
   get initialized unless you make a public function to specifically
   initialize them.
-
-

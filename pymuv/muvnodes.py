@@ -610,13 +610,14 @@ class MuvNodeSwitch(MuvNode):
     def generate_code(self, ctx):
         ctx.scope_push()
         out = (
-            "{expr} {setexp}\n"
             "begin\n"
+            "{expr}\n"
+            "{setexp}\n"
             "{cases}\n"
             "repeat"
         ).format(
-            expr=self.expr.generate_code(ctx),
-            setexp=self.var.set_expr(ctx),
+            expr=self.indent(self.expr.generate_code(ctx)),
+            setexp=self.indent(self.var.set_expr(ctx)),
             cases=self.indent(
                 "\n".join(
                     case.generate_code(ctx) for case in self.children
