@@ -2,9 +2,16 @@
 MUV 2.0 Language Syntax
 #######################
 
+.. sectnum::
+   :depth: 2
+
+.. contents:: Table of Contents
+   :depth: 2
+   :backlinks: top
+
+
 Comments
 ========
-
 Comments can take one of two styles.  For single-line comments, you can use::
 
     // Single line comment.
@@ -20,7 +27,6 @@ For multi-line comments, you can use::
 
 Literals
 ========
-
 Decimal integers are simple::
 
     123456789
@@ -65,22 +71,26 @@ numbers more human readable, like thousands separators::
     16_237.21
     #12_345
 
-String literals are given like::
+String literals are given with single or double-quotes::
 
     "Hello!"
-
-or::
-
     'Hiya!'
 
 If you use triples of quotes for string delimiters, you can more easily
 include single or double character quotes in the string::
 
     """It's a "test"."""
-
-or::
-
     '''It's a "test".'''
+
+Singlequotes and doublequotes inside strings can be escaped by a
+backslash ``\``::
+
+    "This is a \"test\"."
+
+You can insert a newline inside a string with a ``\r`` or ``\n``, and
+an escape char can be added with a ``\e`` or ``\[``::
+
+    '\e[1mBold\[[0m\rNormal'
 
 To make it easier to give regexp patterns with backslashes, you can give raw
 strings by preceeding a regular string of any type with a single ``r``.  Raw
@@ -91,16 +101,15 @@ strings are not processed for backslash escaped characters::
     r"""http://\([a-z0-9._-]+\)"""
     r'''http://\([a-z0-9._-]+\)'''
 
-List arrays can be declared like this::
+List arrays can be declared as comma-separated lists of values, surrounded
+by square brackets::
 
     ["first", "second", "third"]
-
-or::
-
     [1, 2, 4, 8]
 
 Dictionaries (sometimes called hash tables, or associative arrays in other
-languages) are declared like::
+languages) are declared like lists, but with key-value pairs, where the key
+and value in each pair are separated by ``=>`` delimiters::
 
     [ "key1" => "val1", "key2" => "val2", "key3" => "val3" ]
 
@@ -109,9 +118,17 @@ To declare an empty dictionary, which is distinct from a list, use::
     [=>]
 
 
+Constant Declarations
+=====================
+You can declare constants using the syntax::
+
+    const PI = 3.14159;
+
+By convention, the constant name should be all uppercase.
+
+
 Global Variables
 ================
-
 You can declare global variables at the toplevel scope like::
 
     var myglobal;
@@ -123,7 +140,6 @@ pre-defined for all programs.
 
 Function Declarations
 =====================
-
 You can declare a function like this::
 
     func helloworld() {
@@ -159,7 +175,6 @@ return the integer ``0``.
 
 Function Calls
 ==============
-
 You can call functions you have declared, and many builtin MUF primitives in
 this way::
 
@@ -172,7 +187,6 @@ counterpart will return all those values in a list.
 
 Function Variables
 ==================
-
 You can declare extra variables in function scope like this::
 
     func myfunction() {
@@ -204,51 +218,33 @@ will output the following::
     C
 
 
-Constant Declarations
-=====================
-
-You can declare constants using the syntax::
-
-    const PI = 3.14159;
-
-By convention, the constant name should be all uppercase.
-
-
 Built-Ins Functions
 ===================
-
 MUV has several built-in commands available to all programs:
 
-+---------------------+------------------------------------------------------+
-|      Function       |                     Description                      |
-+=====================+======================================================+
-| ``abort(msg)``      | Throws a user exception with the given ``msg``.      |
-+---------------------+------------------------------------------------------+
-| ``throw(msg)``      | The same as ``abort(msg)``                           |
-+---------------------+------------------------------------------------------+
-| ``tell(msg)``       | The same as ``notify(me, msg)``                      |
-+---------------------+------------------------------------------------------+
-| ``count(arr)``      | Returns the count of how many items are in an array. |
-+---------------------+------------------------------------------------------+
-| ``cat(...)``        | Converts all args to strings and concatenates them.  |
-+---------------------+------------------------------------------------------+
-| ``haskey(key,arr)`` | Evaluates true if ``key`` is in the array ``arr``.   |
-+---------------------+------------------------------------------------------+
+===================  ====================================================
+     Function                            Description                     
+===================  ====================================================
+``abort(msg)``       Throws a user exception with the given ``msg``.     
+``throw(msg)``       The same as ``abort(msg)``                          
+``tell(msg)``        The same as ``notify(me, msg)``                     
+``count(arr)``       Returns the count of how many items are in an array.
+``cat(...)``         Converts all args to strings and concatenates them. 
+``haskey(key,arr)``  Evaluates true if ``key`` is in the array ``arr``.  
+===================  ====================================================
 
 MUV also has some built-in constants:
 
-+---------------------+------------------------------------------------------+
-|      Constant       |                     Description                      |
-+=====================+======================================================+
-| ``true``            | ``1`` (Evaluates as true.)                           |
-+---------------------+------------------------------------------------------+
-| ``false``           | ``0`` (Evaluates as false.)                          |
-+---------------------+------------------------------------------------------+
+===================  ====================================================
+     Constant                             Description                    
+===================  ====================================================
+``true``              ``1`` (Evaluates as true.)                         
+``false``             ``0`` (Evaluates as false.)                        
+===================  ====================================================
 
 
 Namespaces
 ==========
-
 If you declare global variables and function within a namespace block, then
 those variables and functions become part of that namespace::
 
@@ -281,7 +277,6 @@ Here's more examples::
 
 Includes
 ========
-
 You can include the code from other MUV files by using the ``include`` command::
 
     include "otherfile.muv";
@@ -297,17 +292,14 @@ MUF primitives declared for MUV to use.  These primitives will be declared
 with exactly the same names as they have in MUF, with the same argument
 ordering.  The only exceptions are:
 
-+------------------+--------------------+-----------------------------------------+
-|     MUF Name     |      MUV Name      |                Change                   |
-+==================+====================+=========================================+
-| ``name-ok?``     | ``name_ok?()``     | Dash in name replaced with underscore.  |
-+------------------+--------------------+-----------------------------------------+
-| ``pname-ok?``    | ``pname_ok?()``    | Dash in name replaced with underscore.  |
-+------------------+--------------------+-----------------------------------------+
-| ``ext-name-ok?`` | ``ext_name_ok?()`` | Dashes in name replaced with underscore.|
-+------------------+--------------------+-----------------------------------------+
-| ``fmtstring``    | ``fmtstring()``    | Argument ordering completely reversed.  |
-+------------------+--------------------+-----------------------------------------+
+================  ==================  ========================================
+    MUF Name           MUV Name                      Change                   
+================  ==================  ========================================
+``name-ok?``      ``name_ok?()``      Dash in name replaced with underscore.  
+``pname-ok?``     ``pname_ok?()``     Dash in name replaced with underscore.  
+``ext-name-ok?``  ``ext_name_ok?()``  Dashes in name replaced with underscore.
+``fmtstring``     ``fmtstring()``     Argument ordering completely reversed.  
+================  ==================  ========================================
 
 Since MUF has kind of a messy namespace, you can *instead* include files
 with just the primitives you need, renamed a bit more sensibly.  For example,
@@ -315,57 +307,35 @@ if you include the file ``!fb6/obj`` You can get access to the standard
 fb6 object related primitives, renamed into the ``obj::`` namespace such
 that MUF primitives like ``name`` and ``set`` are renamed to ``obj::name()``
 and ``obj::set()``, leading to far less namespace polution.  The standard
-namespaced include files are as follows, in order of likely importance:
+namespaced include files are as follows, in alphabetical order.
 
-+------------------+----------------+---------------------------------------------+
-|   Include File   |   NameSpace    |              What it declares               |
-+==================+================+=============================================+
-| ``fb6/stdlib``   |                | ``trig``, ``caller``, ``prog``, ``version``.|
-+------------------+----------------+---------------------------------------------+
-| ``fb6/match``    |                | ``match_noisy``, ``match_controlled``       |
-+------------------+----------------+---------------------------------------------+
-| ``fb6/io``       | ``io::``       | ``notify`` and ``read`` type primitives.    |
-+------------------+----------------+---------------------------------------------+
-| ``fb6/type``     | ``type::``     | Type checking and conversion primitives.    |
-+------------------+----------------+---------------------------------------------+
-| ``fb6/str``      | ``str::``      | String manipulation primitives.             |
-+------------------+----------------+---------------------------------------------+
-| ``fb6/ansi``     | ``ansi::``     | ANSI color code string primitives.          |
-+------------------+----------------+---------------------------------------------+
-| ``fb6/regex``    | ``regex::``    | Regular expression primitives.              |
-+------------------+----------------+---------------------------------------------+
-| ``fb6/math``     | ``math::``     | Floating point and integer math prims.      |
-+------------------+----------------+---------------------------------------------+
-| ``fb6/array``    | ``array::``    | Array/list/dictionary primitives.           |
-+------------------+----------------+---------------------------------------------+
-| ``fb6/prop``     | ``prop::``     | Prims for working with properties.          |
-+------------------+----------------+---------------------------------------------+
-| ``fb6/obj``      | ``obj::``      | DB object related primitives.               |
-+------------------+----------------+---------------------------------------------+
-| ``fb6/time``     | ``time::``     | Time based primitives.                      |
-+------------------+----------------+---------------------------------------------+
-| ``fb6/lock``     | ``lock::``     | Lock related primitives.                    |
-+------------------+----------------+---------------------------------------------+
-| ``fb6/conn``     | ``conn::``     | Connection based primitives.                |
-+------------------+----------------+---------------------------------------------+
-| ``fb6/descr``    | ``descr::``    | Descriptor based connection primitives.     |
-+------------------+----------------+---------------------------------------------+
-| ``fb6/event``    | ``event::``    | Event handling primitives.                  |
-+------------------+----------------+---------------------------------------------+
-| ``fb6/mcp``      | ``mcp::``      | MCP client-server protocol prims.           |
-+------------------+----------------+---------------------------------------------+
-| ``fb6/gui``      | ``gui::``      | MCP-GUI related primitives and defines.     |
-+------------------+----------------+---------------------------------------------+
-| ``fb6/proc``     | ``proc::``     | MUF process related primitives.             |
-+------------------+----------------+---------------------------------------------+
-| ``fb6/prog``     | ``prog::``     | Program calling, editing, and compiling.    |
-+------------------+----------------+---------------------------------------------+
-| ``fb6/sys``      | ``sys::``      | System related primitives.                  |
-+------------------+----------------+---------------------------------------------+
-| ``fb6/debug``    | ``debug::``    | Debugging related primitives.               |
-+------------------+----------------+---------------------------------------------+
-| ``fb6/argparse`` | ``argparse::`` | Cmd-line argument parsing.                  |
-+------------------+----------------+---------------------------------------------+
+================  ==============  ============================================
+  Include File      NameSpace                  What it declares               
+================  ==============  ============================================
+``fb6/ansi``      ``ansi::``      ANSI color code string primitives.          
+``fb6/argparse``  ``argparse::``  Cmd-line argument parsing.                  
+``fb6/array``     ``array::``     Array/list/dictionary primitives.           
+``fb6/conn``      ``conn::``      Connection based primitives.                
+``fb6/debug``     ``debug::``     Debugging related primitives.               
+``fb6/descr``     ``descr::``     Descriptor based connection primitives.     
+``fb6/event``     ``event::``     Event handling primitives.                  
+``fb6/gui``       ``gui::``       MCP-GUI related primitives and defines.     
+``fb6/io``        ``io::``        ``notify`` and ``read`` type primitives.    
+``fb6/lock``      ``lock::``      Lock related primitives.                    
+``fb6/match``                     ``match_noisy``, ``match_controlled``       
+``fb6/math``      ``math::``      Floating point and integer math prims.      
+``fb6/mcp``       ``mcp::``       MCP client-server protocol prims.           
+``fb6/obj``       ``obj::``       DB object related primitives.               
+``fb6/proc``      ``proc::``      MUF process related primitives.             
+``fb6/prog``      ``prog::``      Program calling, editing, and compiling.    
+``fb6/prop``      ``prop::``      Prims for working with properties.          
+``fb6/regex``     ``regex::``     Regular expression primitives.              
+``fb6/stdlib``                    ``trig``, ``caller``, ``prog``, ``version``.
+``fb6/str``       ``str::``       String manipulation primitives.             
+``fb6/sys``       ``sys::``       System related primitives.                  
+``fb6/time``      ``time::``      Time based primitives.                      
+``fb6/type``      ``type::``      Type checking and conversion primitives.    
+================  ==============  ============================================
 
 NOTE: It doesn't make much sense to include *both* ``!fb6/prims`` *and* one
 or more of the namespaced files.  If you include from both, it should still
@@ -412,40 +382,62 @@ Assignment
 
 Numeric Comparisons
 -------------------
-- Equals: ``x == 2``
-- Not Equals: ``x != 2``
-- Greater Than: ``x > 2``
-- Less Than: ``x < 2``
-- Greater Than or Equals: ``x >= 2``
-- Less Than or Equals: ``x <= 2``
+- ``x == 2`` returns true if ``x`` equals ``2``, otherwise false.
+- ``x != 2`` returns true if ``x`` does not equal ``2``, otherwise false.
+- ``x < 2`` returns true if ``x`` is less than ``2``, otherwise false.
+- ``x > 2`` returns true if ``x`` is greater than ``2``, otherwise false.
+- ``x <= 2`` returns true if ``x`` is less than or equal to ``2``, otherwise false.
+- ``x >= 2`` returns true if ``x`` is greater than or equal to ``2``, otherwise false.
 
 
 String Comparisons
 ------------------
-- Case sensitive equals: ``x eq "foo"``
+- ``x eq "foo"`` returns true if ``x`` equals the string ``"foo"``, case sensitive.
 
 
 Array Operations
 ----------------
-- Test if value is in array: ``x in [1, 2, 3, 5, 7, 11, 13, 17, 19]``.
-- Array subscript: ``x[2]`` returns the third item of the array in the
-  variable ``x``.
-- Array subscript assignment: ``x[2] = 42`` sets the third element of the
-  array in ``x`` to ``42``.
+- ``x in arr`` returns true if the value ``x`` is in the array ``arr``.
+- ``x[2]`` returns the third item of the array in the variable ``x``.
+- ``x[2] = 42`` sets the third element of the array in ``x`` to ``42``.
+
+
+True and False
+--------------
+In MUV and MUF both, a value is considered True unless it is one of the
+following specific False values:
+
+- Integer: ``0``
+- DBRef: ``#-1``
+- Float: ``0.0``
+- Empty String: ``""``
+- Empty List: ``[]``
+- Empty Dictionary: ``[=>]``
+- Invalid Lock
+- Stack Mark
 
 
 Logical Operations
 ------------------
-- Logical OR: ``x == 2 || x == 10``
-- Logical AND: ``x > 2 && x < 10``
-- Logical XOR: ``x > 2 ^^ x < 10``
-- Logical NOT: ``!x``
+- Logical AND: ``x && y`` returns true if both ``x`` or ``y`` are true.
+  More specifically, this returns the value of ``x`` if it is false,
+  otherwise it returns the value of ``y``.
+- Logical OR: ``x || y`` returns true if either ``x`` or ``y`` is true.
+  More specifically, this returns the value of ``x`` if it is true,
+  otherwise it returns the value of ``y``.
+- Logical XOR: ``x ^^ y`` returns true if exactly one of ``x`` or ``y`` is true.
+- Logical NOT: ``!x`` returns true if ``x`` is false.
 
+The expression ``x > 3 && !(y < 10)`` will return true if both ``x`` is greater
+than ``3`` *and* ``y`` is *not* less than ``10``.
 
-Note: Logical expressions support shortcutting.  If the left half of a
-logical ``||`` (OR) is true, the right half isn't evaluated at all. If the
-left half of a logical ``&&`` (AND) is false, the right half isn't evaluated
-at all.  Both sides of a logical ``^^`` (XOR) are always evaluated.
+.. note:: Logical expressions support shortcutting.  If the left half of a
+    logical ``||`` (OR) is true, the right half isn't evaluated at all. If
+    the left half of a logical ``&&`` (AND) is false, the right half isn't
+    evaluated at all.  Both sides of a logical ``^^`` (XOR) are always
+    evaluated.  This mostly has implications when you are calling functions
+    in the right-hand side of a shortcutted expression, as these calls may
+    not be made at all.
 
 The intrinsic short-cutting in logical ``&&`` (AND) and ``||`` (OR) operators
 can also have other uses.  The ``&&`` (AND) operator can be used to chain
@@ -457,17 +449,17 @@ Each function in the chain is only called if every previous function in the
 chain returned a true value.  The final value returned will either be the
 first false value returned, or the true value returned by the last call.
 
-Possibly even more useful, if you have a series of functions that return
-a false value on success, and a non-false value on failure, you can chain
-these calls with ``||`` (OR) operators, and get an overall failure code
-(or string) for the chain::
+More usefully, if you have a series of functions that return a false value
+on success, and a non-false value on failure, you can chain these calls with
+``||`` (OR) operators, and get an overall failure code (or string) for the
+chain::
 
     function1(x) || function2(x) || function3(x)
 
-Each function in this chain is only called if every previous function in the
-chain returned a false (success!) value.  The final value returned will either
-be the first true (error code/str) value returned, or the false (success!)
-value returned by the last call.
+Each function in this chain is only called if every previous function in
+the chain returned a false (success!) value.  The final value returned will
+either be the first true (error code or string) value returned, or the false
+(success!) value returned by the last call.
 
 The ``||`` (OR) operator is also useful in returning default values::
 
@@ -476,25 +468,30 @@ The ``||`` (OR) operator is also useful in returning default values::
 This will return the result from ``function1()``, unless it is a value that
 evaluates as false, in which case ``42`` will be returned.
 
-Interestingly, you can combine ``&&`` (AND) and ``||`` (OR) to provide
-alternate values for both success and failure, but only if you use the
-logical operators in that order, and if the success expression evaluates
-as true::
+.. warning:: You can combine ``&&`` (AND) and ``||`` (OR) to provide alternate
+    values for both success and failure::
 
-    test() && "success" || "failure"
+        test() && "success" || "failure"
+    
+    However this only works correctly if you use the logical operators
+    in that specific order, and if the success value evaluates as true.
 
-This will return ``"success"`` if the result of ``test()`` was true, and
-``"failure"`` if it was false.
+    You should resist the urge to use this notation.  It will always be
+    cleaner, more efficient, more concise, and less bug prone to use the
+    Conditional Operator, described below::
+
+        test() ? "success" : "failure"
 
 
-The Conditional Operator
-------------------------
+Conditional Operator
+--------------------
 If you need to provide two different results, based on the result of a third
 expression, you can use the conditional operator::
 
     x>0 ? 1 : 2
 
-This will return 1 if x > 0, otherwise it will return 2.
+This will return ``1`` if ``x`` is greater than ``0``, otherwise it will
+return ``2``.
 
 WARNING: since some identifiers in MUV can end in ``?`` (ie: ``awake?``) you
 will need to put a space between an identifier and the ``?`` in a conditional
@@ -527,10 +524,8 @@ ways::
     var x = y[0][1] = 43 * (z += 1 << 3);
 
 
-
 Arrays
 ======
-
 Declaring a list array is easy::
 
     var listvar = ["First", "Second", "Third", "Forth!"];
@@ -572,7 +567,8 @@ Which deletes the 3rd element of the list stored in ``listvar``, resulting in
     ["First", "Second", "foo", "bar"]
 
 If you need to work with nested lists, ie: lists stored in elements of lists,
-you can just add subscripts to the expression.  For example::
+you can just add subscripts to the expression.  For example, if you start
+with this array::
 
     var nest = [
         [8, 7, 6, 5],
@@ -580,34 +576,39 @@ you can just add subscripts to the expression.  For example::
         ["Foo", "Bar", "Baz"]
     ];
 
-    // Sets a to "Bar", the 2nd element of the list inside the
-    // 3rd element of the list in nested.
-    var a = nest[2][1];
+Then to get the second element of the list embedded in the third element
+of the array in the variable ``nest``, you will do the following::
 
-    // Sets 3rd element of list in the 1st element of nest to 23.
+    nest[2][1];
+
+To set the third element of the list embedded in the first element of
+``nest``, to the value 23, you can do this::
+
     nest[0][2] = 23;
 
-    // nest now contains:
-    // [ [8, 7, 23, 5],  [4, 3, 2],  ["Foo", "Bar", "Baz"] ]
+At this point, the variable ``nest`` will contain the following::
 
-    // Append "baz" to the list in the 3rd element
-    // of the list in nest:
+    [ [8, 7, 23, 5],  [4, 3, 2],  ["Foo", "Bar", "Baz"] ]
+
+To append ``"Qux"`` to the list in the 3rd element of the list in ``nest``::
+
     listvar[2][] = "Qux";
 
-    // nest now contains:
-    // [ [8, 7, 23, 5],  [4, 3, 2],  ["Foo", "Bar", "Baz", "Qux"] ]
+The variable ``nest`` now contains the following::
 
-    // Delete the 2nd element of the list in
-    // the 3rd element in nest.
+    [ [8, 7, 23, 5],  [4, 3, 2],  ["Foo", "Bar", "Baz", "Qux"] ]
+
+To delete the 2nd element of the list in the 3rd element in ``nest``::
+
     del(nest[2][1]);
 
-    // nest now contains:
-    // [ [8, 7, 23, 5],  [4, 3, 2],  ["Foo", "Baz", "Qux"] ]
+The variable ``nest`` now contains::
+
+    [ [8, 7, 23, 5],  [4, 3, 2],  ["Foo", "Baz", "Qux"] ]
 
 
 Dictionaries
 ============
-
 Dictionaries are a special type of array, where the keys are not necessarily
 numeric, and they don't have to be contiguous.  You can use many of the same
 functions and primitives with dictionaries that you use with list arrays.
@@ -634,25 +635,47 @@ the same with a list array::
     mydict["six"] = 6;
     del(mydict["one"]);
 
+Similarly to list arrays, you can also nest dictionaries with other lists and
+dictionaries.  The syntax to manipulate nested dictionaries is exactly the
+same as for lists::
+
+    var nest = [
+        "foo" => [5, 6, 7],
+        "bar" => [
+            "fee" => 1,
+            "fie" => 2,
+            "foe" => 3
+        ],
+        "baz" => 17
+    ];
+    nest["baz"] = 42;
+    nest["bar"][] = "fum";
+    del(nest["foo"][1])
+
 
 Conditional Statements
 ======================
 
 If Statements
 -------------
-You can use the ``if`` statement for conditional code execution::
+You can use the ``if`` statement to execute code only if an expression is true::
 
     if (x > 3)
         tell("Greater!");
 
-Which is the same as::
+This will execute ``tell("Greater!")`` only if the test ``x > 3`` evaluates
+as true.
+
+You can make multiple statements part of the conditional by surrounding them
+in braces like this::
 
     if (x > 3) {
-        tell("Greater!");
+        tell("x > 3!");
+        tell(cat("x = ", x));
     }
 
-If you need an else clause, to evaluate if the test was false, you can write
-it like this::
+If you also need to have it execute code if the expression was false, you can
+use an ``else`` clause, like this::
 
     if (x < 0) {
         tell("Negative!");
@@ -660,17 +683,26 @@ it like this::
         tell("Positive!");
     }
 
+Idiomatically, this is simply "If X is true, do Y, otherwise, do Z."
+
 
 Post-Conditionals
 -----------------
-For a single statement, you can conditionally execute it using a trailing
-``if`` or ``unless`` clause like::
+You can make a single statement execute only if an expression is true by
+using a trailing ``if`` clause::
 
     tell("Odd!") if (x%2);
 
-or::
+This will only execute ``tell("Odd!")`` if the result of ``x % 2`` evaluates
+as true, (non-zero).  Idiomatically, this is "Do X if Y is true."
+
+You can also make a single statement execute only if an expression is false by
+using a trailing ``unless`` clause::
 
     tell("Even!") unless(x%2);
+
+This will only execute ``tell("Even!")`` if the result of ``x % 2`` evaluates
+as False (``0``).  Idiomatically, this is "Do X unless Y is true."
 
 
 Switch Statements
@@ -790,6 +822,9 @@ The condition is checked before each loop::
         tell(intostr(i--));
     }
 
+Idiomatically, ``while(X) Y;`` means  "While X is true, keep repeating Y."
+
+
 Until Loops
 -----------
 Until loops will repeat as long as the condition evaluates false.
@@ -799,6 +834,9 @@ The condition is checked before each loop::
     until (i == 0) {
         tell(intostr(i--));
     }
+
+Idiomatically, ``until(X) Y;`` means  "Until X is true, keep repeating Y."
+
 
 Do-While Loops
 --------------
@@ -811,6 +849,10 @@ least once::
         tell(intostr(i--));
     } while(i > 0);
 
+Idiomatically, ``do X while(Y);`` means "Do X, then while Y is true keep
+repeating X."
+
+
 Do-Until Loops
 --------------
 Do-Until loops will repeat as long as the condition evaluates false.
@@ -822,6 +864,10 @@ least once::
         tell(intostr(i--));
     } until(i == 0);
 
+Idiomatically, ``do X until(Y);`` means "Do X, then until Y is true keep
+repeating X."
+
+
 For Loops
 ---------
 For loops come in a few varieties. The first version counts up
@@ -832,6 +878,9 @@ from one number to another, inclusive::
         tell(intostr(i));
     }
 
+Idiomatically, ``for (V in X => Y) Z;`` means, "Count from X to Y, inclusive.
+For each value, store it in the variable V, then execute Z."
+
 With a ``by`` clause, you can count down, or by a different increment::
 
     // Count from 10 down to 1, inclusive
@@ -839,21 +888,31 @@ With a ``by`` clause, you can count down, or by a different increment::
         tell(intostr(i));
     }
 
+Idiomatically, ``for (V in X => Y by N) Z;`` means, "Count from X to Y,
+inclusive, adding N each time.  For each value, store it in the variable V,
+then execute Z."
+
 You can also iterate arrays/lists/dictionaries like this::
 
     var letters = ["a", "b", "c", "d", "e"];
     for (var letter in letters)
         tell(letter);
 
-Or, to get both index/key and value::
+Idiomatically, ``for (V in X) Y;`` means, "For each item in the array X,
+store the value in the variable V, then execute the code Y."
+
+To iterate over both indexes/keys and values::
 
     for (var idx => var letter in ["a", "b", "c", "d", "e"])
         tell(cat(idx, letter));
 
+Idiomatically, ``for (K => V in X) Y;`` means, "For each item in the array X,
+store the array item's index (key) in the variable K, and the item's value in
+the variable V, then execute the code Y."
+
 
 Comprehensions
 ==============
-
 Using a variation on loops and conditionals, you can quickly create lists and
 dictionaries that are mutations of already existing arrays.  The original
 array is untouched.
@@ -862,9 +921,11 @@ For example, if you have a list of strings in the variable ``words``, you can
 create a list of uppercased versions of those words like this::
 
     var words = ["fee", "fie", "foe", "fum"];
-    var uppers = [for (var word in words) toupper(word)]
+    var uppers = [for (var word in words) toupper(word)];
 
-Similarly, you can mutate a dictionary::
+Similarly, you can generate a dictionary.  If we have an existing dictionary,
+that we want to make a new dictionary from, with uppercased keys, and values
+that are incremented, we can do the following::
 
     var prims = [
         "notify" => 2,
@@ -872,24 +933,22 @@ Similarly, you can mutate a dictionary::
         "swap" => 1,
         "setpropstr" => 3
     ];
-    var keywords = [for (var k => var v in prims) cat("KW_", toupper(k)) => v];
+    var keywords = [for (var k => var v in prims) toupper(k) => v+1];
 
 You can use any variation of for loop for making comprehensions::
 
     var odd_thirds = [for (x in 1 => 100 by 3) if (x % 2) x];
 
 You can also filter a list or dictionary by adding an ``if`` or ``unless``
-clause::
+clause.  This will only include entries which passed the conditional test::
 
-    var nums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     var x;
-    var odds = [for (x in nums) if (x % 2) x]
-    var evens = [for (x in nums) unless (x % 2) x]
+    var odds = [for (x in 0 => 100) if (x % 2) x];
+    var sevens = [for (var y in 0 => 100) unless (y % 7) y];
 
 
 Tuple Assignment
 ================
-
 If an expression or function call returns an array of known size, you can
 assign each array item to an individual variable using tuple assignment::
 
@@ -906,12 +965,13 @@ You can also use tuple assignment inside a loop or comprehension::
 
     var foo = [for (<a, b> in list_generator()) if (a != b) a + b];
 
-Note that the space between the > and = of the tuple assignment is important!
+.. important:: You must put space between the ``>`` and ``=`` of the
+    tuple assignment, or the language parser will get confused, thinking
+    if sees a ``>=`` token.
 
 
 Exception Handling
 ==================
-
 You can trap errors with the ``try`` - ``catch`` construct::
 
     try {
@@ -959,7 +1019,6 @@ If you need to throw your own custom exception, you can do it like::
 
 MUF Interaction
 ===============
-
 Sometimes you need to interact with other MUF programs, by reading or
 storing data on the MUF stack.  You can do that with the ``top`` and
 ``push(...)`` constructs. Also, you can specify raw MUF code with the
@@ -1011,7 +1070,6 @@ If you need it, you can also use raw MUF code in the using clause of a
 
 Extern Declarations
 ===================
-
 If new primitives are added to MUF that MUV doesn't know about, or if you need
 to call external libraries, you can use an ``extern`` declaration to let MUV
 know about how to call it::
@@ -1020,7 +1078,7 @@ know about how to call it::
 
 will tell MUV that a function or primitive named ``tell`` exists that takes one
 argument, and returns nothing on the stack.  A call to this will return the
-value 0, if it is used in an expression::
+value ``0``, if it is used in an expression::
 
     extern single foobar(baz, qux);
 
@@ -1074,45 +1132,57 @@ Directives
 There are a number of compiler directives that are (mostly) passed through to
 the MUF output code.  These include:
 
-+------------------+------------------------------------------------------+
-| Directive        | What it Does                                         |
-+==================+======================================================+
-| $language "muv"  | Allow future MUCK servers to determine this is MUV.  |
-|                  | All MUV programs should start with this directive.   |
-+------------------+------------------------------------------------------+
-| $warn "msg"      | Prints msg as a MUV compiler warning.                |
-+------------------+------------------------------------------------------+
-| $error "msg"     | Prints msg as a MUV error and stops compilation.     |
-+------------------+------------------------------------------------------+
-| $echo "msg"      | Outputs as the corresponding MUF directive.          |
-+------------------+------------------------------------------------------+
-| $author "who"    | Outputs as the corresponding MUF directive.          |
-+------------------+------------------------------------------------------+
-| $note "msg"      | Outputs as the corresponding MUF directive.          |
-+------------------+------------------------------------------------------+
-| $version 1.2     | Outputs as the corresponding MUF directive.          |
-+------------------+------------------------------------------------------+
-| $libversion 1.2  | Outputs as the corresponding MUF directive.          |
-+------------------+------------------------------------------------------+
-| $include "$foo"  | Outputs as the corresponding MUF directive.          |
-+------------------+------------------------------------------------------+
-| $pragma "foo"    | Outputs as the corresponding MUF directive.          |
-+------------------+------------------------------------------------------+
+================  ======================================================
+   Directive         What it Does                                          
+================  ====================================================== 
+$language "muv"   Allow future MUCK servers to determine this is MUV.   
+$warn "msg"       Prints msg as a MUV compiler warning.                 
+$error "msg"      Prints msg as a MUV error and stops compilation.      
+$echo "msg"       Outputs as the corresponding MUF directive.           
+$author "who"     Outputs as the corresponding MUF directive.           
+$note "msg"       Outputs as the corresponding MUF directive.           
+$version 1.2      Outputs as the corresponding MUF directive.           
+$libversion 1.2   Outputs as the corresponding MUF directive.           
+$include "$foo"   Outputs as the corresponding MUF directive.           
+$pragma "foo"     Outputs as the corresponding MUF directive.           
+================  ======================================================
+
+.. important:: All MUV programs should start with ``$language "muv"``.
+  Future versions of the MUCK server will use this to recognize MUV source
+  code.  The MufSim IDE also uses it to distinguish MUV from MUF source.
 
 
 Debugging MUV
 =============
+It's easiest to debug and test MUV code using the MufSim GUI IDE.  There
+are binaries for Mac OS X, and for 64-bit Windows.  You can find them at:
 
-When you are debugging a program compiled into MUF from MUV, there are
-a few things you should be aware of:
+    https://github.com/revarbat/mufsim/tree/master/dist
 
-- If you add a ``-d`` to the muv command-line, debugging code will be inserted
-  throughout the MUF output. This mostly takes the form of comments that show
-  the MUV source line that generated the current MUF code.  These comments take
-  the form ``(MUV:L123)`` where 123 is the line number.
+For Linux, (or any other platform, really), or if you want to use the
+command-line mufsim MUV/MUF debugger instead of the GUI, you can use
+Python and pip to install MufSim::
+
+    pip install mufsim --upgrade
+
+If you prefer to install from the github MufSim sources, download and unpack
+the mufsim-x.x.x.tar.gz archive, then install with::
+
+    python3 setup.py build install
+
+Otherwise, when you are debugging a program compiled into MUF from MUV,
+using the MUCK's built-in MUF debugger or stack-tracing, there are a few
+things you should be aware of:
+
+- If you add a ``-d`` to the muv compiler command-line, debugging code will
+  be inserted throughout the MUF output. This mostly takes the form of
+  comments that show the MUV source line that generated the current MUF code.
+  These comments take the form ``(MUV:L123)`` where 123 is the line number.
 - To prevent namespace collision with the built-in primitives of MUF, the
   non-public functions and variables that MUV generates are renamed slightly
-  from what was given in the MUV sources.
+  from what was given in the MUV sources.  This generally means preceeding
+  the name with a ``_``, and converting any ``::`` namespace separators
+  to ``__``.  ie: ``::foo::bar`` will get renamed to ``_foo__bar``.
 - To keep consistent with expressions returning values, some extra ``dup``
   and ``pop`` statements may appear throughout the code.  Some of this will
   get optimized out by the MUF compiler, and some won't, but they are very
@@ -1157,8 +1227,8 @@ Will compile to MUF as::
 There are several things to note here:
 
 - The program starts with ``$language "muv"``
-- There are comments like (MUV:L123) throughout the code, to indicate what
-  MUV source line originated the MUF code following the comment.
+- There are comments like ``(MUV:L123)`` throughout the code, to indicate
+  what MUV source line originated the MUF code following the comment.
 - The user declared global variable ``gvar`` has been renamed to ``_gvar``
 - The user declared function ``foo`` has been renamed to ``_foo``.
 - The user declared scoped variables ``bar`` and ``baz`` have been renamed
@@ -1175,6 +1245,10 @@ There are several things to note here:
   a ``0`` is pushed onto the stack, so ``foo()`` always returns at least ``0``.
 - The ``__start`` function is added to the end of the progam, to perform
   initialization of global variables.  It then calls the user's last
-  function.  Note: this means global variables in libraries may not
-  get initialized unless you make a public function to specifically
-  initialize them.
+  function.
+  
+.. warning:: Global variable initialization only occurs in the ``__start``
+  function, which isn't run for public library calls.  Global variables in
+  libraries may not get initialized unless you make an explicit public
+  function to initialize them.
+
