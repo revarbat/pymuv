@@ -969,21 +969,23 @@ You can trap errors with the ``try`` - ``catch`` construct::
     }
 
 The variable given to the ``catch`` command will, when an error is received,
-have a dictionary stored in it with the following values:
+have a dictionary stored in it with the following keys:
 
-``error``
-    The error string that was emitted by the MUF instruction that threw an
-    error.
+``"error"``
+    The value for this key will be an error string that was emitted by the
+    MUF instruction that threw an error.
 
-``instr``
-    The name of the MUF instruction that threw the error.
+``"instr"``
+    The value for this is the string name of the MUF instruction that threw
+    the error.
 
-``line``
-    The MUF line that threw the error.
+``"line"``
+    This will have the integer MUF line that threw the error.
 
-``program``
-    The program that the error was thrown in.  This might not be the same as
-    the current program, if the error occurred inside a call.
+``"program"``
+    This will contain the DBRef of the program that the error was thrown in.
+    This might not be the same as the current program, if the error occurred
+    inside a call.
 
 If you don't care about the exception details, you can just not specify the
 variable::
