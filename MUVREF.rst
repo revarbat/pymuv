@@ -955,7 +955,7 @@ You can also use tuple assignment inside a loop or comprehension::
 
 **IMPORTANT:** You must put space between the ``>`` and ``=`` of the
 tuple assignment, or the language parser will get confused, thinking
-if sees a ``>=`` token.
+it sees a ``>=`` token.
 
 
 Exception Handling
