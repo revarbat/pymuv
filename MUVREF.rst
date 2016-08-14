@@ -417,6 +417,23 @@ following specific False values:
 - Stack Mark
 
 
+Conditional Operator
+--------------------
+If you need to provide two different results, based on the result of a third
+expression, you can use the conditional operator::
+
+    x>0 ? 1 : 2
+
+This will return ``1`` if ``x`` is greater than ``0``, otherwise it will
+return ``2``.
+
+**IMPORTANT:** since some identifiers in MUV can end in ``?`` (ie: ``awake?``)
+you will need to put a space between an identifier and the ``?`` in a
+conditional expression, otherwise you may get odd syntax errors::
+
+    var success = result ?"Yes":"No";
+
+
 Logical Operations
 ------------------
 - Logical AND: ``x && y`` returns true if both ``x`` or ``y`` are true.
@@ -431,13 +448,13 @@ Logical Operations
 The expression ``x > 3 && !(y < 10)`` will return true if both ``x`` is greater
 than ``3`` *and* ``y`` is *not* less than ``10``.
 
-.. note:: Logical expressions support shortcutting.  If the left half of a
-    logical ``||`` (OR) is true, the right half isn't evaluated at all. If
-    the left half of a logical ``&&`` (AND) is false, the right half isn't
-    evaluated at all.  Both sides of a logical ``^^`` (XOR) are always
-    evaluated.  This mostly has implications when you are calling functions
-    in the right-hand side of a shortcutted expression, as these calls may
-    not be made at all.
+**NOTE:** Logical expressions support shortcutting.  If the left half of a
+logical ``||`` (OR) is true, the right half isn't evaluated at all. If
+the left half of a logical ``&&`` (AND) is false, the right half isn't
+evaluated at all.  Both sides of a logical ``^^`` (XOR) are always
+evaluated.  This mostly has implications when you are calling functions
+in the right-hand side of a shortcutted expression, as these calls may
+not be made at all.
 
 The intrinsic short-cutting in logical ``&&`` (AND) and ``||`` (OR) operators
 can also have other uses.  The ``&&`` (AND) operator can be used to chain
@@ -468,50 +485,21 @@ The ``||`` (OR) operator is also useful in returning default values::
 This will return the result from ``function1()``, unless it is a value that
 evaluates as false, in which case ``42`` will be returned.
 
-.. warning:: You can combine ``&&`` (AND) and ``||`` (OR) to provide alternate
-    values for both success and failure::
+**WARNING:** You can combine ``&&`` (AND) and ``||`` (OR) to provide alternate
+values for both success and failure, but this is almost never a good idea.
+This notation only works correctly if you use the logical operators in that
+specific order.  Additionally, if the true branch of the expression tries to
+return a false value, then the false branch gets erroneously evaluated as
+well, and its result is returned instead.
 
-        test() && "success" || "failure"
-    
-    However this only works correctly if you use the logical operators
-    in that specific order, and if the success value evaluates as true.
+It will always be cleaner, clearer, more efficient, more concise, and less bug
+prone to use the Conditional Operator.  Do this::
 
-    You should resist the urge to use this notation.  It will always be
-    cleaner, more efficient, more concise, and less bug prone to use the
-    Conditional Operator, described below::
+    result ? "Yes" : "No";
 
-        test() ? "success" : "failure"
+Don't do this::
 
-
-Conditional Operator
---------------------
-If you need to provide two different results, based on the result of a third
-expression, you can use the conditional operator::
-
-    x>0 ? 1 : 2
-
-This will return ``1`` if ``x`` is greater than ``0``, otherwise it will
-return ``2``.
-
-WARNING: since some identifiers in MUV can end in ``?`` (ie: ``awake?``) you
-will need to put a space between an identifier and the ``?`` in a conditional
-expression, otherwise you may get odd syntax errors::
-
-    var success = result ? "Yes" : "No";
-
-You may have noticed that you can also use logical operators to get much the
-same results with slightly different syntax, and only two extra characters::
-
-    var success = result && "Yes" || "No";
-
-There are a few important differences to be aware of, though:
-
-- If the true branch of a logical operator expression tries to return a false
-  value, then the false branch gets erroneously evaluated as well, and its
-  result is returned instead.
-- The conditional operator generates simpler and more efficient code.
-- The conditional operator is explicitly providing alternate values, so it
-  makes for clearer code, compared to abusing logical operator side effects.
+    result && "Yes" || "No";
 
 
 Chaining Expressions
@@ -965,9 +953,9 @@ You can also use tuple assignment inside a loop or comprehension::
 
     var foo = [for (<a, b> in list_generator()) if (a != b) a + b];
 
-.. important:: You must put space between the ``>`` and ``=`` of the
-    tuple assignment, or the language parser will get confused, thinking
-    if sees a ``>=`` token.
+**IMPORTANT:** You must put space between the ``>`` and ``=`` of the
+tuple assignment, or the language parser will get confused, thinking
+if sees a ``>=`` token.
 
 
 Exception Handling
@@ -1147,9 +1135,9 @@ $include "$foo"   Outputs as the corresponding MUF directive.
 $pragma "foo"     Outputs as the corresponding MUF directive.           
 ================  ======================================================
 
-.. important:: All MUV programs should start with ``$language "muv"``.
-  Future versions of the MUCK server will use this to recognize MUV source
-  code.  The MufSim IDE also uses it to distinguish MUV from MUF source.
+**IMPORTANT:** All MUV programs should start with ``$language "muv"``.
+Future versions of the MUCK server will use this to recognize MUV source
+code.  The MufSim IDE also uses it to distinguish MUV from MUF source.
 
 
 Debugging MUV
@@ -1247,8 +1235,8 @@ There are several things to note here:
   initialization of global variables.  It then calls the user's last
   function.
   
-.. warning:: Global variable initialization only occurs in the ``__start``
-  function, which isn't run for public library calls.  Global variables in
-  libraries may not get initialized unless you make an explicit public
-  function to initialize them.
+**WARNING:** Global variable initialization only occurs in the ``__start``
+function, which isn't run for public library calls.  Global variables in
+libraries may not get initialized unless you make an explicit public
+function to initialize them.
 
