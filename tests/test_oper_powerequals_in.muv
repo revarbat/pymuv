@@ -1,0 +1,7 @@
+$language "muv"
+func main(arg)
+{
+    var a = 4;
+    return a **= 2;
+}
+

@@ -934,6 +934,7 @@ def equality_oper():
 
 def assignment_oper():
     return [
+        ASGN_POWER,
         ASGN_MULT, ASGN_DIV, ASGN_MOD,
         ASGN_PLUS, ASGN_MINUS,
         ASGN_BITLEFT, ASGN_BITRIGHT,

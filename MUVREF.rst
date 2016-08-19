@@ -407,6 +407,7 @@ Assignment
 - Multiply and assign: ``x *= 2`` is the same as ``x = x * 2``
 - Divide and assign: ``x /= 2`` is the same as ``x = x / 2``
 - Modulo and assign: ``x %= 2`` is the same as ``x = x % 2``
+- Raise to the power and assign: ``x **= 2`` is the same as ``x = x ** 2``
 - Bitwise AND and assign: ``x &= 2`` is the same as ``x = x & 2``
 - Bitwise OR and assign: ``x |= 2`` is the same as ``x = x | 2``
 - Bitwise XOR and assign: ``x ^= 2`` is the same as ``x = x ^ 2``
