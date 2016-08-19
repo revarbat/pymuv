@@ -2,8 +2,9 @@
 (   https://github.com/revarbat/pymuv )
 
 : _main[ _a -- ret ]
-    _a @ var! _swvar
     begin
+        _a @
+        var! _swvar
         _swvar @ "1" strcmp not if
             "One" me @ swap notify break
         then
@@ -11,8 +12,9 @@
             "Two" me @ swap notify break
         then
     repeat
-    _a @ var! _swvar2
     begin
+        _a @
+        var! _swvar2
         _swvar2 @ "1" stringcmp not if
             "One" me @ swap notify break
         then
@@ -20,8 +22,9 @@
             "Two" me @ swap notify break
         then
     repeat
-    _a @ var! _swvar3
     begin
+        _a @
+        var! _swvar3
         _swvar3 @ "1" strcmp not if
             "One" me @ swap notify break
         then
@@ -29,8 +32,9 @@
             "Two" me @ swap notify break
         then
     repeat
-    3 var! _swvar4
     begin
+        3
+        var! _swvar4
         _swvar4 @ 1 = if
             "One" me @ swap notify break
         then

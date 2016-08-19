@@ -1,0 +1,5 @@
+func main(ang)
+{
+    return 2 ** 3;
+}
+

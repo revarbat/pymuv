@@ -11,11 +11,11 @@ from arpeggio import RegExMatch as _
 
 
 def comment_line():
-    return _(r'//.*?$')
+    return _(r'//.*?$', str_repr='comment')
 
 
 def comment_multi():
-    return _(r'/\*(?ms).*?\*/')
+    return _(r'/\*(?ms).*?\*/', str_repr='comment')
 
 
 def comment():
@@ -243,7 +243,7 @@ def ENDBRACKET():
 
 
 def ASGN():
-    return _("=(?![=>])")
+    return _(r'=(?![=>])', str_repr='=')
 
 
 def ASGN_PLUS():
@@ -291,35 +291,35 @@ def ASGN_BITRIGHT():
 
 
 def OPER_PLUS():
-    return _("\+(?![=+])")
+    return _(r'\+(?![=+])', str_repr='+')
 
 
 def OPER_MINUS():
-    return _("-(?![=-])")
+    return _(r'-(?![=-])', str_repr='-')
 
 
 def OPER_MULT():
-    return _("\*(?![/*=])")
+    return _(r'\*(?![/*=])', str_repr='*')
 
 
 def OPER_DIV():
-    return _("/(?![/*=])")
+    return _(r'/(?![/*=])', str_repr='/')
 
 
 def OPER_MOD():
-    return _("%(?!=)")
+    return _(r'%(?!=)', str_repr='%')
 
 
 def OPER_POWER():
-    return _("\*\*(?!=)")
+    return _(r'\*\*(?!=)', str_repr='**')
 
 
 def OPER_BITAND():
-    return _("&(?![&=])")
+    return _(r'&(?![&=])', str_repr='&')
 
 
 def OPER_BITOR():
-    return _("\|(?![|=])")
+    return _(r'\|(?![|=])', str_repr='|')
 
 
 def OPER_BITXOR():
@@ -331,11 +331,11 @@ def OPER_BITNOT():
 
 
 def OPER_BITLEFT():
-    return _("<<(?!=)")
+    return _(r'<<(?!=)', str_repr='<<')
 
 
 def OPER_BITRIGHT():
-    return _(">>(?!=)")
+    return _(r'>>(?!=)', str_repr='>>')
 
 
 def OPER_INCR():
@@ -363,7 +363,7 @@ def LOGICAL_XOR():
 
 
 def LOGICAL_NOT():
-    return _("!(?!=)")
+    return _(r'!(?!=)', str_repr='!')
 
 
 def COMP_EQ():
@@ -375,11 +375,11 @@ def COMP_NEQ():
 
 
 def COMP_LT():
-    return _(r"<(?![=<])")
+    return _(r'<(?![=<])', str_repr='<')
 
 
 def COMP_GT():
-    return _(r">(?![=>])")
+    return _(r'>(?![=>])', str_repr='>')
 
 
 def COMP_LTE():
@@ -403,7 +403,7 @@ def NS_SEP():
 
 
 def identifier():
-    return _(r'(?i)[a-z_]\w*')
+    return _(r'(?i)[a-z_]\w*', str_repr='ident')
 
 
 def ns_parts():
@@ -439,19 +439,19 @@ def numsign():
 
 
 def bin_integer():
-    return "0b", _(r'[01_]+')
+    return "0b", _(r'[01_]+', str_repr='binary-number')
 
 
 def oct_integer():
-    return "0o", _(r'[0-7_]+')
+    return "0o", _(r'[0-7_]+', str_repr='octal-number')
 
 
 def dec_integer():
-    return Optional("0d"), _(r'[0-9_]+(?![.eE])')
+    return Optional("0d"), _(r'[0-9_]+(?![.eE])', str_repr='decimal-number')
 
 
 def hex_integer():
-    return "0x", _(r'[0-9a-fA-F_]+')
+    return "0x", _(r'[0-9a-fA-F_]+', str_repr='hex-integer')
 
 
 def unsigned_integer():
@@ -464,8 +464,8 @@ def intnum():
 
 def floatnum():
     return [
-        _(r'[+-]?(\d+[.]\d*|\d*[.]\d+|\d+)[eE][+-]?[0-9]+'),
-        _(r'[+-]?(\d+[.]\d*|\d*[.]\d+)'),
+        _(r'[+-]?(\d+[.]\d*|\d*[.]\d+|\d+)[eE][+-]?[0-9]+', str_repr='float'),
+        _(r'[+-]?(\d+[.]\d*|\d*[.]\d+)', str_repr='float'),
     ]
 
 
@@ -478,35 +478,35 @@ def dbref():
 
 
 def raw_dquote_string():
-    return [_('r".*?"')]
+    return [_('r".*?"', str_repr='string')]
 
 
 def raw_squote_string():
-    return [_("r'.*?'")]
+    return [_("r'.*?'", str_repr='string')]
 
 
 def raw_dquote3_string():
-    return [_('(?ms)r""".*?"""')]
+    return [_('(?ms)r""".*?"""', str_repr='string')]
 
 
 def raw_squote3_string():
-    return [_("(?ms)r'''.*?'''")]
+    return [_("(?ms)r'''.*?'''", str_repr='string')]
 
 
 def dquote_string():
-    return [_(r'"([^"\\]|\\.|\\$)*"')]
+    return [_(r'"([^"\\]|\\.|\\$)*"', str_repr='string')]
 
 
 def squote_string():
-    return [_(r"'([^'\\]|\\.|\\$)*'")]
+    return [_(r"'([^'\\]|\\.|\\$)*'", str_repr='string')]
 
 
 def dquote3_string():
-    return [_(r'(?ms)"""([^"\\]|\\.|"(?!""))*"""')]
+    return [_(r'(?ms)"""([^"\\]|\\.|"(?!""))*"""', str_repr='string')]
 
 
 def squote3_string():
-    return [_(r"(?ms)'''([^'\\]|\\.|'(?!''))*'''")]
+    return [_(r"(?ms)'''([^'\\]|\\.|'(?!''))*'''", str_repr='string')]
 
 
 def raw_string_literal():
@@ -909,7 +909,7 @@ def unary_oper():
 
 
 def power_oper():
-    return OPER_POWER
+    return [OPER_POWER]
 
 
 def multiplicative_oper():

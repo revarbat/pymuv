@@ -277,13 +277,13 @@ Here's more examples::
 
 Includes
 ========
-You can include the code from other MUV files by using the ``include`` command::
+You can include code from other MUV files by using the ``include`` command::
 
     include "otherfile.muv";
 
 You can include standard MUV files by preceeding the filename with a ``!``.
 This tells ``include`` to look for the file in the system-wide MUV includes.
-One important standard include file is ``!fb6/prims``::
+One important standard include file is `fb6/prims`_::
 
     include "!fb6/prims";
 
@@ -292,14 +292,14 @@ MUF primitives declared for MUV to use.  These primitives will be declared
 with exactly the same names as they have in MUF, with the same argument
 ordering.  The only exceptions are:
 
-================  ==================  ========================================
+================  ==================  =========================================
     MUF Name           MUV Name                      Change                   
-================  ==================  ========================================
+================  ==================  =========================================
 ``name-ok?``      ``name_ok?()``      Dash in name replaced with underscore.  
 ``pname-ok?``     ``pname_ok?()``     Dash in name replaced with underscore.  
-``ext-name-ok?``  ``ext_name_ok?()``  Dashes in name replaced with underscore.
+``ext-name-ok?``  ``ext_name_ok?()``  Dashes in name replaced with underscores.
 ``fmtstring``     ``fmtstring()``     Argument ordering completely reversed.  
-================  ==================  ========================================
+================  ==================  =========================================
 
 Since MUF has kind of a messy namespace, you can *instead* include files
 with just the primitives you need, renamed a bit more sensibly.  For example,
@@ -307,39 +307,72 @@ if you include the file ``!fb6/obj`` You can get access to the standard
 fb6 object related primitives, renamed into the ``obj::`` namespace such
 that MUF primitives like ``name`` and ``set`` are renamed to ``obj::name()``
 and ``obj::set()``, leading to far less namespace polution.  The standard
-namespaced include files are as follows, in alphabetical order.
+namespaced primitives include files are as follows, in alphabetical order.
 
-================  ==============  ============================================
+=================  ==============  ============================================
   Include File      NameSpace                  What it declares               
-================  ==============  ============================================
-``fb6/ansi``      ``ansi::``      ANSI color code string primitives.          
-``fb6/argparse``  ``argparse::``  Cmd-line argument parsing.                  
-``fb6/array``     ``array::``     Array/list/dictionary primitives.           
-``fb6/conn``      ``conn::``      Connection based primitives.                
-``fb6/debug``     ``debug::``     Debugging related primitives.               
-``fb6/descr``     ``descr::``     Descriptor based connection primitives.     
-``fb6/event``     ``event::``     Event handling primitives.                  
-``fb6/gui``       ``gui::``       MCP-GUI related primitives and defines.     
-``fb6/io``        ``io::``        ``notify`` and ``read`` type primitives.    
-``fb6/lock``      ``lock::``      Lock related primitives.                    
-``fb6/match``                     ``match_noisy``, ``match_controlled``       
-``fb6/math``      ``math::``      Floating point and integer math prims.      
-``fb6/mcp``       ``mcp::``       MCP client-server protocol prims.           
-``fb6/obj``       ``obj::``       DB object related primitives.               
-``fb6/proc``      ``proc::``      MUF process related primitives.             
-``fb6/prog``      ``prog::``      Program calling, editing, and compiling.    
-``fb6/prop``      ``prop::``      Prims for working with properties.          
-``fb6/regex``     ``regex::``     Regular expression primitives.              
-``fb6/stdlib``                    ``trig``, ``caller``, ``prog``, ``version``.
-``fb6/str``       ``str::``       String manipulation primitives.             
-``fb6/sys``       ``sys::``       System related primitives.                  
-``fb6/time``      ``time::``      Time based primitives.                      
-``fb6/type``      ``type::``      Type checking and conversion primitives.    
-================  ==============  ============================================
+=================  ==============  ============================================
+`fb6/ansi`_        ``ansi::``      ANSI color code string primitives.          
+`fb6/array`_       ``array::``     Array/list/dictionary primitives.           
+`fb6/conn`_        ``conn::``      Connection based primitives.                
+`fb6/debug`_       ``debug::``     Debugging related primitives.               
+`fb6/descr`_       ``descr::``     Descriptor based connection primitives.     
+`fb6/event`_       ``event::``     Event handling primitives.                  
+`fb6/gui`_         ``gui::``       MCP-GUI related primitives and defines.     
+`fb6/io`_          ``io::``        ``notify`` and ``read`` type primitives.    
+`fb6/lock`_        ``lock::``      Lock related primitives.                    
+`fb6/math`_        ``math::``      Floating point and integer math prims.      
+`fb6/mcp`_         ``mcp::``       MCP client-server protocol prims.           
+`fb6/obj`_         ``obj::``       DB object related primitives.               
+`fb6/proc`_        ``proc::``      MUF process related primitives.             
+`fb6/prog`_        ``prog::``      Program calling, editing, and compiling.    
+`fb6/prop`_        ``prop::``      Prims for working with properties.          
+`fb6/regex`_       ``regex::``     Regular expression primitives.              
+`fb6/stdlib`_                      ``trig``, ``caller``, ``prog``, ``version``.
+`fb6/str`_         ``str::``       String manipulation primitives.             
+`fb6/sys`_         ``sys::``       System related primitives.                  
+`fb6/time`_        ``time::``      Time based primitives.                      
+`fb6/type`_        ``type::``      Type checking and conversion primitives.    
+=================  ==============  ============================================
 
 NOTE: It doesn't make much sense to include *both* ``!fb6/prims`` *and* one
 or more of the namespaced files.  If you include from both, it should still
 work, but it really misses the point of using namespaces.
+
+There are also a couple standard include files that provide access to features
+useful for matching and argument parsing.
+
+================  ==============  ============================================
+  Include File      NameSpace                  What it declares               
+================  ==============  ============================================
+`fb6/match`_                      ``match_noisy``, ``match_controlled``       
+`fb6/argparse`_   ``argparse::``  Cmd-line argument parsing.                  
+================  ==============  ============================================
+
+.. _fb6/prims: https://github.com/revarbat/pymuv/blob/master/pymuv/incls/fb6/prims
+.. _fb6/ansi: https://github.com/revarbat/pymuv/blob/master/pymuv/incls/fb6/ansi
+.. _fb6/array: https://github.com/revarbat/pymuv/blob/master/pymuv/incls/fb6/array
+.. _fb6/conn: https://github.com/revarbat/pymuv/blob/master/pymuv/incls/fb6/conn
+.. _fb6/debug: https://github.com/revarbat/pymuv/blob/master/pymuv/incls/fb6/debug
+.. _fb6/descr: https://github.com/revarbat/pymuv/blob/master/pymuv/incls/fb6/descr
+.. _fb6/event: https://github.com/revarbat/pymuv/blob/master/pymuv/incls/fb6/event
+.. _fb6/gui: https://github.com/revarbat/pymuv/blob/master/pymuv/incls/fb6/gui
+.. _fb6/io: https://github.com/revarbat/pymuv/blob/master/pymuv/incls/fb6/io
+.. _fb6/lock: https://github.com/revarbat/pymuv/blob/master/pymuv/incls/fb6/lock
+.. _fb6/math: https://github.com/revarbat/pymuv/blob/master/pymuv/incls/fb6/math
+.. _fb6/mcp: https://github.com/revarbat/pymuv/blob/master/pymuv/incls/fb6/mcp
+.. _fb6/obj: https://github.com/revarbat/pymuv/blob/master/pymuv/incls/fb6/obj
+.. _fb6/proc: https://github.com/revarbat/pymuv/blob/master/pymuv/incls/fb6/proc
+.. _fb6/prog: https://github.com/revarbat/pymuv/blob/master/pymuv/incls/fb6/prog
+.. _fb6/prop: https://github.com/revarbat/pymuv/blob/master/pymuv/incls/fb6/prop
+.. _fb6/regex: https://github.com/revarbat/pymuv/blob/master/pymuv/incls/fb6/regex
+.. _fb6/stdlib: https://github.com/revarbat/pymuv/blob/master/pymuv/incls/fb6/stdlib
+.. _fb6/str: https://github.com/revarbat/pymuv/blob/master/pymuv/incls/fb6/str
+.. _fb6/sys: https://github.com/revarbat/pymuv/blob/master/pymuv/incls/fb6/sys
+.. _fb6/time: https://github.com/revarbat/pymuv/blob/master/pymuv/incls/fb6/time
+.. _fb6/type: https://github.com/revarbat/pymuv/blob/master/pymuv/incls/fb6/type
+.. _fb6/match: https://github.com/revarbat/pymuv/blob/master/pymuv/incls/fb6/match
+.. _fb6/argparse: https://github.com/revarbat/pymuv/blob/master/pymuv/incls/fb6/argparse
 
 
 Expressions
@@ -352,6 +385,7 @@ Basic Math
 - Multiplication: ``5 * 2``
 - Division: ``10 / 2``
 - Modulo: ``7 % 3``
+- Power: ``7 ** 3``
 - Grouping: ``2 * (3 + 4)``
 
 

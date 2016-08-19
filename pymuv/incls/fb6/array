@@ -9,6 +9,8 @@ extern single   concat(args*) = "{ }list swap array_reverse foreach swap pop 0 s
 extern single   merge(args*) = "{ }dict swap foreach swap pop foreach rot rot ->[] repeat repeat";
 
 extern single   sum(arr) = "0 swap foreach swap pop + repeat";
+extern single   min(arr) = "1 array_cut swap array_vals pop swap foreach swap pop over over > if swap then pop repeat";
+extern single   max(arr) = "1 array_cut swap array_vals pop swap foreach swap pop over over < if swap then pop repeat";
 
 extern multiple first(arr) = "array_first";
 extern multiple last(arr) = "array_last";

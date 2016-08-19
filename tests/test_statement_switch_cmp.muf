@@ -22,8 +22,9 @@
 ;
 : _main[ _arg -- ret ]
     2 var! _i
-    _i @ var! _swvar
     begin
+        _i @
+        var! _swvar
         _swvar @ 1 = if
             "One." me @ swap notify break
         then
@@ -34,8 +35,9 @@
             "Three." me @ swap notify break
         then
     repeat
-    _arg @ var! _swvar2
     begin
+        _arg @
+        var! _swvar2
         _swvar2 @ "greet" strcmp not if
             "Hello." me @ swap notify break
         then
@@ -47,8 +49,9 @@
         then
         "I don't understand." me @ swap notify break
     repeat
-    _arg @ var! _swvar3
     begin
+        _arg @
+        var! _swvar3
         _swvar3 @ "fee" complex_match if
             "Fee selected!" me @ swap notify break
         then
@@ -60,8 +63,9 @@
         then
     repeat
     "foo" var! _a
-    42 var! _swvar4
     begin
+        42
+        var! _swvar4
         _swvar4 @ 99 > if
             "A" me @ swap notify break
         then
