@@ -57,6 +57,18 @@ class MuvNode(object):
             if line != prevline:
                 prevline = line
                 out += "(MUV:L%s) " % line
+        txt = out
+        out = ''
+        for line in txt.split('\n'):
+            sline = line.lstrip()
+            indent = len(line) - len(sline)
+            while True:
+                m = re.search(r'^(.+?)(\(MUV:L\d+\).*)$', sline)
+                if not m:
+                    out += (' ' * indent) + sline + '\n'
+                    break
+                out += (' ' * indent) + m.group(1).strip() + '\n'
+                sline = m.group(2).strip()
         return out
 
 

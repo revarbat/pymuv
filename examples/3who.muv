@@ -1,0 +1,97 @@
+$language "muv"
+
+include "!fb6/obj";
+include "!fb6/descr";
+include "!fb6/array";
+include "!fb6/math";
+include "!fb6/io";
+
+using namespace obj;
+using namespace descr;
+using namespace math;
+using namespace io;
+
+func stimestr(secs) {
+    if (secs > 86400) {
+        return fmtstring("%3id", secs/86400);
+    } else if (secs > 3600) {
+        return fmtstring("%3ih", secs/3600);
+    } else if (secs > 60) {
+        return fmtstring("%3im", secs/60);
+    } else {
+        return fmtstring("%3is", secs);
+    }
+}
+
+func mtimestr(secs) {
+    var days = "";
+    var hours = 0;
+    var mins = 0;
+    if (secs >= 86400) {
+        days = fmtstring("%id ", secs/86400);
+        secs %= 86400;
+    }
+    if (secs >= 3600) {
+        hours = secs/3600;
+        secs %= 3600;
+    }
+    if (secs >= 60) {
+        mins = secs/60;
+        secs %= 60;
+    }
+    return fmtstring("%s%0.2i:%0.2i", days, hours, mins);
+}
+
+func columnize(arr, cols, colheader) {
+    var col;
+    var arrlen = count(arr);
+    var maxrows = int(ceil(arrlen/(cols+0.0)));
+    var minrows = int(floor(arrlen/(cols+0.0)));
+    var colrows = [for (col in 0 => cols-1) minrows];
+    for (col in 0 => arrlen - cols*minrows - 1) {
+        colrows[col] = maxrows;
+    }
+    var colcols = 80/cols - 1;
+    var colfmt = cat("%-", colcols, ".", colcols, "s");
+    var out = [];
+    var line = "";
+    for (col in 0 => cols - 1) {
+        if (line) {
+            line = cat(line, " ");
+        }
+        line = cat(line, fmtstring(colfmt, colheader));
+    }
+    out[] = line;
+    for (var row in 0 => maxrows-1) {
+        line = "";
+        var baseidx = 0;
+        for (col in 0 => cols - 1) {
+            if (row <= colrows[col] - 1) {
+                if (line) {
+                    line = cat(line, ' ');
+                }
+                line = cat(line, fmtstring(colfmt, arr[baseidx + row]));
+            }
+            baseidx += colrows[col];
+        }
+        out[] = line;
+    }
+    return out;
+}
+
+func main(arg) {
+    var cols = 3;
+    var colhdr = "Name         OnTime Idle";
+    var who_list = [
+        for (var x in descr_array(#-1))
+        if (descrdbref(x))
+        fmtstring(
+            "%-12s %6s %4s",
+            name(descrdbref(x)),
+            mtimestr(descrtime(x)),
+            stimestr(descridle(x))
+        )
+    ];
+    array_notify(columnize(who_list, cols, colhdr), [me]);
+    tell(fmtstring("%i players connected.", count(who_list)));
+}
