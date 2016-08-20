@@ -94,3 +94,6 @@ ENV/
 # OS X cruft
 .DS_Store
 
+tests/test_*_out.muf
+
+

@@ -1,9 +1,10 @@
-( Generated from test_oper_plus_in.muv by the MUV compiler. )
+( Generated from test_statement_fmtstring_in.muv by the MUV compiler. )
 (   https://github.com/revarbat/pymuv )
 
 : _main[ _arg -- ret ]
-    42 13 +
+    "foof" 8 "%*s." fmtstring
 ;
+
 : __start
     "me" match me ! me @ location loc ! trig trigger !
     _main

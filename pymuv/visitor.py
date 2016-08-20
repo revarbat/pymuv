@@ -731,15 +731,18 @@ class MuvVisitor(PTNodeVisitor):
         fmt = args[0]
         if isinstance(fmt, mn.MuvNodeString):
             pos = fmt.position
-            fmt = fmt.value
-            pats = re.findall(r'%.', fmt.replace('%%', ''))
-            if len(args) - 1 != len(pats):
+            fmt = fmt.value.replace('%%', '')
+            pats = re.findall(r'%[| +-]?[\d\*]*\.?[\d\*]*[isdDlefg~?]', fmt)
+            acount = 0
+            for pat in pats:
+                acount += len(pat.split('*'))
+            if len(args) - 1 != acount:
                 raise MuvError(
                     (
                         "fmtstring(fmt, ...) format string "
                         "expects {exp} args, but got {found}."
                     ).format(
-                        exp=len(pats),
+                        exp=acount,
                         found=len(args) - 1,
                     ),
                     position=pos,
@@ -755,19 +758,34 @@ class MuvVisitor(PTNodeVisitor):
                 mn.MuvNodeString,
             ]
             fmt_types = {
-                "%i": ("integer", mn.MuvNodeInteger),
-                "%d": ("dbref", mn.MuvNodeDbRef),
-                "%D": ("dbref", mn.MuvNodeDbRef),
-                "%e": ("float", mn.MuvNodeFloat),
-                "%f": ("float", mn.MuvNodeFloat),
-                "%g": ("float", mn.MuvNodeFloat),
-                "%s": ("string", mn.MuvNodeString),
+                "i": ("integer", mn.MuvNodeInteger),
+                "d": ("dbref", mn.MuvNodeDbRef),
+                "D": ("dbref", mn.MuvNodeDbRef),
+                "e": ("float", mn.MuvNodeFloat),
+                "f": ("float", mn.MuvNodeFloat),
+                "g": ("float", mn.MuvNodeFloat),
+                "s": ("string", mn.MuvNodeString),
             }
             num = 0
-            for pat, val in zip(pats, args[1:]):
+            for pat in pats:
                 num += 1
+                for i in range(len(pat.split('*'))-1):
+                    val = args[num]
+                    if type(val) in literals:
+                        if not isinstance(val, mn.MuvNodeInteger):
+                            raise MuvError(
+                                errfmt.format(
+                                    exp="integer",
+                                    found=val.valtype,
+                                    num=num,
+                                ),
+                                position=val.position,
+                            )
+                    num += 1
+                val = args[num]
                 if type(val) in literals:
-                    typname, typ = fmt_types[pat]
+                    basepat = pat[-1]
+                    typname, typ = fmt_types[basepat]
                     if not isinstance(val, typ):
                         raise MuvError(
                             errfmt.format(

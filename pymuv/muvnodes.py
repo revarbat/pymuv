@@ -65,9 +65,12 @@ class MuvNode(object):
             while True:
                 m = re.search(r'^(.+?)(\(MUV:L\d+\).*)$', sline)
                 if not m:
-                    out += (' ' * indent) + sline + '\n'
+                    if sline:
+                        out += (' ' * indent) + sline + '\n'
                     break
-                out += (' ' * indent) + m.group(1).strip() + '\n'
+                pre = m.group(1).strip()
+                if pre:
+                    out += (' ' * indent) + pre + '\n'
                 sline = m.group(2).strip()
         return out
 
@@ -944,6 +947,7 @@ class MuvNodeProgram(MuvNode):
                 (r'\bswap bitxor\b', r'bitxor'),
                 (r'\bswap bitand\b', r'bitand'),
                 (r'(\w+) @ \1 (\+\+|--) pop\b', r'\1 \2'),
+                (r'(?ms)\n\n', r'\n'),
             ]
         for pat, repl in replacements:
             out = re.sub(pat, repl, out)
