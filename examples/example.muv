@@ -9,7 +9,7 @@ func arrrr() {
 
     tell(bar[3]);
     for (var key => var val in bar) {
-        tell(cat(key + " = " + val));
+        tell(cat(key, " = ", val));
     }
 }
 
