@@ -4,7 +4,7 @@ import os
 import glob
 from setuptools import setup
 
-VERSION = "0.9.6"
+VERSION = "0.9.7"
 
 
 def find_data_files(source, target, patterns):
@@ -48,7 +48,7 @@ setup(
     url='https://github.com/revarbat/pymuv',
     download_url='https://github.com/revarbat/pymuv/archive/master.zip',
     packages=['pymuv'],
-    package_data={'pymuv': ["incls/fb6/*"]},
+    package_data={'pymuv': ["incls/fb6/*", "incls/fb7/*"]},
     license='MIT License',
     classifiers=[
         'Development Status :: 4 - Beta',
