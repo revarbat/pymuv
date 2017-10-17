@@ -287,10 +287,10 @@ One important standard include file is `fb6/prims`_::
 
     include "!fb6/prims";
 
-If you include ``!fb6/prims`` in your file, you will get all the standard FB6
-MUF primitives declared for MUV to use.  These primitives will be declared
-with exactly the same names as they have in MUF, with the same argument
-ordering.  The only exceptions are:
+If you include ``!fb6/prims`` (or ``!fb7/prims``) in your file, you will get
+all the standard FB6 (or FB7) MUF primitives declared for MUV to use.  These
+primitives will be declared with exactly the same names as they have in MUF,
+with the same argument ordering.  The only exceptions are:
 
 ================  ==================  =========================================
     MUF Name           MUV Name                      Change                   
@@ -303,11 +303,13 @@ ordering.  The only exceptions are:
 
 Since MUF has kind of a messy namespace, you can *instead* include files
 with just the primitives you need, renamed a bit more sensibly.  For example,
-if you include the file ``!fb6/obj`` You can get access to the standard
-fb6 object related primitives, renamed into the ``obj::`` namespace such
-that MUF primitives like ``name`` and ``set`` are renamed to ``obj::name()``
-and ``obj::set()``, leading to far less namespace polution.  The standard
-namespaced primitives include files are as follows, in alphabetical order.
+if you include the file ``!fb6/obj`` (or ``!fb7/obj``) You can get access
+to the standard fb6 (or fb7) object related primitives, renamed into the
+``obj::`` namespace such that MUF primitives like ``name`` and ``set`` are
+renamed to ``obj::name()`` and ``obj::set()``, leading to far less namespace
+polution.  The standard namespaced primitives include files are as follows,
+in alphabetical order.  (You can replace `fb6` with `fb7` for all of these.  The
+fb7 include files are a superset of the fb6 includes.)
 
 =================  ==============  ============================================
   Include File      NameSpace                  What it declares               
