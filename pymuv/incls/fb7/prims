@@ -343,7 +343,7 @@ extern single nextprop(x,y);
 extern single parseprop(w,x,y,z);
 extern multiple parsepropex(w,x,y,z);
 extern single parsempi(w,x,y,z);
-extern single parsempi_blessed(w,x,y,z);
+extern single parsempiblessed(w,x,y,z);
 extern void reflist_add(x,y,z);
 extern void reflist_del(x,y,z);
 extern single reflist_find(x,y,z);

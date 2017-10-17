@@ -42,7 +42,7 @@ extern void     reflist_put(x,y,z) = "array_put_reflist";
 extern single   parseprop(w,x,y,z);
 extern multiple parsepropex(w,x,y,z);
 extern single   parsempi(w,x,y,z);
-extern single   parsempi_blessed(w,x,y,z);
+extern single   parsempiblessed(w,x,y,z);
 
 }
 

@@ -4,7 +4,7 @@ import os
 import glob
 from setuptools import setup
 
-VERSION = "0.9.5"
+VERSION = "0.9.6"
 
 
 def find_data_files(source, target, patterns):
