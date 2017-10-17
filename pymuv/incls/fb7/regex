@@ -1,0 +1,18 @@
+////////////////////////////
+// regex namespace
+
+namespace regex {
+
+    extern multiple match(txt,pat,flgs) = "regexp";
+    extern single   sub(txt,pat,repl,flgs) = "regsub";
+    extern single   split(txt,pat,flgs) = "regsplit";
+    extern single   split_noempty(txt,pat,flgs) = "regsplit_noempty";
+
+    // Server defined constants.
+    const ICASE = muf("reg_icase");
+    const ALL = muf("reg_all");
+    const EXTENDED = muf("reg_extended");
+
+}
+
+

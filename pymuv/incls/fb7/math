@@ -1,0 +1,63 @@
+////////////////////////////////////
+// Make math namespace.
+
+namespace math {
+
+extern single   min(x,y) = "over over > if swap then pop";
+extern single   max(x,y) = "over over < if swap then pop";
+
+extern single   nmin(x,y*) = "foreach swap pop over over > if swap then pop repeat";
+extern single   nmax(x,y*) = "foreach swap pop over over < if swap then pop repeat";
+
+extern single   sum(arr) = "0 swap foreach swap pop + repeat";
+
+extern single   int(x);
+extern single   abs(x);
+extern single   ceil(x);
+extern single   floor(x);
+extern single   fmod(x,y);
+extern multiple modf(x);
+extern single   sign(x);
+
+extern single   sqrt(x);
+extern single   pow(x,y);
+extern single   log(x);
+extern single   exp(x);
+extern single   log10(x);
+extern single   exp10(x);
+
+extern single   sin(x);
+extern single   cos(x);
+extern single   tan(x);
+extern single   asin(x);
+extern single   acos(x);
+extern single   atan(x);
+extern single   atan2(y,x);
+
+extern multiple diff3(x1,y1,z1,x2,y2,z2);
+extern single   dist3d(x,y,z);
+extern multiple xyz_to_polar(x,y,z);
+extern multiple polar_to_xyz(rad,theta,phi);
+
+extern single   getseed();
+extern void     setseed(x);
+extern single   srand();
+extern single   frand();
+extern single   random();
+extern single   gaussian(x,y);
+
+extern void     error_clear_all() = "clear";
+extern single   error_clear(x) = "clear_error";
+extern single   error?();
+extern single   error_bit(x);
+extern single   error_name(x);
+extern single   error_num();
+extern single   error_str(x);
+extern single   error_is_set?(x) = "is_set?";
+extern single   error_set(x) = "set_error";
+
+const pi = 3.141592653589793236;
+const e  = 2.718281828459045235;
+
+}
+

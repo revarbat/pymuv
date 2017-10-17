@@ -1,0 +1,29 @@
+/////////////////////////////////////////
+// Common matching routines.
+
+extern single match_noisy(obj) = """\
+match
+dup #-1 dbcmp if me @ "I don't see that here!" notify then
+dup #-2 dbcmp if me @ "I don't know which one you mean!" notify then
+dup #-3 dbcmp if pop me @ getlink then""";
+
+extern single match_controlled(obj) = """\
+match
+dup #-1 dbcmp if me @ "I don't see that here!" notify then
+dup #-2 dbcmp if me @ "I don't know which one you mean!" notify then
+dup #-3 dbcmp if pop me @ getlink then
+dup ok? if
+    me @ over controls not if
+        pop #-1 me @ "Permission denied." notify
+    then
+then""";
+
+extern single match_player_noisy(obj) = """\
+pmatch dup not if me @ "I don't recognize anyone by that name." notify then""";
+
+extern multiple match_multi(remote, pat) = """\
+var! __mrm__pat
+contents_array foreach swap pop
+    dup name __mrm__pat @ smatch not if pop then
+repeat""";
+

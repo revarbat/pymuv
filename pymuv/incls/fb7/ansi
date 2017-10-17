@@ -1,0 +1,13 @@
+/////////////////////////////////
+// ansi namespace
+
+namespace ansi {
+
+extern single   textattr(x,y);
+extern single   strip(x) = "ansi_strip";
+extern single   strlen(x) = "ansi_strlen";
+extern multiple strcut(x,y) = "ansi_strcut";
+extern single   midstr(x,y,z) = "ansi_midstr";
+
+}
+

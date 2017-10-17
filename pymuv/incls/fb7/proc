@@ -1,0 +1,26 @@
+///////////////////////////////
+// proc namespace
+
+namespace proc {
+
+extern single mode();
+extern void   setmode(x);
+extern void   preempt();
+extern void   foreground();
+extern void   background();
+extern single interp(x,y,z);
+extern single queue(x,y,z);
+extern single fork();
+extern single kill(x);
+extern single pid();
+extern single ispid?(x);
+extern single getpids(x);
+extern single getpidinfo(x);
+extern single instances(x);
+
+const PREEMPT = muf("pr_mode");
+const FOREGROUND = muf("fg_mode");
+const BACKGROUND = muf("bg_mode");
+
+}
+

@@ -1,0 +1,62 @@
+//////////////////////////////////
+// array namespace
+
+namespace array {
+
+extern single   make(args*) = "";
+extern single   make_dict(args*) = "{ swap array_vals pop }dict";
+extern single   concat(args*) = "{ }list swap array_reverse foreach swap pop 0 swap array_insertrange repeat";
+extern single   merge(args*) = "{ }dict swap foreach swap pop foreach rot rot ->[] repeat repeat";
+
+extern single   sum(arr) = "0 swap foreach swap pop + repeat";
+extern single   min(arr) = "1 array_cut swap array_vals pop swap foreach swap pop over over > if swap then pop repeat";
+extern single   max(arr) = "1 array_cut swap array_vals pop swap foreach swap pop over over < if swap then pop repeat";
+
+extern multiple first(arr) = "array_first";
+extern multiple last(arr) = "array_last";
+extern multiple next(arr,idx) = "array_next";
+extern multiple prev(arr,idx) = "array_prev";
+
+extern single   getitem(arr,idx) = "array_getitem";
+extern single   setitem(x,arr,idx) = "array_setitem";
+extern single   insertitem(x,arr,idx) = "array_insertitem";
+extern single   appenditem(x,arr) = "array_appenditem";
+extern single   delitem(arr,idx) = "array_delitem";
+
+extern single   getrange(arr,sidx,eidx) = "array_getrange";
+extern single   setrange(arr,idx,vals) = "array_setrange";
+extern single   insertrange(arr,idx,vals) = "array_insertrange";
+extern single   delrange(arr,sidx,eidx) = "array_delrange";
+
+extern single   union(args*) = "array_vals array_nunion";
+extern single   diff(args*) = "array_vals array_ndiff";
+extern single   intersect(args*) = "array_vals array_nintersect";
+
+extern single   nunion(args*) = "array_vals array_nunion";
+extern single   ndiff(args*) = "array_vals array_ndiff";
+extern single   nintersect(args*) = "array_vals array_nintersect";
+
+extern single   compare(arr1,arr2) = "array_compare";
+extern single   extract(arr,idxs) = "array_extract";
+extern single   excludeval(arr,val) = "array_excludeval";
+extern single   findval(arr,val) = "array_findval";
+
+extern single   interpret(arr) = "array_interpret";
+extern single   join(arr,s) = "array_join";
+
+extern single   keys(arr) = "array_keys array_make";
+extern single   vals(arr) = "array_vals array_make";
+extern single   matchkey(arr,pat) = "array_matchkey";
+extern single   matchval(arr,pat) = "array_matchval";
+
+extern single   nested_get(arr,idxlst) = "array_nested_get";
+extern single   nested_set(x,arr,idxlst) = "array_nested_set";
+extern single   nested_del(arr,idxlst) = "array_nested_del";
+
+extern single   sort(lst,flg) = "array_sort";
+extern single   sort_indexed(lst,flg,idx) = "array_sort_indexed";
+extern single   reverse(arr) = "array_reverse";
+extern multiple cut(arr,idx) = "array_cut";
+
+}
+

@@ -1,0 +1,15 @@
+/////////////////////////////////
+// lock namespace
+
+namespace lock {
+
+extern single locked?(plyr,obj);
+extern single parselock(lck);
+extern single unparselock(lck);
+extern single prettylock(lck);
+extern single testlock(d,lck);
+extern single setlockstr(d,lckstr);
+extern single getlockstr(d);
+
+}
+

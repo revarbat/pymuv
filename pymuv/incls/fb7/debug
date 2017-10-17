@@ -1,0 +1,10 @@
+//////////////////////////
+// debug namespace
+
+namespace debug {
+    extern void on() = "debug_on";
+    extern void off() = "debug_off";
+    extern void line() = "debug_line";
+    extern void break() = "debugger_break";
+}
+

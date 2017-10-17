@@ -1,5 +1,5 @@
 ////////////////////////////////////////
-// Declarations for all FB6 primitives.
+// Declarations for all FB7 primitives.
 
 extern single awake?(x);
 extern single online() = "online_array";
@@ -42,6 +42,7 @@ extern multiple execute(d, args*) = "[]<- array_vals pop execute";
 
 extern single cancall?(x,y);
 extern single interp(x,y,z);
+extern void secure_sysvars();
 
 extern single event_count();
 extern single event_exists(x);
@@ -53,11 +54,12 @@ extern void timer_stop(x);
 extern void watchpid(x);
 
 extern void notify(x,y);
+extern void notify_nolisten(x,y);
+extern void notify_secure(x,y,z);
 extern void notify_except(x,y,z);
 extern void array_notify(x,y);
-
-extern void notify_exclude(x,y,z) = "swap array_vals
-dup 2 + rotate notify_exclude";
+extern void array_notify_secure(x,y,z);
+extern void notify_exclude(x,y,z) = "swap array_vals dup 2 + rotate notify_exclude";
 
 extern void user_log(x);
 extern single read();
@@ -74,9 +76,12 @@ extern single dbref(x);
 
 extern single prog();
 extern single trig();
+extern single cmd();
 extern single caller();
+extern single supplicant();
 extern single version();
 extern single depth();
+extern single fulldepth();
 
 extern single address?(x);
 extern single array?(x);
@@ -115,9 +120,13 @@ extern single toupper(x);
 
 extern single strencrypt(x,y);
 extern single strdecrypt(x,y);
+extern single md5hash(x);
+extern single sha1hash(x);
 
 extern multiple regexp(x,y,z);
 extern single regsub(w,x,y,z);
+extern single regsplit(x,y,z);
+extern single regsplit_noempty(x,y,z);
 
 extern single locked?(x,y);
 extern single parselock(x);
@@ -299,6 +308,7 @@ extern void setosucc(x,y);
 extern void setsucc(x,y);
 extern single succ(x);
 extern single truename(x);
+extern single pname_history(x);
 
 extern single getlink(x);
 extern void setlink(x,y);
@@ -332,6 +342,8 @@ extern single propdir?(x,y);
 extern single nextprop(x,y);
 extern single parseprop(w,x,y,z);
 extern multiple parsepropex(w,x,y,z);
+extern single parsempi(w,x,y,z);
+extern single parsempi_blessed(w,x,y,z);
 extern void reflist_add(x,y,z);
 extern void reflist_del(x,y,z);
 extern single reflist_find(x,y,z);
@@ -394,6 +406,10 @@ extern void debugger_break();
 
 extern void force(x,y);
 extern single force_level();
+extern single forcedby();
+extern single forcedby_array();
+
+extern single array_make(args*) = "";
 
 extern single array_make(args*) = "";
 extern single array_make_dict(args*) = "{ swap array_vals pop }dict";

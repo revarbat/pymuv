@@ -2,8 +2,11 @@
 // Standard absolute basics MUV library
 
 extern single prog();
+extern single cmd();
 extern single trig();
 extern single caller();
+extern single supplicant();
 extern single version();
 extern single depth();
+extern single fulldepth();
 
