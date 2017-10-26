@@ -1127,8 +1127,8 @@ of the extern to coerce it to a normal form::
 
     extern single fmtstr(fmt, args*) = "
         2 try
-            array_vals 1 + reverse fmtstring
-            0 depth - rotate depth 1 - popn
+            array_vals ++ reverse fmtstring
+            depth -1 * rotate depth -- popn
         catch abort
         endcatch
     ";
