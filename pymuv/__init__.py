@@ -20,6 +20,8 @@ def main():
     parser.add_argument("-n", "--no-optimization",
                         help="Disable code optimization.",
                         action="store_true")
+    parser.add_argument("-T", "--target", choices=['fb6', 'fb7'], default="fb6",
+                        help="Target MUF variant. Currently one of 'fb6' or 'fb7'.")
     parser.add_argument("-w", "--wrapper", type=str, default="",
                         help="Wrap code for upload into given program.")
     parser.add_argument("-s", "--sysincludes-only",
@@ -30,11 +32,13 @@ def main():
     parser.add_argument('infile', help='Input MUV sourcecode file.')
     opts = parser.parse_args()
 
-    muvparser = MuvParser()
-    muvparser.set_debug(opts.debug)
-    muvparser.optimization_level = 0 if opts.no_optimization else 1
-    muvparser.sysincludes_only = opts.sysincludes_only
-    muvparser.wrapper_program = opts.wrapper
+    muvparser = MuvParser(
+        debug=opts.debug,
+        target=opts.target,
+        optim=(0 if opts.no_optimization else 1),
+        sysonly=opts.sysincludes_only,
+        wrapper=opts.wrapper,
+    )
     muvparser.parse_file(opts.infile)
 
     if not opts.check:

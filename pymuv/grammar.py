@@ -42,6 +42,10 @@ def DIR_LANGUAGE():
     return "$language"
 
 
+def DIR_TARGET():
+    return "$target"
+
+
 def DIR_LIBVERSION():
     return "$libversion"
 
@@ -108,6 +112,10 @@ def KW_EXTERN():
 
 def KW_FMTSTRING():
     return Kwd("fmtstring")
+
+
+def KW_FTELL():
+    return Kwd("ftell")
 
 
 def KW_FOR():
@@ -888,6 +896,10 @@ def fmtstring_expr():
     return KW_FMTSTRING, PAREN, arglist, ENDPAR
 
 
+def ftell_expr():
+    return KW_FTELL, PAREN, arglist, ENDPAR
+
+
 def function_addr():
     return OPER_BITAND, FUNC_IDENT
 
@@ -982,6 +994,7 @@ def leaf_expr():
         dbref,
         string_literal,
         fmtstring_expr,
+        ftell_expr,
         KW_TOP,
         del_expr,
         push_expr,
@@ -1106,6 +1119,10 @@ def dir_language():
     return DIR_LANGUAGE, string_literal
 
 
+def dir_target():
+    return DIR_TARGET, string_literal
+
+
 def dir_version():
     return DIR_VERSION, floatnum
 
@@ -1152,6 +1169,7 @@ def directive():
         dir_libversion,
         dir_note,
         dir_pragma,
+        dir_target,
         dir_version,
         dir_warn,
     ]

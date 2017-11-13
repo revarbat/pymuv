@@ -798,6 +798,79 @@ class MuvVisitor(PTNodeVisitor):
         args = list(reversed(list(args)))
         return mn.MuvNodeCommand(node.position, "fmtstring", *args)
 
+    def visit_ftell_expr(self, node, children):
+        args = children[0]
+        fmt = args[0]
+        if isinstance(fmt, mn.MuvNodeString):
+            pos = fmt.position
+            fmt = fmt.value.replace('%%', '')
+            pats = re.findall(r'%[| +-]?[\d\*]*\.?[\d\*]*[isdDlefg~?]', fmt)
+            acount = 0
+            for pat in pats:
+                acount += len(pat.split('*'))
+            if len(args) - 1 != acount:
+                raise MuvError(
+                    (
+                        "ftell(fmt, ...) format string "
+                        "expects {exp} args, but got {found}."
+                    ).format(
+                        exp=acount,
+                        found=len(args) - 1,
+                    ),
+                    position=pos,
+                )
+            errfmt = (
+                "ftell(fmt, ...) format expected "
+                "{exp} arg, but got {found} ({num})."
+            )
+            literals = [
+                mn.MuvNodeInteger,
+                mn.MuvNodeFloat,
+                mn.MuvNodeDbRef,
+                mn.MuvNodeString,
+            ]
+            fmt_types = {
+                "i": ("integer", mn.MuvNodeInteger),
+                "d": ("dbref", mn.MuvNodeDbRef),
+                "D": ("dbref", mn.MuvNodeDbRef),
+                "e": ("float", mn.MuvNodeFloat),
+                "f": ("float", mn.MuvNodeFloat),
+                "g": ("float", mn.MuvNodeFloat),
+                "s": ("string", mn.MuvNodeString),
+            }
+            num = 0
+            for pat in pats:
+                num += 1
+                for i in range(len(pat.split('*'))-1):
+                    val = args[num]
+                    if type(val) in literals:
+                        if not isinstance(val, mn.MuvNodeInteger):
+                            raise MuvError(
+                                errfmt.format(
+                                    exp="integer",
+                                    found=val.valtype,
+                                    num=num,
+                                ),
+                                position=val.position,
+                            )
+                    num += 1
+                val = args[num]
+                if type(val) in literals:
+                    basepat = pat[-1]
+                    typname, typ = fmt_types[basepat]
+                    if not isinstance(val, typ):
+                        raise MuvError(
+                            errfmt.format(
+                                exp=typname,
+                                found=val.valtype,
+                                num=num,
+                            ),
+                            position=val.position,
+                        )
+        args = list(reversed(list(args)))
+        fexpr = mn.MuvNodeCommand(node.position, "fmtstring", *args)
+        return mn.MuvNodeCommand(node.position, "me @ over notify", fexpr)
+
     def visit_raw_muf(self, node, children):
         raw = children[0].value
         return mn.MuvNodeStatements(node.position, raw)
@@ -864,6 +937,14 @@ class MuvVisitor(PTNodeVisitor):
                 position=node.position,
             )
         return None
+
+    def visit_dir_target(self, node, children):
+        if children[0].value not in ["fb6", "fb7"]:
+            raise MuvError(
+                '$target can only be one of "fb6" or "fb7".',
+                position=node.position,
+            )
+        return mn.MuvNodeTarget(node.position, children[0].value)
 
     def visit_dir_version(self, node, children):
         return mn.MuvNodeStatements(

@@ -16,20 +16,17 @@ from pymuv.visitor import MuvVisitor
 
 
 class MuvParser(object):
-    def __init__(self):
+    def __init__(self, debug=False, target='fb6', optim=0, sysonly=False, wrapper=None):
         self.input_sources = ''
         self.output = ''
         self.error_cb = None
         self.error_found = False
-        self.context = Context()
-        self.debug = False
-        self.optimization_level = False
-        self.sysincludes_only = False
-        self.wrapper_program = None
-
-    def set_debug(self, val=True):
-        self.debug = val
-        self.context.debug = val
+        self.debug = debug
+        self.target = target
+        self.optimization_level = optim
+        self.sysincludes_only = sysonly
+        self.wrapper_program = wrapper
+        self.context = Context(debug=debug, target=self.target)
 
     def print_error(self, filename, line, col, msg):
         self.error_found = True
@@ -79,7 +76,7 @@ class MuvParser(object):
                 '++', '--', '.', '[', '?',
                 '&&', '||', '^^', '!',
                 '0b', '0o', '0d', '0x', '#',
-                'top', 'push', 'del', 'fmtstring', 'muf',
+                'top', 'push', 'del', 'fmtstring', 'ftell', 'muf',
                 r'[01_]+', r'[0-7_]+', r'[0-9a-fA-F_]+',
                 r'[0-9_]+(?![.eE])', r'[+-]?(\d+\.\d*|\d*\.\d+)',
                 r'[+-]?(\d+\.\d*|\d*\.\d+|\d)[eE][+-]?[0-9]+',

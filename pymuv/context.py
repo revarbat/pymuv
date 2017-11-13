@@ -54,16 +54,18 @@ class Scope(object):
 
 
 class Context(object):
-    def __init__(self):
+    def __init__(self, debug=False, target='fb6'):
         self.parsers = []
         self.filenames = []
-        self.debug = False
+        self.debug = debug
+        self.target = target
         self.scopes = [Scope()]
         self.func_realvars = {}
         self.curr_namespace = '::'
         self.using_namespaces = []
         self.global_consts = {}
         self.global_vars = {}
+        self.target_inits = []
         self.init_statements = []
         self.functions = {}
         self.last_function = None
@@ -76,9 +78,6 @@ class Context(object):
         self.declare_global_var("loc", sys=True)
         self.declare_global_var("trigger", sys=True)
         self.declare_global_var("command", sys=True)
-
-        # Global Initialiations
-        self.add_init('"me" match me ! me @ location loc ! trig trigger !')
 
         # Standard Builtin Functions
         self.declare_function(
@@ -111,6 +110,9 @@ class Context(object):
         self.scopes.pop()
 
     def add_init(self, expstr):
+        self.init_statements.append(expstr)
+
+    def add_priority_init(self, expstr):
         self.init_statements.append(expstr)
 
     # NameSpaces #############################################

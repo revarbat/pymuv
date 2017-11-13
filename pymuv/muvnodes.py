@@ -75,6 +75,16 @@ class MuvNode(object):
         return out
 
 
+class MuvNodeTarget(MuvNode):
+    def __init__(self, pos, target):
+        super(MuvNodeTarget, self).__init__("TARGET", pos)
+        self.target = target
+
+    def generate_code(self, ctx):
+        ctx.target = self.target
+        return ''
+
+
 class MuvNodeNull(MuvNode):
     def __init__(self, pos):
         super(MuvNodeNull, self).__init__("NULL", pos)
@@ -924,7 +934,13 @@ class MuvNodeProgram(MuvNode):
 
     def generate_code(self, ctx):
         code = self.code.generate_code(ctx)
-        inits = ctx.init_statements
+        inits = []
+        if ctx.target in ['fb7']:
+            inits.append('secure_sysvars')
+            inits.append('1 array_default_pinning')
+        else:
+            inits.append('"me" match me ! me @ location loc ! trig trigger !')
+        inits.extend(ctx.init_statements)
         inits.append(ctx.last_function)
         if ctx.last_func_pos:
             self.position = ctx.last_func_pos

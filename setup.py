@@ -4,7 +4,7 @@ import os
 import glob
 from setuptools import setup
 
-VERSION = "0.9.7"
+VERSION = "0.9.9"
 
 
 def find_data_files(source, target, patterns):
@@ -41,7 +41,7 @@ with open('README.rst') as f:
 setup(
     name='pymuv',
     version=VERSION,
-    description='A python implementation of the MUV 2.0 to fb6 MUF compiler.',
+    description='A python implementation of the MUV 2.0 to FuzzBall MUCK MUF compiler.',
     long_description=LONG_DESCR,
     author='Revar Desmera',
     author_email='revarbat@gmail.com',
