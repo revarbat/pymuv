@@ -190,6 +190,9 @@ extern single error_str(x);
 extern single is_set?(x);
 extern single set_error(x);
 
+extern single shallow_copy(x);
+extern single deep_copy(x);
+
 extern single array_keys(x) = "array_keys array_make";
 extern single array_vals(x) = "array_vals array_make";
 

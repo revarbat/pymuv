@@ -3,6 +3,9 @@
 
 namespace array {
 
+extern single   copy(x) = "shallow_copy";
+extern single   deep_copy(x) = "deep_copy";
+
 extern single   make(args*) = "";
 extern single   make_dict(args*) = "{ swap array_vals pop }dict";
 extern single   concat(args*) = "{ }list swap array_reverse foreach swap pop 0 swap array_insertrange repeat";
