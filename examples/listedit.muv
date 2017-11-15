@@ -1,4 +1,5 @@
 $language "muv"
+$target "fb6"
 
 include "!fb6/array";
 include "!fb6/str";
@@ -13,9 +14,9 @@ func verify(override, msg) {
     if (override) {
         return 1;
     }
-    tell(cat("Are you sure you want to ", msg, "?"));
+    ftell("Are you sure you want to %s?", msg);
     var lcin = str::tolower(io::read());
-    if (str::strcut(lcin,1)[0] eq "y") {
+    if (str::stringpfx(lcin, "y")) {
         return 1;
     }
     tell("Cancelled.");
@@ -26,7 +27,7 @@ func verify(override, msg) {
 func handle_mode_list(obj, prop) {
     var lines = prop::list_get(obj, prop);
     for (var i => var line in lines) {
-        tell(fmtstring("%3i: %s", i+1, line));
+        ftell("%3i: %s", i+1, line);
     }
     tell("Done.");
 }
