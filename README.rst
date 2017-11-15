@@ -38,12 +38,11 @@ You can write::
     func showspecies() {
         for (var obj in contents_array(loc)) {
             if (player?(obj)) {
-                tell(
-                    fmtstring(
-                        "%-30D %-10s %-30s", obj,
-                        getpropstr(obj, "sex") || "Unknown",
-                        getpropstr(obj, "species") || "Unknown"
-                    )
+                ftell(
+                    "%-30D %-10s %-30s",
+                    obj,
+                    getpropstr(obj, "sex") || "Unknown",
+                    getpropstr(obj, "species") || "Unknown"
                 );
             }
         }
