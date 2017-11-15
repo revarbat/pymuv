@@ -222,16 +222,17 @@ Built-Ins Functions
 ===================
 MUV has several built-in commands available to all programs:
 
-===================  ====================================================
+=======================  ====================================================
      Function                            Description                     
-===================  ====================================================
-``abort(msg)``       Throws a user exception with the given ``msg``.     
-``throw(msg)``       The same as ``abort(msg)``                          
-``tell(msg)``        The same as ``notify(me, msg)``                     
-``count(arr)``       Returns the count of how many items are in an array.
-``cat(...)``         Converts all args to strings and concatenates them. 
-``haskey(key,arr)``  Evaluates true if ``key`` is in the array ``arr``.  
-===================  ====================================================
+=======================  ====================================================
+``abort(msg)``           Throws a user exception with the given ``msg``.     
+``throw(msg)``           The same as ``abort(msg)``                          
+``tell(msg)``            The same as ``notify(me, msg)``                     
+``ftell(fmt, arg...)``   The same as ``notify(me, fmtstring(fmt, arg...)``                     
+``count(arr)``           Returns the count of how many items are in an array.
+``cat(...)``             Converts all args to strings and concatenates them. 
+``haskey(key,arr)``      Evaluates true if ``key`` is in the array ``arr``.  
+=======================  ====================================================
 
 MUV also has some built-in constants:
 
@@ -1101,17 +1102,17 @@ If new primitives are added to MUF that MUV doesn't know about, or if you need
 to call external libraries, you can use an ``extern`` declaration to let MUV
 know about how to call it::
 
-    extern void tell(msg);
+    extern void foo(bar, baz);
 
-will tell MUV that a function or primitive named ``tell`` exists that takes one
-argument, and returns nothing on the stack.  A call to this will return the
+will tell MUV that a function or primitive named ``foo`` exists that takes two
+arguments, and returns nothing on the stack.  A call to this will return the
 value ``0``, if it is used in an expression::
 
-    extern single foobar(baz, qux);
+    extern single foobar(baz, qux*);
 
 will tell MUV that a function or primitive named ``foobar`` exists, that takes
-two arguments, and returns a single value on the stack.  When you call this
-function, it will return that single stack item to the caller::
+one or more arguments, and returns a single value on the stack.  When you call
+this function, it will return that single stack item to the caller::
 
     extern multiple fleegul();
 
@@ -1134,12 +1135,12 @@ of the extern to coerce it to a normal form::
     ";
 
 The arguments for the extern will be the topmost stack items, with the first
-argument being deepest on the stack.  In the case of varargs, like above, the
-topmost stack item will be a list containing all the remaining args.  If the
-extern is ``void``, then nothing is expected to be left on the stack.  If the
-extern is ``single``, then one item is expected to be left on the stack.  If
-the extern is ``multiple``, then all items left on the stack will be bundled
-into a list to be returned to the caller.
+argument being deepest on the stack.  In the case of varargs, like with
+``args*`` above, the topmost stack item will be a list containing all the
+remaining args.  If the extern is ``void``, then nothing is expected to be
+left on the stack.  If the extern is ``single``, then one item is expected to
+be left on the stack.  If the extern is ``multiple``, then all items left on
+the stack will be bundled into a list to be returned to the caller.
 
 The raw MUF code given is used *instead* of a call to the name of the declared
 extern.  A normal extern::
