@@ -416,9 +416,14 @@ class MuvVisitor(PTNodeVisitor):
             out = oper
         return out
 
+    def visit_prefix_expr(self, node, children):
+        return mn.MuvNodePrefixExpr(
+            node.position,
+            children[0],
+            children[1],
+        )
+
     def visit_postfix_expr(self, node, children):
-        if len(children) == 1:
-            return children[0]
         return mn.MuvNodePostfixExpr(
             node.position,
             children[0],
@@ -434,10 +439,8 @@ class MuvVisitor(PTNodeVisitor):
         if oper == "-":
             return mn.MuvNodeBinaryExpr(
                 node.position,
-                children[1], "*", mn.MuvNodeInteger(node.position, -1)
+                mn.MuvNodeInteger(node.position, 0), "-", children[1]
             )
-        if oper in ["++", "--"]:
-            return mn.MuvNodePrefixExpr(node.position, oper, children[1])
         return mn.MuvNodeExprList(node.position, children[1], oper)
 
     def visit_power_expr(self, node, children):

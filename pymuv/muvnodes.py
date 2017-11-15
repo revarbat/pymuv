@@ -6,6 +6,7 @@ import re
 import textwrap
 
 from pymuv.errors import MuvError
+from pymuv.lvalue import LValue
 
 
 def str_or_expr(x, ctx):
@@ -263,7 +264,12 @@ class MuvNodePostfixExpr(MuvNode):
         self.oper = oper
 
     def generate_code(self, ctx):
-        if isinstance(self.expr, MuvNodeVarFetch):
+        if isinstance(self.expr, LValue):
+            lval = self.expr
+            ctx.assign_level += 1
+            out = lval.unary_set_expr(ctx, self.oper, postoper=True)
+            ctx.assign_level -= 1
+        elif isinstance(self.expr, MuvNodeVarFetch):
             lval = self.expr.var
             ctx.assign_level += 1
             out = lval.unary_set_expr(ctx, self.oper, postoper=True)
@@ -283,15 +289,15 @@ class MuvNodePrefixExpr(MuvNode):
         self.expr = expr
 
     def generate_code(self, ctx):
-        if self.oper in ['+', '-']:
-            out = "0 {expr} {oper}".format(
-                expr=self.expr.generate_code(ctx),
-                oper=self.oper,
-            )
+        if isinstance(self.expr, LValue):
+            lval = self.expr
+            ctx.assign_level += 1
+            out = lval.unary_set_expr(ctx, self.oper, postoper=False)
+            ctx.assign_level -= 1
         elif isinstance(self.expr, MuvNodeVarFetch):
             lval = self.expr.var
             ctx.assign_level += 1
-            out = lval.unary_set_expr(ctx, self.oper)
+            out = lval.unary_set_expr(ctx, self.oper, postoper=False)
             ctx.assign_level -= 1
         else:
             out = "{expr} {oper}".format(

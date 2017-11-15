@@ -908,7 +908,7 @@ def function_call():
     return FUNC_IDENT, PAREN, Optional(arglist), ENDPAR
 
 
-def postfix_oper():
+def prepost_oper():
     return [OPER_INCR, OPER_DECR]
 
 
@@ -1017,17 +1017,20 @@ def subscript_expr():
     return leaf_expr, ZeroOrMore([index_oper, addrcall_oper])
 
 
+def prefix_expr():
+    return (prepost_oper, lvalue)
+
+
 def postfix_expr():
-    return [
-        (subscript_expr, postfix_oper),
-        subscript_expr
-    ]
+    return (lvalue, prepost_oper)
 
 
 def unary_expr():
     return [
         postfix_expr,
-        (unary_oper, unary_expr)
+        prefix_expr,
+        (unary_oper, unary_expr),
+        subscript_expr
     ]
 
 

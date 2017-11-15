@@ -1,3 +1,6 @@
-include README.rst REFERENCE.rst
-recursive-include pymuv incls examples
+include README.rst MUVREF.rst
+recursive-include pymuv *.py
+recursive-include pymuv/incls/fb6 *
+recursive-include pymuv/incls/fb7 *
+recursive-include examples *
 

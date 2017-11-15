@@ -1,0 +1,19 @@
+$language "muv"
+$target "fb7"
+
+func main(arg) {
+    var a = ["foo"=>[=>]];
+    a.foo.bar.baz = 23;
+    a.foo.bar.qux = 24;
+    var b = a.foo.bar;
+    b.qax = "fah";
+    del(b["qax"]);
+    var out1 = a.foo.bar.baz++;
+    var out2 = ++a.foo.bar.baz;
+    a.foo.bar.qux += 2;
+    del(a.foo.bar.qux);
+    var c = a.foo.bar.baz;
+    c++;
+    var d = -c;
+    del(a["foo"]);
+}
