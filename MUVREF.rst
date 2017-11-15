@@ -1164,6 +1164,7 @@ the MUF output code.  These include:
    Directive         What it Does                                          
 ================  ====================================================== 
 $language "muv"   Allow future MUCK servers to determine this is MUV.   
+$target "fb6"     Sets the MUF variant to generate code for.  Can be "fb6" or "fb7".
 $warn "msg"       Prints msg as a MUV compiler warning.                 
 $error "msg"      Prints msg as a MUV error and stops compilation.      
 $echo "msg"       Outputs as the corresponding MUF directive.           
