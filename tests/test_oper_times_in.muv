@@ -1,4 +1,7 @@
 func main(arg) {
-    return 42*13;
+    var a = 42;
+    var b = 13;
+    var c = a * b;
+    var d = 42*13;
 }
 

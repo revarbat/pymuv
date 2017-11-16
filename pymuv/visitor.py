@@ -29,6 +29,8 @@ class MuvVisitor(PTNodeVisitor):
             oper, expr = arr[:2]
             arr = arr[2:]
             out = mn.MuvNodeBinaryExpr(expr.position, out, oper, expr)
+        if isinstance(out, mn.MuvNodeBinaryExpr):
+            out = out.optimize()
         return out
 
     def visit_ows(self, node, children):
@@ -437,6 +439,10 @@ class MuvVisitor(PTNodeVisitor):
         if oper == "+":
             return children[1]
         if oper == "-":
+            if isinstance(children[1], mn.MuvNodeInteger):
+                return mn.MuvNodeInteger(node.position, -children[1].value)
+            if isinstance(children[1], mn.MuvNodeFloat):
+                return mn.MuvNodeFloat(node.position, -children[1].value)
             return mn.MuvNodeBinaryExpr(
                 node.position,
                 mn.MuvNodeInteger(node.position, 0), "-", children[1]

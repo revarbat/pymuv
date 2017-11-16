@@ -314,6 +314,75 @@ class MuvNodeBinaryExpr(MuvNode):
         self.oper = oper
         self.expr2 = expr2
 
+    def do_oper(self, val1, oper, val2):
+        if oper == '+':
+            return val1 + val2
+        elif oper == '-':
+            return val1 - val2
+        elif oper == '*':
+            return val1 * val2
+        elif oper == '/':
+            if isinstance(val1, int) and isinstance(val2, int):
+                return int(val1 / val2)
+            else:
+                return val1 / val2
+        elif oper == '%':
+            return val1 % val2
+        elif oper == 'pow':
+            return val1 ** val2
+        return None
+
+    def optimize(self):
+        if isinstance(self.expr1, MuvNodeBinaryExpr):
+            self.expr1 = self.expr1.optimize()
+        if isinstance(self.expr2, MuvNodeBinaryExpr):
+            self.expr2 = self.expr2.optimize()
+        isnum1 = isinstance(self.expr1, (MuvNodeInteger, MuvNodeFloat))
+        isnum2 = isinstance(self.expr2, (MuvNodeInteger, MuvNodeFloat))
+        if isnum1 and isnum2:
+            val1 = self.expr1.value
+            val2 = self.expr2.value
+            val = self.do_oper(val1, self.oper, val2)
+            if val is None:
+                return self
+            if isinstance(val, float):
+                return MuvNodeFloat(self.position, val)
+            else:
+                return MuvNodeInteger(self.position, val)
+        if isnum1 and isinstance(self.expr2, MuvNodeBinaryExpr):
+            oper2 = self.expr2.oper
+            expr3 = self.expr2.expr1
+            expr4 = self.expr2.expr2
+            val1 = self.expr1.value
+            isnum3 = isinstance(expr3, (MuvNodeInteger, MuvNodeFloat))
+            if isnum1 and isnum3 and self.oper != '%' and self.oper == oper2:
+                val2 = expr3.value
+                val = self.do_oper(val1, self.oper, val2)
+                if val is None:
+                    return self
+                if isinstance(val, float):
+                    val = MuvNodeFloat(self.position, val)
+                else:
+                    val = MuvNodeInteger(self.position, val)
+                return MuvNodeBinaryExpr(self.position, val, oper2, expr4)
+        if isnum2 and isinstance(self.expr1, MuvNodeBinaryExpr):
+            oper2 = self.expr1.oper
+            expr3 = self.expr1.expr1
+            expr4 = self.expr1.expr2
+            val2 = self.expr2.value
+            isnum3 = isinstance(expr4, (MuvNodeInteger, MuvNodeFloat))
+            if isnum1 and isnum3 and self.oper != '%' and self.oper == oper2:
+                val1 = expr4.value
+                val = self.do_oper(val1, self.oper, val2)
+                if val is None:
+                    return self
+                if isinstance(val, float):
+                    val = MuvNodeFloat(self.position, val)
+                else:
+                    val = MuvNodeInteger(self.position, val)
+                return MuvNodeBinaryExpr(self.position, expr3, oper2, val)
+        return self
+
     def generate_code(self, ctx):
         ctx.assign_level += 1
         out = "{expr1} {expr2} {oper}".format(

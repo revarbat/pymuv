@@ -1,5 +1,8 @@
 func main(ang)
 {
-    return 2 ** 3;
+    var a = 2;
+    var b = 3;
+    var c = a ** b;
+    var d = 2 ** 3;
 }
 
