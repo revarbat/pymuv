@@ -65,6 +65,7 @@ extern void user_log(x);
 extern single read();
 extern multiple tread(x);
 extern void read_wants_blanks();
+extern void read_wants_no_blanks();
 
 extern single atoi(x);
 extern single ctoi(x);

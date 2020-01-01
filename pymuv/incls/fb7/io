@@ -17,6 +17,7 @@ extern single   read();
 extern multiple tread(secs);
 extern multiple timed_read(secs) = "tread";
 extern void     read_wants_blanks();
+extern void     read_wants_no_blanks();
 
 extern single   ignoring?(d1,d2);
 extern void     ignore_add(d1,d2);
